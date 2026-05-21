@@ -16,9 +16,12 @@ export function LogoutButton() {
         });
       }}
       disabled={isPending}
-      className="label hover:text-ink transition-colors duration-160 ease-out"
+      className="flex items-center gap-3 w-full px-3 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200 rounded"
     >
-      Sign out
+      <span className="material-symbols-outlined">logout</span>
+      <span className="font-label-mono text-label-mono">
+        {isPending ? "Signing out…" : "Logout"}
+      </span>
     </button>
   );
 }
