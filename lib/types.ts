@@ -116,3 +116,14 @@ export type TenderFull = Tender & {
   required_documents: RequiredDocument[];
   evaluation_criteria: EvaluationCriterion[];
 };
+
+export type RequirementCounts = {
+  total: number;
+  covered: number;
+  partial: number;
+  missing: number;
+  unclear: number;
+  mandatory: number;
+  reviewed: number;
+  missing_mandatory: number;
+};

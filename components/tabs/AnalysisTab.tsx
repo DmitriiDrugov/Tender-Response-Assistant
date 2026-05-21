@@ -1,22 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Capability, Requirement, TenderFull } from "@/lib/types";
+import type { Capability, Requirement, RequirementCounts, TenderFull } from "@/lib/types";
 import { CoverageStats } from "../CoverageStats";
 import { DraftGenerationBanner } from "../DraftGenerationBanner";
 import { FilterStrip, type FilterKey } from "../FilterStrip";
 import { RequirementRow } from "../RequirementRow";
-
-type Counts = {
-  total: number;
-  covered: number;
-  partial: number;
-  missing: number;
-  unclear: number;
-  mandatory: number;
-  reviewed: number;
-  missing_mandatory: number;
-};
 
 export function AnalysisTab({
   tender,
@@ -26,7 +15,7 @@ export function AnalysisTab({
 }: {
   tender: TenderFull;
   capabilities: Capability[];
-  counts: Counts;
+  counts: RequirementCounts;
   onTenderChange: (t: TenderFull) => void;
 }) {
   const [filter, setFilter] = useState<FilterKey>("all");

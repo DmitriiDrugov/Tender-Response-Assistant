@@ -1,23 +1,12 @@
-import type { TenderFull } from "@/lib/types";
+import type { RequirementCounts, TenderFull } from "@/lib/types";
 import { CoverageStats } from "../CoverageStats";
-
-type Counts = {
-  total: number;
-  covered: number;
-  partial: number;
-  missing: number;
-  unclear: number;
-  mandatory: number;
-  reviewed: number;
-  missing_mandatory: number;
-};
 
 export function OverviewTab({
   tender,
   counts,
 }: {
   tender: TenderFull;
-  counts: Counts;
+  counts: RequirementCounts;
 }) {
   const missingDocs = tender.required_documents.filter((d) => d.status === "missing").length;
   const criticalHighRisks = tender.risks.filter(

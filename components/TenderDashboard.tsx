@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { TenderFull, Capability } from "@/lib/types";
+import type { Capability, RequirementCounts, TenderFull } from "@/lib/types";
 import { TenderHeader } from "./TenderHeader";
 import { Tabs } from "./Tabs";
 import { AnalysisTab } from "./tabs/AnalysisTab";
@@ -49,7 +49,7 @@ function pipelineActive(t: TenderFull): boolean {
   );
 }
 
-function computeCounts(requirements: TenderFull["requirements"]) {
+function computeCounts(requirements: TenderFull["requirements"]): RequirementCounts {
   const c = {
     total: 0,
     covered: 0,
