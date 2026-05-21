@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Risk, TenderFull } from "@/lib/types";
+import type { DocumentStatus, Risk, TenderFull } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function SidePanel({
@@ -105,6 +105,22 @@ function RisksSection({ risks }: { risks: Risk[] }) {
   );
 }
 
+const DOC_STATUSES: DocumentStatus[] = ["missing", "uploaded", "needs_review", "approved"];
+
+const STATUS_LABEL: Record<DocumentStatus, string> = {
+  missing: "Missing",
+  uploaded: "Uploaded",
+  needs_review: "Needs review",
+  approved: "Approved",
+};
+
+const STATUS_COLOR: Record<DocumentStatus, string> = {
+  missing: "var(--status-missing)",
+  uploaded: "var(--status-partial)",
+  needs_review: "var(--status-unclear)",
+  approved: "var(--status-covered)",
+};
+
 function DocumentsSection({
   tenderId,
   docs,
@@ -114,49 +130,76 @@ function DocumentsSection({
   docs: TenderFull["required_documents"];
   onRefresh: () => Promise<void>;
 }) {
+  const prepared = docs.filter((d) => d.status === "uploaded" || d.status === "approved").length;
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleStatusCycle(docId: string, status: DocumentStatus) {
+    const next = DOC_STATUSES[(DOC_STATUSES.indexOf(status) + 1) % DOC_STATUSES.length];
+    try {
+      const res = await fetch(`/api/required-documents/${docId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      });
+      if (!res.ok) {
+        const d = (await res.json().catch(() => null)) as { error?: string } | null;
+        setError(d?.error || "Status update failed.");
+        return;
+      }
+      setError(null);
+      await onRefresh();
+    } catch {
+      setError("Network error.");
+    }
+  }
+
   return (
     <section aria-labelledby="docs-heading">
-      <div className="flex items-center justify-between mb-3">
-        <h4 id="docs-heading" className="font-serif text-20 text-ink leading-none">
-          Required documents
-        </h4>
-        <span className="text-12 text-ink-muted tabular">
-          {docs.filter((d) => d.checked).length}/{docs.length}
-        </span>
+      <div className="mb-3 space-y-0.5">
+        <div className="flex items-center justify-between">
+          <h4 id="docs-heading" className="font-serif text-20 text-ink leading-none">
+            Required documents
+          </h4>
+          <span className="text-12 text-ink-muted tabular">{docs.length} found</span>
+        </div>
+        {docs.length > 0 && (
+          <p className="text-12 text-ink-muted">
+            Prepared / uploaded:{" "}
+            <span className="text-ink tabular">
+              {prepared}/{docs.length}
+            </span>
+          </p>
+        )}
       </div>
 
       {docs.length === 0 ? (
         <p className="text-13 text-ink-muted">No documents extracted.</p>
       ) : (
-        <ul className="space-y-2">
-          {docs.map((d) => (
-            <li key={d.id}>
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={d.checked}
-                  onChange={async (e) => {
-                    await fetch(`/api/required-documents/${d.id}`, {
-                      method: "PATCH",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ checked: e.target.checked }),
-                    });
-                    await onRefresh();
-                  }}
-                  className="mt-1 accent-[var(--accent)]"
-                />
-                <span
-                  className={cn(
-                    "text-13 leading-snug",
-                    d.checked ? "text-ink-muted line-through" : "text-ink",
-                  )}
+        <>
+          {error ? (
+            <p role="alert" className="text-12 text-accent mb-2">{error}</p>
+          ) : null}
+          <ul className="divide-y divide-border">
+            {docs.map((d) => (
+              <li key={d.id} className="py-2.5 flex items-start justify-between gap-3">
+                <span className="text-13 text-ink leading-snug flex-1">{d.name}</span>
+                <button
+                  type="button"
+                  onClick={() => void handleStatusCycle(d.id, d.status)}
+                  className="flex-shrink-0 flex items-center gap-1.5 text-12 text-ink-muted hover:text-ink transition-colors duration-160"
+                  title="Click to change status"
                 >
-                  {d.name}
-                </span>
-              </label>
-            </li>
-          ))}
-        </ul>
+                  <span
+                    className="dot"
+                    style={{ background: STATUS_COLOR[d.status] }}
+                    aria-hidden="true"
+                  />
+                  {STATUS_LABEL[d.status]}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </section>
   );
