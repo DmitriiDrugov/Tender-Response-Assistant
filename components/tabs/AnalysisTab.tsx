@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Capability, Requirement, RequirementCounts, TenderFull } from "@/lib/types";
+import type { Capability, Requirement, RequirementCounts, RequirementType, TenderFull } from "@/lib/types";
 import { CoverageStats } from "../CoverageStats";
 import { DraftGenerationBanner } from "../DraftGenerationBanner";
 import { FilterStrip, type FilterKey } from "../FilterStrip";
@@ -19,6 +19,7 @@ export function AnalysisTab({
   onTenderChange: (t: TenderFull) => void;
 }) {
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [typeFilter, setTypeFilter] = useState<RequirementType | null>(null);
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [showBanner, setShowBanner] = useState(tender.drafting_status === "running");
@@ -30,8 +31,8 @@ export function AnalysisTab({
   const draftingRunning = tender.drafting_status === "running";
 
   const filtered = useMemo(
-    () => filterRequirements(tender.requirements, filter, query),
-    [tender.requirements, filter, query],
+    () => filterRequirements(tender.requirements, filter, typeFilter, query),
+    [tender.requirements, filter, typeFilter, query],
   );
 
   function updateRequirement(updated: Requirement) {
@@ -62,16 +63,18 @@ export function AnalysisTab({
         query={query}
         onQuery={setQuery}
         counts={counts}
+        typeFilter={typeFilter}
+        onTypeFilter={setTypeFilter}
       />
 
       {filtered.length === 0 ? (
-        <p className="text-14 text-ink-muted py-7">
+        <p className="text-14 text-on-surface-variant py-7">
           {tender.requirements.length === 0
             ? "No requirements extracted yet."
             : "No requirements match this filter."}
         </p>
       ) : (
-        <ul className="border-t border-border">
+        <ul className="border-t border-outline-variant">
           {filtered.map((r) => (
             <RequirementRow
               key={r.id}
@@ -92,6 +95,7 @@ export function AnalysisTab({
 function filterRequirements(
   reqs: Requirement[],
   filter: FilterKey,
+  typeFilter: RequirementType | null,
   query: string,
 ): Requirement[] {
   const q = query.trim().toLowerCase();
@@ -102,9 +106,11 @@ function filterRequirements(
     if (filter === "partial" && r.match_status !== "partially_covered") return false;
     if (filter === "missing" && r.match_status !== "not_covered") return false;
     if (filter === "unclear" && r.match_status !== "unclear") return false;
+    if (filter === "blocked" && r.draft_status !== "blocked") return false;
+    if (typeFilter && r.requirement_type !== typeFilter) return false;
     if (q) {
       const hay =
-        `${r.text} ${r.category ?? ""} ${r.source_excerpt ?? ""} ${r.draft_response ?? ""}`.toLowerCase();
+        `${r.text} ${r.category ?? ""} ${r.requirement_type ?? ""} ${r.source_excerpt ?? ""} ${r.draft_response ?? ""}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;

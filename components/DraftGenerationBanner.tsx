@@ -41,13 +41,13 @@ export function DraftGenerationBanner({
       role="status"
       aria-live="polite"
       className={cn(
-        'border-b border-border bg-surface-2 overflow-hidden',
+        'border-b border-outline-variant bg-surface-container overflow-hidden',
         'transition-[max-height] duration-320 ease-out',
         phase === 'collapsing' ? 'max-h-0' : 'max-h-24',
       )}
     >
       {/* 2px progress bar at top — exception to DESIGN.md "no progress bar" rule */}
-      <div className="h-0.5 bg-border-strong">
+      <div className="h-0.5 bg-outline">
         <div
           className="h-full bg-ink"
           style={{
@@ -61,22 +61,22 @@ export function DraftGenerationBanner({
 
       {phase === 'completing' || phase === 'collapsing' ? (
         <div className="flex items-center gap-3 py-3 px-5">
-          <span className="dot flex-shrink-0" style={{ background: 'var(--status-covered)' }} />
-          <span className="text-14 text-ink-2">
+          <span className="dot flex-shrink-0" style={{ background: '#705d00' }} />
+          <span className="text-14 text-on-surface-variant">
             Analysis complete · All {done} responses processed
           </span>
         </div>
       ) : (
         <div className="flex items-baseline justify-between py-3 px-5">
           <div className="space-y-0.5">
-            <p className="text-14 text-ink-2">
+            <p className="text-14 text-on-surface-variant">
               Drafting responses · {done} / {total}
             </p>
             {currentText ? (
-              <p className="text-12 text-ink-muted">Currently drafting: {currentText}</p>
+              <p className="text-12 text-on-surface-variant">Currently drafting: {currentText}</p>
             ) : null}
           </div>
-          <span className="shrink-0 pl-5 text-12 text-ink-muted tabular">
+          <span className="shrink-0 pl-5 text-12 text-on-surface-variant tabular">
             {pct}% complete
           </span>
         </div>

@@ -2,18 +2,18 @@ import type { DraftStatus } from '@/lib/types';
 import { InkStroke } from './InkStroke';
 
 const BADGE: Record<DraftStatus, { dot: string; label: string; stroke?: true }> = {
-  pending:    { dot: 'var(--border-strong)',  label: 'Queued' },
+  pending:    { dot: '#d0c6ab',  label: 'Queued' },
   generating: { dot: 'var(--ink)',            label: 'Generating', stroke: true },
-  ready:      { dot: 'var(--status-covered)', label: 'Ready' },
-  blocked:    { dot: 'var(--status-partial)', label: 'Requires evidence' },
-  failed:     { dot: 'var(--status-missing)', label: 'Failed' },
-  skipped:    { dot: 'var(--ink-faint)',      label: 'Skipped' },
+  ready:      { dot: '#705d00', label: 'Ready' },
+  blocked:    { dot: '#e9c400', label: 'Requires evidence' },
+  failed:     { dot: '#ba1a1a', label: 'Failed' },
+  skipped:    { dot: '#7e775f',      label: 'Skipped' },
 };
 
 export function DraftStatusBadge({ status }: { status: DraftStatus }) {
   const cfg = BADGE[status];
   return (
-    <span className="hidden lg:inline-flex items-center gap-1.5 text-12 uppercase tracking-wider font-medium text-ink-muted whitespace-nowrap">
+    <span className="hidden lg:inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">
       <span className="dot flex-shrink-0" style={{ background: cfg.dot }} />
       {cfg.label}
       {cfg.stroke ? <InkStroke className="ml-1" /> : null}
