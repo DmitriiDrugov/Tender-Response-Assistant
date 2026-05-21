@@ -2,6 +2,14 @@
 
 export type PipelineStatus = "pending" | "running" | "complete" | "failed";
 
+export type DraftStatus =
+  | 'pending'
+  | 'generating'
+  | 'ready'
+  | 'blocked'
+  | 'failed'
+  | 'skipped';
+
 export type Tender = {
   id: string;
   title: string;
@@ -59,6 +67,7 @@ export type Requirement = {
   suggested_action: string | null;
   confidence: "high" | "medium" | "low" | null;
   draft_response: string | null;
+  draft_status: DraftStatus;
   reviewer_notes: string | null;
   reviewed_at: string | null;
   overridden_by_user: boolean;
@@ -84,11 +93,13 @@ export type Risk = {
   recommended_action: string | null;
 };
 
+export type DocumentStatus = "missing" | "uploaded" | "needs_review" | "approved";
+
 export type RequiredDocument = {
   id: string;
   tender_id: string;
   name: string;
-  checked: boolean;
+  status: DocumentStatus;
 };
 
 export type EvaluationCriterion = {
