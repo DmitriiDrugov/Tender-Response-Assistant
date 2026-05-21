@@ -119,7 +119,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   let done = alreadyDone;
   let lastError: string | null = null;
   let aborted = false;
-  let abortError: RateLimitedError | null = null;
+  const abortState: { error: RateLimitedError | null } = { error: null };
 
   const pendingRequirements = requirements.filter(
     (r): r is NonNullable<typeof r> =>
@@ -203,7 +203,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         } catch (err) {
           if (err instanceof RateLimitedError) {
             aborted = true;
-            abortError = err;
+            abortState.error = err;
             await sb
               .from("requirements")
               .update({ draft_status: "failed" })
@@ -213,7 +213,9 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
           lastError =
             err instanceof LlmJSONParseError
               ? "Model returned an unparseable response."
-              : (err as Error).message;
+              : err instanceof Error
+                ? err.message
+                : "Unknown error.";
           await sb
             .from("requirements")
             .update({ draft_status: "failed" })
@@ -227,8 +229,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     }),
   );
 
-  const capturedAbortError = abortError as RateLimitedError | null;
-  if (aborted && capturedAbortError) {
+  if (aborted && abortState.error) {
     await sb
       .from("tenders")
       .update({
@@ -238,7 +239,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         drafting_progress_done: done,
       })
       .eq("id", id);
-    return NextResponse.json({ error: capturedAbortError.message }, { status: 429 });
+    return NextResponse.json({ error: abortState.error.message }, { status: 429 });
   }
 
   await sb
