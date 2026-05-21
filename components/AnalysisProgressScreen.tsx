@@ -57,15 +57,13 @@ export function AnalysisProgressScreen({
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     setPhase('ready');
     setProgress(100);
-    const t = setTimeout(() => {
-      setPhase('dismissing');
-      setTimeout(() => onDismissedRef.current(), 400);
-    }, 600);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setPhase('dismissing'), 600);
+    const t2 = setTimeout(() => onDismissedRef.current(), 1_000); // 600ms hold + 320ms transition + 80ms buffer
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   useEffect(() => {
-    if (hasAnyDraft && phase === 'waiting') handleReady();
+    if (hasAnyDraft && phase === 'waiting') return handleReady();
   }, [hasAnyDraft, phase, handleReady]);
 
   const statusTitle = phase === 'ready'
