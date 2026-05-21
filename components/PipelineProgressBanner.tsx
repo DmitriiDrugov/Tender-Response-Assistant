@@ -28,7 +28,7 @@ function derivePipelineSteps(tender: TenderFull): Step[] {
     : "pending";
 
   const draftLabel =
-    draftState === "active" && total > 0
+    draftState === "active"
       ? `Drafting ${done} of ${total} responses.`
       : "Drafting responses.";
 
@@ -117,7 +117,7 @@ export function PipelineProgressBanner({ tender }: { tender: TenderFull }) {
                   : "text-on-surface-variant",
               ].join(" ")}
             >
-              {step.label.replace(".", "")}
+              {step.label}
               {step.state === "active" && <InkStroke className="ml-1 inline-block" />}
             </span>
           </div>
