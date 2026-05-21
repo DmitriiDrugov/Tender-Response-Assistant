@@ -355,6 +355,7 @@ function ReviewerControls({
   const r = requirement;
   const reviewed = r.reviewed_at != null;
   const [notes, setNotes] = useState(r.reviewer_notes ?? "");
+  const [error, setError] = useState<string | null>(null);
   const notesTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastNotesRef = useRef(notes);
 
@@ -364,18 +365,29 @@ function ReviewerControls({
   }, [r.id, r.reviewer_notes]);
 
   useEffect(() => {
-    if (notes === lastNotesRef.current) return;
+    if (notes === lastNotesRef.current) {
+      setError(null);
+      return;
+    }
     if (notesTimer.current) clearTimeout(notesTimer.current);
     notesTimer.current = setTimeout(async () => {
-      const res = await fetch(`/api/requirements/${r.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reviewer_notes: notes }),
-      });
-      if (res.ok) {
+      try {
+        const res = await fetch(`/api/requirements/${r.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reviewer_notes: notes }),
+        });
+        if (!res.ok) {
+          const d = (await res.json().catch(() => null)) as { error?: string } | null;
+          setError(d?.error || "Save failed.");
+          return;
+        }
         const updated = (await res.json()) as Requirement;
         lastNotesRef.current = updated.reviewer_notes ?? "";
+        setError(null);
         onUpdated(updated);
+      } catch {
+        setError("Network error. Will retry on next change.");
       }
     }, AUTOSAVE_MS);
     return () => {
@@ -414,6 +426,9 @@ function ReviewerControls({
           placeholder="Internal notes (not exported)."
           className="input text-14 min-h-[4rem]"
         />
+        {error ? (
+          <p role="alert" className="text-12 text-accent">{error}</p>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center gap-3 pt-1">
