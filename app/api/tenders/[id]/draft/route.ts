@@ -4,6 +4,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { LlmJSONParseError, RateLimitedError, llmJSON } from "@/lib/llm/client";
 import { draftSchema } from "@/lib/llm/schemas";
 import { enforceEvidenceBoundDraft, normalizeMatchStatus } from "@/lib/llm/draft-guard";
+import { logPipelineEvent } from "@/lib/pipeline-logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -109,6 +110,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       last_error: null,
     })
     .eq("id", id);
+  await logPipelineEvent(id, "draft", "running");
 
   const model = process.env.OPENROUTER_MODEL_DRAFT || "meta-llama/llama-3.3-70b-instruct:free";
 
@@ -239,6 +241,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         drafting_progress_done: done,
       })
       .eq("id", id);
+    await logPipelineEvent(id, "draft", "failed", abortState.error.message);
     return NextResponse.json({ error: abortState.error.message }, { status: 429 });
   }
 
@@ -250,6 +253,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       last_error: lastError,
     })
     .eq("id", id);
+  await logPipelineEvent(id, "draft", "complete");
 
   return NextResponse.json({ ok: true, drafts: done, total: requirements.length });
 }

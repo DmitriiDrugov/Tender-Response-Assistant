@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { llmJSON, RateLimitedError, LlmJSONParseError } from "@/lib/llm/client";
 import { extractSchema } from "@/lib/llm/schemas";
+import { logPipelineEvent } from "@/lib/pipeline-logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -11,13 +12,17 @@ const paramsSchema = z.object({ id: z.string().uuid() });
 
 function isoDate(s: string | null | undefined): string | null {
   if (!s) return null;
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // Try to parse other common formats (e.g. "25 May 2026", "25/05/2026", "May 25, 2026")
-  const d = new Date(s);
+  // Normalise to Date first so we can validate month/day range.
+  // A bare YYYY-MM-DD is parsed as UTC midnight; other formats go through Date().
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(`${s}T00:00:00Z`) : new Date(s);
   if (Number.isNaN(d.getTime())) return null;
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
+  const yyyy = d.getUTCFullYear();
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  // Reject dates the parser silently clamped (e.g. "2005-00-00" → invalid).
+  const month = d.getUTCMonth() + 1;
+  const day = d.getUTCDate();
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
   return `${yyyy}-${mm}-${dd}`;
 }
 
@@ -30,11 +35,14 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
   const tenderRes = await sb
     .from("tenders")
-    .select("id, raw_text")
+    .select("id, raw_text, extraction_status")
     .eq("id", id)
     .single();
   if (tenderRes.error || !tenderRes.data) {
     return NextResponse.json({ error: "Tender not found." }, { status: 404 });
+  }
+  if (tenderRes.data.extraction_status === "running") {
+    return NextResponse.json({ error: "Extraction is already in progress." }, { status: 409 });
   }
   const rawText = (tenderRes.data.raw_text as string) || "";
   if (!rawText) {
@@ -42,6 +50,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   }
 
   await sb.from("tenders").update({ extraction_status: "running", last_error: null }).eq("id", id);
+  await logPipelineEvent(id, "extract", "running");
 
   const tenderText = rawText.length > MAX_TEXT_CHARS ? rawText.slice(0, MAX_TEXT_CHARS) : rawText;
   const wasTruncated = rawText.length > MAX_TEXT_CHARS;
@@ -178,16 +187,18 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       }
     }
 
-    await sb.from("tenders").update({ extraction_status: "complete" }).eq("id", id);
-
-    if (wasTruncated) {
-      await sb
-        .from("tenders")
-        .update({
-          last_error: `Document was truncated to ${MAX_TEXT_CHARS.toLocaleString()} characters (${Math.round(rawText.length / 1000)} k total). Requirements beyond this point were not extracted.`,
-        })
-        .eq("id", id);
-    }
+    // Single atomic update: status + optional truncation warning in one write so
+    // polling clients never see "complete" without the accompanying note.
+    await sb
+      .from("tenders")
+      .update({
+        extraction_status: "complete",
+        last_error: wasTruncated
+          ? `Document was truncated to ${MAX_TEXT_CHARS.toLocaleString()} characters (${Math.round(rawText.length / 1000)} k total). Requirements beyond this point were not extracted.`
+          : null,
+      })
+      .eq("id", id);
+    await logPipelineEvent(id, "extract", "complete");
 
     return NextResponse.json({
       ok: true,
@@ -206,6 +217,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       .from("tenders")
       .update({ extraction_status: "failed", last_error: message })
       .eq("id", id);
+    await logPipelineEvent(id, "extract", "failed", message);
     return NextResponse.json({ error: message }, { status: httpStatus });
   }
 }

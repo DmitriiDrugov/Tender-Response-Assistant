@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { LlmEmptyResponseError, LlmJSONParseError, RateLimitedError, llmJSON } from "@/lib/llm/client";
 import { matchWrappedSchema, type MatchOutput } from "@/lib/llm/schemas";
+import { logPipelineEvent } from "@/lib/pipeline-logger";
 
 export const runtime = "nodejs";
 // Chunked matching: each chunk is one LLM call. Raise the ceiling to handle real tenders.
@@ -71,6 +72,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   for (const c of capabilities) capabilityByName.set(c.name.toLowerCase(), c.id);
 
   await sb.from("tenders").update({ matching_status: "running", last_error: null }).eq("id", id);
+  await logPipelineEvent(id, "match", "running");
 
   const capabilitiesForPrompt = capabilities.map((c) => ({
     category: c.category,
@@ -132,6 +134,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       .from("tenders")
       .update({ matching_status: "failed", last_error: message })
       .eq("id", id);
+    await logPipelineEvent(id, "match", "failed", message);
     return NextResponse.json({ error: message }, { status: httpStatus });
   }
 
@@ -187,6 +190,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       drafting_progress_total: requirements.length,
     })
     .eq("id", id);
+  await logPipelineEvent(id, "match", "complete");
 
   return NextResponse.json({
     ok: true,

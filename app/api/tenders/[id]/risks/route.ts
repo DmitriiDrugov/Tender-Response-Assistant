@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { LlmJSONParseError, RateLimitedError, llmJSON } from "@/lib/llm/client";
 import { riskWrappedSchema } from "@/lib/llm/schemas";
+import { logPipelineEvent } from "@/lib/pipeline-logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -28,6 +29,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   }
 
   await sb.from("tenders").update({ risks_status: "running", last_error: null }).eq("id", id);
+  await logPipelineEvent(id, "risks", "running");
 
   const tenderText = rawText.length > MAX_TEXT_CHARS ? rawText.slice(0, MAX_TEXT_CHARS) : rawText;
 
@@ -41,9 +43,17 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       tenderId: id,
     });
 
-    await sb.from("risks").delete().eq("tender_id", id);
+    const delRes = await sb.from("risks").delete().eq("tender_id", id);
+    if (delRes.error) {
+      await sb
+        .from("tenders")
+        .update({ risks_status: "failed", last_error: delRes.error.message })
+        .eq("id", id);
+      return NextResponse.json({ error: "Failed to clear existing risks." }, { status: 500 });
+    }
+
     if (output.length > 0) {
-      await sb.from("risks").insert(
+      const insRes = await sb.from("risks").insert(
         output.map((r) => ({
           tender_id: id,
           category: r.category,
@@ -53,9 +63,17 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
           recommended_action: r.recommended_action,
         })),
       );
+      if (insRes.error) {
+        await sb
+          .from("tenders")
+          .update({ risks_status: "failed", last_error: insRes.error.message })
+          .eq("id", id);
+        return NextResponse.json({ error: "Failed to save risks." }, { status: 500 });
+      }
     }
 
     await sb.from("tenders").update({ risks_status: "complete" }).eq("id", id);
+    await logPipelineEvent(id, "risks", "complete");
     return NextResponse.json({ ok: true, count: output.length });
   } catch (err) {
     const message =
@@ -69,6 +87,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       .from("tenders")
       .update({ risks_status: "failed", last_error: message })
       .eq("id", id);
+    await logPipelineEvent(id, "risks", "failed", message);
     return NextResponse.json({ error: message }, { status: httpStatus });
   }
 }

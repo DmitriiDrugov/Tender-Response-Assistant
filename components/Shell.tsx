@@ -30,6 +30,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
             >
               Capabilities
             </Link>
+            <Link
+              href="/logs"
+              className="label hover:text-ink transition-colors duration-160 ease-out"
+            >
+              Logs
+            </Link>
             <LogoutButton />
           </nav>
         </div>
