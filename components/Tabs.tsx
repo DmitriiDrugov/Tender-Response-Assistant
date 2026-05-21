@@ -4,10 +4,6 @@ import { useId } from "react";
 
 export type TabSpec = { key: string; label: string; count?: number; badge?: number };
 
-/**
- * Segmented horizontal tabs with an underline on active. Keyboard:
- * left/right arrows move focus, Home/End jump, Enter/Space activates.
- */
 export function Tabs({
   tabs,
   active,
@@ -38,7 +34,8 @@ export function Tabs({
       role="tablist"
       aria-label="Tender views"
       onKeyDown={onKeyDown}
-      className="border-b border-border flex items-end gap-7"
+      className="flex gap-8 overflow-x-auto border-b border-outline-variant/30 pt-2"
+      style={{ scrollbarWidth: "none" }}
     >
       {tabs.map((t) => {
         const isActive = t.key === active;
@@ -51,21 +48,19 @@ export function Tabs({
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(t.key)}
             className={[
-              "relative pb-3 -mb-px flex items-center gap-2 text-14 transition-colors duration-160 ease-out",
-              isActive ? "text-ink" : "text-ink-muted hover:text-ink-2",
+              "relative pb-2 -mb-px flex items-center gap-2 font-body-md text-body-md whitespace-nowrap transition-colors",
+              isActive
+                ? "text-primary font-bold border-b-2 border-primary"
+                : "text-on-surface-variant hover:text-primary",
             ].join(" ")}
           >
-            <span className={isActive ? "font-medium" : ""}>{t.label}</span>
+            <span>{t.label}</span>
             {t.badge != null && t.badge > 0 ? (
-              <span className="text-12 tabular text-accent font-medium">{t.badge}</span>
+              <span className="bg-error text-on-error px-1.5 py-0.5 text-[10px] font-bold rounded-none">
+                {t.badge}
+              </span>
             ) : t.count != null ? (
-              <span className="text-12 tabular text-ink-muted">{t.count}</span>
-            ) : null}
-            {isActive ? (
-              <span
-                aria-hidden="true"
-                className="absolute left-0 right-0 -bottom-px h-[2px] bg-ink"
-              />
+              <span className="text-[10px] text-on-surface-variant/60">{t.count}</span>
             ) : null}
           </button>
         );

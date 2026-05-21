@@ -1,104 +1,104 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import type { TenderFull } from "@/lib/types";
 import { formatCurrency, formatDate, daysUntil } from "@/lib/utils";
-import { PipelineProgress } from "./PipelineProgress";
 
 export function TenderHeader({ tender }: { tender: TenderFull }) {
   const dl = tender.submission_deadline;
   const dDays = daysUntil(dl);
-  const deadlineTone =
-    dDays == null ? "default" : dDays < 0 ? "overdue" : dDays <= 14 ? "soon" : "default";
+  const deadlineUrgent = dDays != null && dDays < 0;
 
   return (
-    <header className="space-y-5">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-13 text-ink-muted hover:text-ink transition-colors duration-160 ease-out"
-      >
-        <ArrowLeft size={14} strokeWidth={1.5} aria-hidden="true" />
-        All tenders
-      </Link>
-
-      <div className="space-y-3">
-        <h1 className="font-serif text-31 leading-tight text-ink max-w-reading">
-          {tender.title}
-        </h1>
-        <div className="flex flex-wrap items-baseline gap-x-7 gap-y-2 text-13 text-ink-2">
-          {tender.issuing_authority ? (
-            <Field label="Issuer" value={tender.issuing_authority} />
-          ) : null}
-          {tender.tender_id_external ? (
-            <Field label="Tender ID" value={tender.tender_id_external} mono />
-          ) : null}
-          {tender.country ? <Field label="Country" value={tender.country} /> : null}
-          {tender.language ? <Field label="Language" value={tender.language} /> : null}
-          {tender.estimated_value_amount != null ? (
-            <Field
-              label="Estimated value"
-              value={formatCurrency(tender.estimated_value_amount, tender.estimated_value_currency)}
-            />
-          ) : null}
-          {tender.contract_duration ? (
-            <Field label="Duration" value={tender.contract_duration} />
-          ) : null}
-          <div className="flex items-baseline gap-2">
-            <span className="label">Deadline</span>
-            <span
-              className={
-                deadlineTone === "overdue"
-                  ? "text-accent"
-                  : deadlineTone === "soon"
-                    ? "text-status-partial"
-                    : "text-ink"
-              }
-            >
-              {formatDate(dl)}
-              {dDays != null
-                ? dDays < 0
-                  ? " · overdue"
-                  : ` · in ${dDays} d`
-                : null}
+    <div className="space-y-0">
+      {/* Row 1: nav + title + actions */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
+          <Link
+            href="/"
+            className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors flex-shrink-0"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <span className="font-label-md text-label-md uppercase">Back to Tenders</span>
+          </Link>
+          <span className="text-outline-variant flex-shrink-0">/</span>
+          <h2 className="font-headline-md text-headline-md text-primary truncate">
+            {tender.title}
+          </h2>
+        </div>
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="relative hidden md:block">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">
+              search
             </span>
+            <input
+              type="text"
+              placeholder="Search project data…"
+              className="bg-surface-container-low industrial-border pl-9 pr-4 py-2 font-body-md text-on-surface w-56 focus:outline-none focus:ring-1 focus:ring-primary rounded-none placeholder:text-outline"
+            />
           </div>
+          <button className="p-2 text-on-surface-variant hover:text-primary transition-colors">
+            <span className="material-symbols-outlined">notifications</span>
+          </button>
+          <button className="p-2 text-on-surface-variant hover:text-primary transition-colors">
+            <span className="material-symbols-outlined">settings</span>
+          </button>
         </div>
       </div>
 
-      <PipelineProgress
-        state={{
-          extraction_status: tender.extraction_status,
-          matching_status: tender.matching_status,
-          drafting_status: tender.drafting_status,
-          risks_status: tender.risks_status,
-          drafting_progress_done: tender.drafting_progress_done,
-          drafting_progress_total: tender.drafting_progress_total,
-          last_error: tender.last_error,
-        }}
-      />
-
-      {tender.scope_summary ? (
-        <p className="font-serif text-16 leading-relaxed text-ink-2 max-w-reading">
-          {tender.scope_summary}
-        </p>
-      ) : null}
-
-      {tender.extraction_status === 'complete' && tender.last_error ? (
-        <p className="text-13 text-ink-muted max-w-reading">
-          <span className="label mr-1.5">Note</span>
-          {tender.last_error}
-        </p>
-      ) : null}
-    </header>
+      {/* Row 2: metadata grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 industrial-border bg-surface-container-lowest divide-x divide-outline-variant mt-4">
+        {tender.issuing_authority && (
+          <MetaCell label="Authority" value={tender.issuing_authority} />
+        )}
+        {tender.tender_id_external && (
+          <MetaCell label="Tender ID" value={tender.tender_id_external} mono />
+        )}
+        <div className="p-4">
+          <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-1">
+            Deadline
+          </p>
+          <p
+            className={[
+              "font-data-md text-data-md",
+              deadlineUrgent ? "text-error font-bold italic" : "text-on-surface",
+            ].join(" ")}
+          >
+            {formatDate(dl)}
+            {dDays != null
+              ? dDays < 0
+                ? ` (${Math.abs(dDays)} days overdue)`
+                : ` (${dDays} days left)`
+              : ""}
+          </p>
+        </div>
+        {tender.estimated_value_amount != null && (
+          <MetaCell
+            label="Estimated Value"
+            value={formatCurrency(tender.estimated_value_amount, tender.estimated_value_currency)}
+            mono
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
-function Field({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function MetaCell({
+  label,
+  value,
+  mono,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
   return (
-    <div className="flex items-baseline gap-2">
-      <span className="label">{label}</span>
-      <span className={mono ? "font-mono text-13 text-ink" : "text-ink"}>{value}</span>
+    <div className="p-4">
+      <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-1">{label}</p>
+      <p className={mono ? "font-data-md text-data-md text-on-surface" : "font-body-md text-body-md text-on-surface"}>
+        {value}
+      </p>
     </div>
   );
 }

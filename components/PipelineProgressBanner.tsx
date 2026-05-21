@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import type { TenderFull } from "@/lib/types";
 import { InkStroke } from "./InkStroke";
-import { cn } from "@/lib/utils";
 
 type StepState = "complete" | "active" | "pending";
 type Step = { label: string; state: StepState };
@@ -39,6 +38,7 @@ function derivePipelineSteps(tender: TenderFull): Step[] {
     drafting_status === "complete";
 
   return [
+    { label: "Extracting requirements.", state: "complete" },
     { label: "Matching against capabilities.", state: matchState },
     { label: draftLabel, state: draftState },
     { label: "Identifying risks.", state: risksState },
@@ -60,68 +60,69 @@ function hasPendingWork(tender: TenderFull): boolean {
 export function PipelineProgressBanner({ tender }: { tender: TenderFull }) {
   const [visible, setVisible] = useState(hasPendingWork(tender));
   const [dismissing, setDismissing] = useState(false);
-
   const pending = hasPendingWork(tender);
 
   useEffect(() => {
-    if (pending) {
-      setVisible(true);
-      setDismissing(false);
-      return;
-    }
+    if (pending) { setVisible(true); setDismissing(false); return; }
     if (!visible) return;
     const t1 = setTimeout(() => setDismissing(true), 1_200);
-    const t2 = setTimeout(() => setVisible(false), 1_200 + 320);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    const t2 = setTimeout(() => setVisible(false), 1_520);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [pending, visible]);
 
   if (!visible) return null;
 
   const steps = derivePipelineSteps(tender);
+  const activeIdx = steps.findIndex((s) => s.state === "active");
 
   return (
     <div
       role="status"
       aria-live="polite"
-      className={cn(
-        "border-b border-border bg-surface px-7 lg:px-9 py-3",
-        "transition-opacity duration-320 ease-out",
-        dismissing && "opacity-0",
-      )}
+      className={[
+        "industrial-border bg-surface p-6 transition-opacity duration-300",
+        dismissing ? "opacity-0" : "opacity-100",
+      ].join(" ")}
     >
-      <ol className="flex flex-wrap items-center gap-x-7 gap-y-1.5" aria-label="Analysis pipeline">
+      <p className="font-label-md text-label-md text-on-surface-variant uppercase mb-6">
+        Response Pipeline
+      </p>
+      <div className="flex items-center justify-between relative">
+        {/* Track line */}
+        <div className="absolute top-[7px] left-0 w-full h-px bg-outline-variant z-0" />
+        {/* Progress line */}
+        <div
+          className="absolute top-[5px] left-0 h-1 bg-primary z-0 transition-all duration-700"
+          style={{ width: `${(Math.max(0, activeIdx) / (steps.length - 1)) * 100}%` }}
+        />
+
         {steps.map((step, i) => (
-          <li key={i} className="flex items-center gap-2 text-13">
+          <div key={i} className="relative z-10 flex flex-col items-center gap-2">
+            {step.state === "active" ? (
+              <div className="w-6 h-6 rounded-full bg-primary border-4 border-surface flex items-center justify-center animate-pulse">
+                <div className="w-2 h-2 rounded-full bg-on-primary" />
+              </div>
+            ) : step.state === "complete" ? (
+              <div className="w-4 h-4 rounded-full bg-primary border-4 border-surface ring-1 ring-primary" />
+            ) : (
+              <div className="w-4 h-4 rounded-full bg-surface-container border-4 border-surface ring-1 ring-outline-variant" />
+            )}
             <span
-              className="dot flex-shrink-0"
-              style={{
-                background:
-                  step.state === "complete"
-                    ? "var(--status-covered)"
-                    : step.state === "active"
-                      ? "var(--ink)"
-                      : "var(--border-strong)",
-              }}
-              aria-hidden="true"
-            />
-            <span
-              className={
+              className={[
+                "font-label-md text-label-md text-center max-w-[80px]",
                 step.state === "active"
-                  ? "text-ink"
+                  ? "text-primary font-extrabold underline decoration-primary decoration-2"
                   : step.state === "complete"
-                    ? "text-ink-2"
-                    : "text-ink-faint"
-              }
+                  ? "text-on-surface font-bold"
+                  : "text-on-surface-variant",
+              ].join(" ")}
             >
-              {step.label}
+              {step.label.replace(".", "")}
+              {step.state === "active" && <InkStroke className="ml-1 inline-block" />}
             </span>
-            {step.state === "active" ? <InkStroke className="ml-1" /> : null}
-          </li>
+          </div>
         ))}
-      </ol>
+      </div>
     </div>
   );
 }

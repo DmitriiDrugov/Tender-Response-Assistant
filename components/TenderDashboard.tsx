@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Capability, RequirementCounts, TenderFull } from "@/lib/types";
+import type { Capability, ClarificationQuestion, RequirementCounts, TenderFull } from "@/lib/types";
 import { TenderHeader } from "./TenderHeader";
 import { Tabs } from "./Tabs";
 import { AnalysisTab } from "./tabs/AnalysisTab";
@@ -10,10 +10,21 @@ import { ExportTab } from "./tabs/ExportTab";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { DocumentsTab } from "./tabs/DocumentsTab";
 import { RisksTab } from "./tabs/RisksTab";
+import { ClarificationsTab } from "./tabs/ClarificationsTab";
+import { ActionPlanTab } from "./tabs/ActionPlanTab";
 import { AnalysisProgressScreen } from "./AnalysisProgressScreen";
 import { PipelineProgressBanner } from "./PipelineProgressBanner";
+import { RedFlagBanner } from "./RedFlagBanner";
 
-type TabKey = "overview" | "requirements" | "documents" | "risks" | "capabilities" | "export";
+type TabKey =
+  | "overview"
+  | "requirements"
+  | "documents"
+  | "risks"
+  | "clarifications"
+  | "action_plan"
+  | "capabilities"
+  | "export";
 
 async function advancePipeline(
   id: string,
@@ -90,16 +101,32 @@ export function TenderDashboard({
 
   const counts = useMemo(() => computeCounts(tender.requirements), [tender.requirements]);
 
-  const missingDocBadge = tender.required_documents.filter((d) => d.status === "missing").length;
-  const highRiskBadge = tender.risks.filter(
-    (r) => r.severity === "critical" || r.severity === "high",
+  const missingDocBadge = tender.required_documents.filter(
+    (d) => d.status === "missing" || d.status === "requested",
   ).length;
+  const highRiskBadge = tender.risks.filter(
+    (r) => (r.severity === "critical" || r.severity === "high") && !r.is_false_positive && !r.decision,
+  ).length;
+  const clarificationBadge = tender.clarification_questions.filter(
+    (q) => q.status === "draft",
+  ).length;
+
+  const actionPlanBadge = useMemo(() => {
+    const critical = counts.missing_mandatory;
+    const missingDocs = tender.required_documents.filter((d) => d.status === "missing").length;
+    const blockedDrafts = tender.requirements.filter((r) => r.draft_status === "blocked").length;
+    return critical + missingDocs + blockedDrafts + highRiskBadge;
+  }, [counts.missing_mandatory, tender.required_documents, tender.requirements, highRiskBadge]);
 
   const refreshTender = useCallback(async () => {
     const res = await fetch(`/api/tenders/${tender.id}`, { cache: "no-store" });
     if (!res.ok) return;
     const data = (await res.json()) as TenderFull;
-    setTender(data);
+    // Preserve clarification_questions from local state if not in API response
+    setTender((prev) => ({
+      ...data,
+      clarification_questions: data.clarification_questions ?? prev.clarification_questions,
+    }));
   }, [tender.id]);
 
   const refreshCapabilities = useCallback(async () => {
@@ -145,6 +172,14 @@ export function TenderDashboard({
     };
   }, [tender, refreshTender, showOverlay]);
 
+  function handleClarificationsChange(qs: ClarificationQuestion[]) {
+    setTender((prev) => ({ ...prev, clarification_questions: qs }));
+  }
+
+  function handleRiskUpdated() {
+    void refreshTender();
+  }
+
   return (
     <>
       {showOverlay && (
@@ -153,8 +188,9 @@ export function TenderDashboard({
           onDismissed={() => setShowOverlay(false)}
         />
       )}
-      <div className="px-7 lg:px-9 py-6">
-        <div className="space-y-6">
+      <div className="flex flex-col min-h-screen">
+        {/* Sticky top bar */}
+        <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant/30 flex flex-col px-8 py-4 gap-4">
           <TenderHeader tender={tender} />
           <Tabs
             tabs={[
@@ -172,39 +208,53 @@ export function TenderDashboard({
                 badge: highRiskBadge > 0 ? highRiskBadge : undefined,
                 count: highRiskBadge === 0 ? tender.risks.length : undefined,
               },
+              {
+                key: "clarifications",
+                label: "Clarifications",
+                badge: clarificationBadge > 0 ? clarificationBadge : undefined,
+                count: clarificationBadge === 0 ? tender.clarification_questions.length : undefined,
+              },
+              {
+                key: "action_plan",
+                label: "Action plan",
+                badge: actionPlanBadge > 0 ? actionPlanBadge : undefined,
+              },
               { key: "capabilities", label: "Capabilities" },
               { key: "export", label: "Export" },
             ]}
             active={tab}
             onChange={(k) => setTab(k as TabKey)}
           />
+        </header>
 
+        {/* Content */}
+        <div className="flex-1 p-8 space-y-8 max-w-7xl mx-auto w-full">
           {tender.extraction_status === "complete" && (
             <PipelineProgressBanner tender={tender} />
           )}
+          {tender.extraction_status === "complete" && (
+            <RedFlagBanner tender={tender} onViewBlockers={() => setTab("action_plan")} />
+          )}
 
-          {tab === "overview" ? (
-            <OverviewTab tender={tender} counts={counts} />
-          ) : null}
-
-          {tab === "requirements" ? (
-            <AnalysisTab
-              tender={tender}
-              capabilities={capabilities}
-              counts={counts}
-              onTenderChange={setTender}
-            />
-          ) : null}
-
-          {tab === "documents" ? (
+          {tab === "overview" && <OverviewTab tender={tender} counts={counts} />}
+          {tab === "requirements" && (
+            <AnalysisTab tender={tender} capabilities={capabilities} counts={counts} onTenderChange={setTender} />
+          )}
+          {tab === "documents" && (
             <DocumentsTab docs={tender.required_documents} onRefresh={refreshTender} />
-          ) : null}
-
-          {tab === "risks" ? (
-            <RisksTab risks={tender.risks} />
-          ) : null}
-
-          {tab === "capabilities" ? (
+          )}
+          {tab === "risks" && (
+            <RisksTab risks={tender.risks} onRiskUpdated={handleRiskUpdated} />
+          )}
+          {tab === "clarifications" && (
+            <ClarificationsTab
+              tenderId={tender.id}
+              questions={tender.clarification_questions}
+              onQuestionsChange={handleClarificationsChange}
+            />
+          )}
+          {tab === "action_plan" && <ActionPlanTab tender={tender} />}
+          {tab === "capabilities" && (
             <CapabilitiesTab
               tenderId={tender.id}
               capabilities={capabilities}
@@ -212,10 +262,32 @@ export function TenderDashboard({
               onRefreshCapabilities={refreshCapabilities}
               onRefreshTender={refreshTender}
             />
-          ) : null}
-
-          {tab === "export" ? <ExportTab tender={tender} /> : null}
+          )}
+          {tab === "export" && <ExportTab tender={tender} />}
         </div>
+
+        {/* Footer action bar */}
+        <footer className="border-t border-outline-variant/30 bg-surface px-8 py-6 flex justify-between items-center">
+          <div className="flex gap-4">
+            <button className="flex items-center gap-2 industrial-border px-4 py-2 font-label-md text-label-md uppercase hover:bg-surface-variant transition-colors">
+              <span className="material-symbols-outlined text-sm">share</span>
+              Collaborate
+            </button>
+            <button className="flex items-center gap-2 industrial-border px-4 py-2 font-label-md text-label-md uppercase hover:bg-surface-variant transition-colors">
+              <span className="material-symbols-outlined text-sm">history</span>
+              Revision History
+            </button>
+          </div>
+          <div className="flex gap-4">
+            <button className="bg-surface-container-lowest industrial-border px-6 py-3 font-label-md text-label-md uppercase hover:bg-surface-container transition-colors">
+              Save Draft
+            </button>
+            <button className="bg-primary text-on-primary px-8 py-3 font-label-md text-label-md uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(112,93,0,0.3)] active:translate-y-0.5 active:shadow-none">
+              Submit Package
+              <span className="material-symbols-outlined">send</span>
+            </button>
+          </div>
+        </footer>
       </div>
     </>
   );
