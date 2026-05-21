@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import { Public_Sans, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const sans = Inter({
+const sans = Public_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -25,13 +25,15 @@ export const metadata: Metadata = {
   description: "Triage, draft, and review responses to public tenders.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
