@@ -2,12 +2,23 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { LlmJSONParseError, RateLimitedError, llmJSON } from "@/lib/llm/client";
-import { matchWrappedSchema } from "@/lib/llm/schemas";
+import { matchWrappedSchema, type MatchOutput } from "@/lib/llm/schemas";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+// Chunked matching: each chunk is one LLM call. Raise the ceiling to handle real tenders.
+export const maxDuration = 300;
 
 const paramsSchema = z.object({ id: z.string().uuid() });
+
+// How many requirements per LLM call. Keeps output well within 8 000-token limit.
+// Override with MATCH_CHUNK_SIZE env var for paid-tier models with larger output windows.
+const CHUNK_SIZE = Number(process.env.MATCH_CHUNK_SIZE || "40");
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
 
 export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id } = paramsSchema.parse(await ctx.params);
@@ -28,9 +39,10 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     );
   }
 
+  // Fetch overridden_by_user so we can preserve user-set match statuses on re-run.
   const reqsRes = await sb
     .from("requirements")
-    .select("id, ordinal, text, category, is_mandatory, source_excerpt")
+    .select("id, ordinal, text, category, is_mandatory, source_excerpt, overridden_by_user")
     .eq("tender_id", id)
     .order("ordinal", { ascending: true });
   if (reqsRes.error) {
@@ -51,13 +63,6 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
   await sb.from("tenders").update({ matching_status: "running", last_error: null }).eq("id", id);
 
-  const requirementsForPrompt = requirements.map((r, idx) => ({
-    index: idx,
-    text: r.text,
-    category: r.category,
-    is_mandatory: r.is_mandatory,
-  }));
-
   const capabilitiesForPrompt = capabilities.map((c) => ({
     category: c.category,
     name: c.name,
@@ -65,58 +70,45 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     evidence: c.evidence,
   }));
 
+  const model = process.env.OPENROUTER_MODEL_MATCH || "deepseek/deepseek-chat:free";
+
+  // Build a global index map: requirement_index (in full list) → LLM result
+  const byIndex = new Map<number, MatchOutput[number]>();
+
+  const chunks = chunk(requirements, CHUNK_SIZE);
+
   try {
-    const output = await llmJSON({
-      promptFile: "match",
-      variables: {
-        REQUIREMENTS_JSON: JSON.stringify(requirementsForPrompt, null, 2),
-        CAPABILITY_MATRIX_JSON: JSON.stringify(capabilitiesForPrompt, null, 2),
-      },
-      model: process.env.OPENROUTER_MODEL_MATCH || "deepseek/deepseek-chat:free",
-      schema: matchWrappedSchema,
-      route: "match",
-      tenderId: id,
-    });
+    for (let chunkIdx = 0; chunkIdx < chunks.length; chunkIdx++) {
+      const chunkReqs = chunks[chunkIdx];
+      if (!chunkReqs) continue;
+      const chunkStart = chunkIdx * CHUNK_SIZE;
 
-    const byIndex = new Map<number, (typeof output)[number]>();
-    for (const item of output) byIndex.set(item.requirement_index, item);
+      // Use local indices (0..N-1) within each chunk for a clean prompt.
+      const requirementsForPrompt = chunkReqs.map((r, localIdx) => ({
+        index: localIdx,
+        text: r.text,
+        category: r.category,
+        is_mandatory: r.is_mandatory,
+      }));
 
-    // Per-requirement updates; small N (≤ ~400)
-    let updated = 0;
-    for (let i = 0; i < requirements.length; i++) {
-      const reqRow = requirements[i];
-      if (!reqRow) continue;
-      const m = byIndex.get(i);
-      if (!m) continue;
-      const matchedIds = m.matched_capability_names
-        .map((n) => capabilityByName.get(n.toLowerCase()))
-        .filter((x): x is string => !!x);
+      const output = await llmJSON({
+        promptFile: "match",
+        variables: {
+          REQUIREMENTS_JSON: JSON.stringify(requirementsForPrompt, null, 2),
+          CAPABILITY_MATRIX_JSON: JSON.stringify(capabilitiesForPrompt, null, 2),
+        },
+        model,
+        schema: matchWrappedSchema,
+        route: "match",
+        tenderId: id,
+      });
 
-      const upd = await sb
-        .from("requirements")
-        .update({
-          match_status: m.match_status,
-          matched_capability_ids: matchedIds,
-          gap_description: m.gap_description,
-          suggested_action: m.suggested_action,
-          confidence: m.confidence,
-          overridden_by_user: false,
-        })
-        .eq("id", reqRow.id);
-      if (!upd.error) updated++;
+      // Remap local chunk indices to global requirement indices.
+      for (const item of output) {
+        const globalIdx = chunkStart + item.requirement_index;
+        byIndex.set(globalIdx, item);
+      }
     }
-
-    await sb
-      .from("tenders")
-      .update({
-        matching_status: "complete",
-        drafting_status: "pending",
-        drafting_progress_done: 0,
-        drafting_progress_total: requirements.length,
-      })
-      .eq("id", id);
-
-    return NextResponse.json({ ok: true, matched: updated });
   } catch (err) {
     const message =
       err instanceof RateLimitedError
@@ -131,4 +123,75 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       .eq("id", id);
     return NextResponse.json({ error: message }, { status: httpStatus });
   }
+
+  // Write results. Requirements where overridden_by_user === true keep their
+  // existing match_status; all other fields (capabilities, gap, confidence) update.
+  let updated = 0;
+  let failed = 0;
+
+  for (let i = 0; i < requirements.length; i++) {
+    const reqRow = requirements[i];
+    if (!reqRow) continue;
+    const m = byIndex.get(i);
+    if (!m) continue;
+
+    const matchedIds = m.matched_capability_names
+      .map((n) => capabilityByName.get(n.toLowerCase()))
+      .filter((x): x is string => !!x);
+
+    const updatePayload: Record<string, unknown> = {
+      matched_capability_ids: matchedIds,
+      gap_description: m.gap_description,
+      suggested_action: m.suggested_action,
+      confidence: m.confidence,
+    };
+
+    // Preserve the user's manual match_status override — only update it when
+    // the user has not explicitly set it, or this is a clean re-extraction run
+    // (overridden_by_user is already false because requirements were deleted and re-inserted).
+    if (!reqRow.overridden_by_user) {
+      updatePayload.match_status = m.match_status;
+      updatePayload.overridden_by_user = false;
+    }
+
+    const upd = await sb
+      .from("requirements")
+      .update(updatePayload)
+      .eq("id", reqRow.id);
+
+    if (upd.error) {
+      failed++;
+    } else {
+      updated++;
+    }
+  }
+
+  if (failed > 0) {
+    const errMsg = `${failed} requirement(s) failed to save.`;
+    await sb
+      .from("tenders")
+      .update({ matching_status: "failed", last_error: errMsg })
+      .eq("id", id);
+    return NextResponse.json(
+      { error: errMsg, matched: updated, failed, total: requirements.length },
+      { status: 500 },
+    );
+  }
+
+  await sb
+    .from("tenders")
+    .update({
+      matching_status: "complete",
+      drafting_status: "pending",
+      drafting_progress_done: 0,
+      drafting_progress_total: requirements.length,
+    })
+    .eq("id", id);
+
+  return NextResponse.json({
+    ok: true,
+    matched: updated,
+    total: requirements.length,
+    chunks: chunks.length,
+  });
 }
