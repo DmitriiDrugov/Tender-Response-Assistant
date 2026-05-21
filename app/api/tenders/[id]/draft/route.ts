@@ -6,12 +6,32 @@ import { draftSchema } from "@/lib/llm/schemas";
 import { enforceEvidenceBoundDraft, normalizeMatchStatus } from "@/lib/llm/draft-guard";
 
 export const runtime = "nodejs";
-// Long-running pipeline. On Vercel set to platform max; locally unbounded.
 export const maxDuration = 300;
 
 const paramsSchema = z.object({ id: z.string().uuid() });
 
-const PACING_MS = 6_000; // conservative free-tier pacing
+const PACING_MS = Number(process.env.DRAFT_PACING_MS ?? "0");
+const CONCURRENCY = Math.max(1, Number(process.env.DRAFT_CONCURRENCY ?? "5"));
+
+class Semaphore {
+  private count: number;
+  private queue: (() => void)[] = [];
+  constructor(n: number) { this.count = n; }
+  acquire(): Promise<void> {
+    return this.count > 0
+      ? (this.count--, Promise.resolve())
+      : new Promise<void>(r => this.queue.push(r));
+  }
+  release(): void {
+    const next = this.queue.shift();
+    next ? next() : this.count++;
+  }
+}
+
+// A 'running' tender whose updated_at is older than this is considered stale
+// (the previous server process was killed before it could finish).
+// maxDuration is 300 s; allow 60 s margin for queue/cold-start before declaring stale.
+const STALE_THRESHOLD_MS = 6 * 60 * 1000;
 
 export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id } = paramsSchema.parse(await ctx.params);
@@ -19,7 +39,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
   const tenderRes = await sb
     .from("tenders")
-    .select("id, matching_status")
+    .select("id, matching_status, drafting_status, updated_at")
     .eq("id", id)
     .single();
   if (tenderRes.error || !tenderRes.data) {
@@ -30,6 +50,24 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       { error: "Matching must complete before drafting." },
       { status: 409 },
     );
+  }
+
+  // Guard against concurrent runs. If a run is already active (recently updated),
+  // reject. If it is stale (process was killed by a timeout), recover and resume.
+  if (tenderRes.data.drafting_status === "running") {
+    const staleness = Date.now() - new Date(tenderRes.data.updated_at as string).getTime();
+    if (staleness < STALE_THRESHOLD_MS) {
+      return NextResponse.json(
+        { error: "Drafting is already in progress." },
+        { status: 409 },
+      );
+    }
+    // Stale run: reset any requirements left mid-generation so they are re-attempted.
+    await sb
+      .from("requirements")
+      .update({ draft_status: "pending" })
+      .eq("tender_id", id)
+      .eq("draft_status", "generating");
   }
 
   const reqsRes = await sb
@@ -59,7 +97,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   for (const c of capabilities) capById.set(c.id, c);
 
   const alreadyDone = requirements.filter(
-    (r) => r.draft_status === 'ready' || r.draft_status === 'blocked',
+    (r) => r.draft_status === "ready" || r.draft_status === "blocked",
   ).length;
 
   await sb
@@ -74,108 +112,133 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
   const model = process.env.OPENROUTER_MODEL_DRAFT || "meta-llama/llama-3.3-70b-instruct:free";
 
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const sleep = PACING_MS > 0
+    ? (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+    : null;
 
   let done = alreadyDone;
   let lastError: string | null = null;
+  let aborted = false;
+  let abortError: RateLimitedError | null = null;
 
-  for (const r of requirements) {
-    if (!r) continue;
-    // Resume: skip requirements that were already drafted in a previous run.
-    if (r.draft_status === 'ready' || r.draft_status === 'blocked') continue;
-    const matchedCapabilities = ((r.matched_capability_ids || []) as string[])
-      .map((cid) => capById.get(cid))
-      .filter((c: (typeof capabilities)[number] | undefined): c is (typeof capabilities)[number] => !!c);
-    const matchedNames = matchedCapabilities.map((c) => c.name);
-    const evidenceText = JSON.stringify(
-      matchedCapabilities.map((c) => ({
-        category: c.category,
-        name: c.name,
-        description: c.description,
-        evidence: c.evidence,
-      })),
-      null,
-      2,
-    );
+  const pendingRequirements = requirements.filter(
+    (r): r is NonNullable<typeof r> =>
+      !!r && r.draft_status !== "ready" && r.draft_status !== "blocked",
+  );
 
-    const requirementAndMatch = {
-      text: r.text,
-      category: r.category,
-      is_mandatory: r.is_mandatory,
-      source_excerpt: r.source_excerpt,
-      match_status: r.match_status,
-      matched_capability_names: matchedNames,
-      gap_description: r.gap_description,
-      suggested_action: r.suggested_action,
-      confidence: r.confidence,
-    };
+  const sem = new Semaphore(CONCURRENCY);
 
-    await sb
-      .from('requirements')
-      .update({ draft_status: 'generating' })
-      .eq('id', r.id);
+  await Promise.allSettled(
+    pendingRequirements.map(async (r) => {
+      if (aborted) return;
+      await sem.acquire();
+      if (aborted) { sem.release(); return; }
+      try {
+        const matchedCapabilities = ((r.matched_capability_ids || []) as string[])
+          .map((cid) => capById.get(cid))
+          .filter((c): c is (typeof capabilities)[number] => !!c);
+        const matchedNames = matchedCapabilities.map((c) => c.name);
+        const evidenceText = JSON.stringify(
+          matchedCapabilities.map((c) => ({
+            category: c.category,
+            name: c.name,
+            description: c.description,
+            evidence: c.evidence,
+          })),
+          null,
+          2,
+        );
 
-    try {
-      const output = await llmJSON({
-        promptFile: "draft",
-        variables: {
-          REQUIREMENT_AND_MATCH_JSON: JSON.stringify(requirementAndMatch, null, 2),
-          COMPANY_EVIDENCE: evidenceText,
-        },
-        model,
-        schema: draftSchema,
-        route: "draft",
-        tenderId: id,
-      });
-      const guarded = enforceEvidenceBoundDraft({
-        output,
-        matchStatus: normalizeMatchStatus(r.match_status),
-        isMandatory: r.is_mandatory,
-        gapDescription: r.gap_description,
-        matchedEvidence: matchedCapabilities,
-      });
+        const requirementAndMatch = {
+          text: r.text,
+          category: r.category,
+          is_mandatory: r.is_mandatory,
+          source_excerpt: r.source_excerpt,
+          match_status: r.match_status,
+          matched_capability_names: matchedNames,
+          gap_description: r.gap_description,
+          suggested_action: r.suggested_action,
+          confidence: r.confidence,
+        };
 
-      await sb
-        .from("requirements")
-        .update({
-          draft_response: guarded.draft_response,
-          reviewer_notes: guarded.reviewer_notes,
-          draft_status: guarded.requires_bid_manager_decision ? 'blocked' : 'ready',
-        })
-        .eq("id", r.id);
-
-      done++;
-      // Throttle: update DB every requirement (small enough demo to be fine)
-      await sb
-        .from("tenders")
-        .update({ drafting_progress_done: done })
-        .eq("id", id);
-    } catch (err) {
-      if (err instanceof RateLimitedError) {
         await sb
-          .from("tenders")
-          .update({
-            drafting_status: "failed",
-            last_error:
-              "Free-tier rate limit reached during drafting. Re-run drafting in a minute to resume.",
-            drafting_progress_done: done,
-          })
-          .eq("id", id);
-        return NextResponse.json({ error: err.message }, { status: 429 });
-      }
-      lastError =
-        err instanceof LlmJSONParseError
-          ? "Model returned an unparseable response."
-          : (err as Error).message;
-      await sb
-        .from('requirements')
-        .update({ draft_status: 'failed' })
-        .eq('id', r.id);
-      // Continue with next requirement — partial failure is acceptable for the demo;
-      // the row simply stays without a draft and the user can hit Regenerate per-row.
-    }
+          .from("requirements")
+          .update({ draft_status: "generating" })
+          .eq("id", r.id);
 
-    await sleep(PACING_MS);
+        try {
+          const output = await llmJSON({
+            promptFile: "draft",
+            variables: {
+              REQUIREMENT_AND_MATCH_JSON: JSON.stringify(requirementAndMatch, null, 2),
+              COMPANY_EVIDENCE: evidenceText,
+            },
+            model,
+            schema: draftSchema,
+            route: "draft",
+            tenderId: id,
+          });
+          const guarded = enforceEvidenceBoundDraft({
+            output,
+            matchStatus: normalizeMatchStatus(r.match_status),
+            isMandatory: r.is_mandatory,
+            gapDescription: r.gap_description,
+            matchedEvidence: matchedCapabilities,
+          });
+
+          await sb
+            .from("requirements")
+            .update({
+              draft_response: guarded.draft_response,
+              reviewer_notes: guarded.reviewer_notes,
+              draft_status: guarded.requires_bid_manager_decision ? "blocked" : "ready",
+            })
+            .eq("id", r.id);
+
+          done++;
+          await sb
+            .from("tenders")
+            .update({ drafting_progress_done: done })
+            .eq("id", id);
+        } catch (err) {
+          if (err instanceof RateLimitedError) {
+            aborted = true;
+            abortError = err;
+            await sb
+              .from("requirements")
+              .update({ draft_status: "failed" })
+              .eq("id", r.id);
+            return;
+          }
+          lastError =
+            err instanceof LlmJSONParseError
+              ? "Model returned an unparseable response."
+              : (err as Error).message;
+          await sb
+            .from("requirements")
+            .update({ draft_status: "failed" })
+            .eq("id", r.id);
+        }
+
+        if (sleep) await sleep(PACING_MS);
+      } finally {
+        sem.release();
+      }
+    }),
+  );
+
+  const capturedAbortError = abortError as RateLimitedError | null;
+  if (aborted && capturedAbortError) {
+    await sb
+      .from("tenders")
+      .update({
+        drafting_status: "failed",
+        last_error:
+          "Free-tier rate limit reached during drafting. Re-run drafting to resume where it stopped.",
+        drafting_progress_done: done,
+      })
+      .eq("id", id);
+    return NextResponse.json({ error: capturedAbortError.message }, { status: 429 });
   }
 
   await sb
