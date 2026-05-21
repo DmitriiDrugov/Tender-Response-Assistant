@@ -3,6 +3,15 @@ import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { LlmJSONParseError, RateLimitedError, llmJSON } from "@/lib/llm/client";
 import { draftSchema } from "@/lib/llm/schemas";
+import { enforceEvidenceBoundDraft, normalizeMatchStatus } from "@/lib/llm/draft-guard";
+
+type DraftCapability = {
+  id: string;
+  category: string;
+  name: string;
+  description: string | null;
+  evidence: string | null;
+};
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -20,10 +29,11 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   const r = reqRes.data;
 
   const capsRes = await sb.from("capabilities").select("id, category, name, description, evidence");
-  const capabilities = capsRes.data || [];
-  const matchedNames = (r.matched_capability_ids || [])
-    .map((cid: string) => capabilities.find((c) => c.id === cid)?.name)
-    .filter((n: string | undefined): n is string => !!n);
+  const capabilities = (capsRes.data || []) as DraftCapability[];
+  const matchedCapabilities: DraftCapability[] = ((r.matched_capability_ids || []) as string[])
+    .map((cid: string) => capabilities.find((c) => c.id === cid))
+    .filter((c: (typeof capabilities)[number] | undefined): c is (typeof capabilities)[number] => !!c);
+  const matchedNames = matchedCapabilities.map((c) => c.name);
 
   const requirementAndMatch = {
     text: r.text,
@@ -38,7 +48,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   };
 
   const evidenceText = JSON.stringify(
-    capabilities.map((c) => ({
+    matchedCapabilities.map((c) => ({
       category: c.category,
       name: c.name,
       description: c.description,
@@ -60,12 +70,19 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
       route: "draft-regen",
       tenderId: r.tender_id,
     });
+    const guarded = enforceEvidenceBoundDraft({
+      output,
+      matchStatus: normalizeMatchStatus(r.match_status),
+      isMandatory: r.is_mandatory,
+      gapDescription: r.gap_description,
+      matchedEvidence: matchedCapabilities,
+    });
 
     const upd = await sb
       .from("requirements")
       .update({
-        draft_response: output.draft_response,
-        reviewer_notes: output.reviewer_notes,
+        draft_response: guarded.draft_response,
+        reviewer_notes: guarded.reviewer_notes,
       })
       .eq("id", id)
       .select("*")

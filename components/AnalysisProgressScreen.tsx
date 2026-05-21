@@ -8,29 +8,23 @@ import { cn } from '@/lib/utils';
 type StepState = 'pending' | 'active' | 'complete';
 type Step = { label: string; state: StepState };
 
-function deriveSteps(tender: TenderFull, hasAnyDraft: boolean, opening: boolean): Step[] {
+function deriveSteps(tender: TenderFull, opening: boolean): Step[] {
   const ext = tender.extraction_status;
-  const mat = tender.matching_status;
-  const dft = tender.drafting_status;
   return [
-    { label: 'Document uploaded',       state: 'complete' },
-    { label: 'Text extracted',          state: ext === 'complete' ? 'complete' : ext === 'running' ? 'active' : 'pending' },
-    { label: 'Requirements extracted',  state: ext === 'complete' ? 'complete' : ext === 'running' ? 'active' : 'pending' },
-    { label: 'Capabilities matched',    state: mat === 'complete' ? 'complete' : mat === 'running' ? 'active' : 'pending' },
-    { label: 'Drafting first response', state: hasAnyDraft ? 'complete' : dft === 'running' ? 'active' : 'pending' },
-    { label: 'Opening analysis',        state: opening ? 'active' : 'pending' },
+    { label: 'Document uploaded',      state: 'complete' },
+    { label: 'Text extracted',         state: ext === 'complete' ? 'complete' : ext === 'running' ? 'active' : 'pending' },
+    { label: 'Requirements extracted', state: ext === 'complete' ? 'complete' : ext === 'running' ? 'active' : 'pending' },
+    { label: 'Opening analysis',       state: opening ? 'active' : 'pending' },
   ];
 }
 
-const TAU = 15_000; // ms — exponential time constant; reaches ~85% at ~30s
+const TAU = 15_000;
 
 export function AnalysisProgressScreen({
   tender,
-  hasAnyDraft,
   onDismissed,
 }: {
   tender: TenderFull;
-  hasAnyDraft: boolean;
   onDismissed: () => void;
 }) {
   const [progress, setProgress]   = useState(0);
@@ -52,25 +46,25 @@ export function AnalysisProgressScreen({
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [phase]);
 
-  // When first draft arrives: snap to 100%, hold 600ms, then dismiss
+  // Dismiss as soon as the first LLM response arrives (extraction complete).
   const handleReady = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     setPhase('ready');
     setProgress(100);
     const t1 = setTimeout(() => setPhase('dismissing'), 600);
-    const t2 = setTimeout(() => onDismissedRef.current(), 1_000); // 600ms hold + 320ms transition + 80ms buffer
+    const t2 = setTimeout(() => onDismissedRef.current(), 1_000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   useEffect(() => {
-    if (hasAnyDraft && phase === 'waiting') return handleReady();
-  }, [hasAnyDraft, phase, handleReady]);
+    if (tender.extraction_status === 'complete' && phase === 'waiting') return handleReady();
+  }, [tender.extraction_status, phase, handleReady]);
 
   const statusTitle = phase === 'ready'
-    ? 'First response ready.'
+    ? 'Requirements extracted.'
     : 'Preparing tender analysis.';
 
-  const steps = deriveSteps(tender, hasAnyDraft, phase === 'ready');
+  const steps = deriveSteps(tender, phase === 'ready');
 
   return (
     <div
@@ -108,7 +102,6 @@ export function AnalysisProgressScreen({
           />
         </div>
 
-        {/* Step timeline */}
         <ol className="space-y-2" aria-label="Pipeline steps">
           {steps.map((step) => (
             <li key={step.label} className="flex items-center gap-3 text-14 text-ink-muted">

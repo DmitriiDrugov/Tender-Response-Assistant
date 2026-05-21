@@ -8,18 +8,20 @@ For each requirement, classify match status:
 
 For partial or not_covered items, describe the gap and suggest a mitigation (subcontracting, partnership, planned investment, or N/A). Confidence reflects YOUR certainty in the classification, not the company's strength.
 
-Output a JSON array, one entry per requirement, in the same order as input.
+Output a JSON object with a single key "matches" containing an array, one entry per requirement, in the same order as input.
 
-[
-  {
-    "requirement_index": number,
-    "match_status": "fully_covered" | "partially_covered" | "not_covered" | "unclear",
-    "matched_capability_names": [string],
-    "gap_description": string | null,
-    "suggested_action": string | null,
-    "confidence": "high" | "medium" | "low"
-  }
-]
+{
+  "matches": [
+    {
+      "requirement_index": number,
+      "match_status": "fully_covered" | "partially_covered" | "not_covered" | "unclear",
+      "matched_capability_names": [string],
+      "gap_description": string | null,
+      "suggested_action": string | null,
+      "confidence": "high" | "medium" | "low"
+    }
+  ]
+}
 
 Requirements:
 

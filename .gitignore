@@ -34,3 +34,7 @@ supabase/.temp
 
 # misc
 *.log
+CLAUDE_REVIEW.local.md
+
+# MCP config — contains service role key, never commit
+.mcp.json

@@ -38,9 +38,9 @@ export function CapabilitiesPageClient({ initial }: { initial: Capability[] }) {
     <div className="space-y-7">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-2 max-w-reading">
-          <h1 className="font-serif text-31 text-ink leading-tight">Capabilities</h1>
+          <h1 className="font-serif text-31 text-ink leading-tight">Capability Matrix</h1>
           <p className="text-14 text-ink-2">
-            The matrix the model matches every tender requirement against. Edit names, descriptions, and concrete evidence (project IDs, certificate numbers, dates). Strong evidence makes for strong drafts.
+            Reusable company evidence used to match tender requirements.
           </p>
         </div>
         <button type="button" onClick={seed} disabled={seeding} className="btn btn-sm">

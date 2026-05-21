@@ -5,7 +5,9 @@ import { supabaseServer } from "@/lib/supabase/server";
 export const runtime = "nodejs";
 
 const paramsSchema = z.object({ id: z.string().uuid() });
-const patchSchema = z.object({ checked: z.boolean() });
+const patchSchema = z.object({
+  status: z.enum(["missing", "uploaded", "needs_review", "approved"]),
+});
 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id } = paramsSchema.parse(await ctx.params);
@@ -18,7 +20,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   }
   const res = await sb
     .from("required_documents")
-    .update({ checked: body.checked })
+    .update({ status: body.status })
     .eq("id", id)
     .select("*")
     .single();

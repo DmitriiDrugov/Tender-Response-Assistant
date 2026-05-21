@@ -35,9 +35,16 @@ export class LlmJSONParseError extends Error {
   }
 }
 
+export class LlmEmptyResponseError extends Error {
+  constructor() {
+    super("Model returned an empty response (no content). This can happen with free-tier models under load — try again.");
+    this.name = "LlmEmptyResponseError";
+  }
+}
+
 const DEFAULTS: Record<PromptName, { temperature: number; maxTokens: number }> = {
   extract: { temperature: 0, maxTokens: 8000 },
-  match: { temperature: 0, maxTokens: 4000 },
+  match: { temperature: 0, maxTokens: 8000 },
   draft: { temperature: 0.3, maxTokens: 2000 },
   risk: { temperature: 0, maxTokens: 4000 },
 };
@@ -195,6 +202,22 @@ export async function llmJSON<S extends z.ZodTypeAny>(
       });
 
       lastRaw = raw;
+
+      if (!raw.trim()) {
+        if (attempt === 0) continue;
+        await logRequest({
+          route: opts.route,
+          model: opts.model,
+          inputTokens,
+          outputTokens,
+          durationMs: Date.now() - started,
+          status: "parse_error",
+          error: "empty response content",
+          tenderId: opts.tenderId,
+        });
+        throw new LlmEmptyResponseError();
+      }
+
       const cleaned = sanitizeJsonString(raw);
 
       let parsed: unknown;
@@ -211,7 +234,7 @@ export async function llmJSON<S extends z.ZodTypeAny>(
           outputTokens,
           durationMs: Date.now() - started,
           status: "parse_error",
-          error: (err as Error).message,
+          error: `${(err as Error).message} | raw(500): ${raw.slice(0, 500)}`,
           tenderId: opts.tenderId,
         });
         throw new LlmJSONParseError("Model returned invalid JSON.", raw);
@@ -254,7 +277,7 @@ export async function llmJSON<S extends z.ZodTypeAny>(
         (err as { response?: { status?: number } })?.response?.status;
       if (status === 429) {
         if (attempt === 0) {
-          await sleep(5000);
+          await sleep(65_000); // wait out the free-tier 1-minute window
           continue;
         }
         await logRequest({

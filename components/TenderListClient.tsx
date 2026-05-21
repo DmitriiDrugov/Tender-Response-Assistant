@@ -283,13 +283,19 @@ function TenderRow({
  */
 async function runPipeline(id: string, refresh: () => Promise<void>) {
   try {
-    await fetch(`/api/tenders/${id}/extract`, { method: "POST" });
+    const extractRes = await fetch(`/api/tenders/${id}/extract`, { method: "POST" });
     await refresh();
-    await fetch(`/api/tenders/${id}/match`, { method: "POST" });
+    if (!extractRes.ok) return;
+
+    const matchRes = await fetch(`/api/tenders/${id}/match`, { method: "POST" });
     await refresh();
+    if (!matchRes.ok) return;
+
     // Risks first (small, fast) then drafting (long-running)
-    await fetch(`/api/tenders/${id}/risks`, { method: "POST" });
+    const risksRes = await fetch(`/api/tenders/${id}/risks`, { method: "POST" });
     await refresh();
+    if (!risksRes.ok) return;
+
     await fetch(`/api/tenders/${id}/draft`, { method: "POST" });
     await refresh();
   } catch {

@@ -60,9 +60,12 @@ export function CapabilitiesTab({
     <div className="space-y-7">
       <header className="flex flex-wrap items-end justify-between gap-3 pb-2">
         <div className="space-y-1 max-w-reading">
-          <h2 className="font-serif text-25 text-ink leading-tight">Capability matrix</h2>
-          <p className="text-13 text-ink-muted">
-            Edits here apply globally. Re-run matching to apply changes against the current tender.
+          <h2 className="font-serif text-25 text-ink leading-tight">Capability Matrix</h2>
+          <p className="text-14 text-ink-muted">
+            Reusable company evidence used to match tender requirements.
+          </p>
+          <p className="text-14 text-ink-muted">
+            Re-run matching compares the current tender requirements against the saved capability matrix.
           </p>
         </div>
         <div className="flex items-center gap-3">

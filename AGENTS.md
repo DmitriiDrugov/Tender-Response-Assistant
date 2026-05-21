@@ -44,11 +44,10 @@ Never invent design decisions. If `DESIGN.md` specifies a token, use it. If a pa
 ## Repository layout
 
 ```
-src/
-  app/           Next.js App Router pages and API routes
-  components/    Shared UI components
-  lib/           Business logic, AI calls, Supabase client, types
-  types/         Shared TypeScript types (no logic)
+app/           Next.js App Router pages and API routes
+components/    Shared UI components
+lib/           Business logic, AI calls, Supabase client, types
+types/         Shared TypeScript types (no logic)
 ```
 
 Follow this layout. Do not create new top-level directories without a documented reason.

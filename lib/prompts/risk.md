@@ -11,19 +11,21 @@ Look for:
 - Eligibility criteria narrowly scoped to potentially favor a specific vendor
 - Requirements that imply additional unscoped work
 
-For each risk, output a JSON array entry:
+Output a JSON object with a single key "risks" containing an array of risk entries:
 
-[
-  {
-    "category": string,
-    "description": string,
-    "source_location": string,
-    "severity": "critical" | "high" | "medium" | "low",
-    "recommended_action": string
-  }
-]
+{
+  "risks": [
+    {
+      "category": string,
+      "description": string,
+      "source_location": string,
+      "severity": "critical" | "high" | "medium" | "low",
+      "recommended_action": string
+    }
+  ]
+}
 
-If no risks are found, return an empty array.
+If no risks are found, return {"risks": []}.
 
 Tender document:
 

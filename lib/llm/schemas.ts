@@ -8,8 +8,8 @@ import { z } from "zod";
 
 const moneySchema = z
   .object({
-    amount: z.number(),
-    currency: z.string(),
+    amount: z.number().nullable(),
+    currency: z.string().nullable(),
   })
   .nullable();
 
@@ -17,7 +17,7 @@ export const extractSchema = z.object({
   title: z.string(),
   issuing_authority: z.string().nullable(),
   country: z.string().nullable(),
-  language: z.string(),
+  language: z.string().nullable(),
   tender_id_external: z.string().nullable(),
   publication_date: z.string().nullable(),
   submission_deadline: z.string().nullable(),
@@ -27,24 +27,24 @@ export const extractSchema = z.object({
   scope_summary: z.string(),
   lots: z.array(
     z.object({
-      lot_id_external: z.string(),
-      title: z.string(),
-      description: z.string(),
+      lot_id_external: z.string().nullable(),
+      title: z.string().nullable(),
+      description: z.string().nullable(),
       estimated_value: moneySchema,
     }),
   ),
   requirements: z.array(
     z.object({
       text: z.string(),
-      category: z.string(),
+      category: z.string().nullable(),
       is_mandatory: z.boolean(),
-      source_excerpt: z.string(),
+      source_excerpt: z.string().nullable(),
     }),
   ),
   required_documents: z.array(z.string()),
   evaluation_criteria: z.array(
     z.object({
-      criterion: z.string(),
+      criterion: z.string().nullable(),
       weight_percent: z.number().nullable(),
     }),
   ),
@@ -63,7 +63,7 @@ export type MatchStatus = z.infer<typeof matchStatusSchema>;
 export const matchItemSchema = z.object({
   requirement_index: z.number().int().nonnegative(),
   match_status: matchStatusSchema,
-  matched_capability_names: z.array(z.string()),
+  matched_capability_names: z.preprocess((v) => v ?? [], z.array(z.string())),
   gap_description: z.string().nullable(),
   suggested_action: z.string().nullable(),
   confidence: z.enum(["high", "medium", "low"]),
@@ -77,11 +77,11 @@ export type MatchOutput = z.infer<typeof matchSchema>;
  */
 export const matchWrappedSchema = z.preprocess((val) => {
   if (Array.isArray(val)) return val;
-  if (val && typeof val === "object" && "items" in val && Array.isArray((val as { items: unknown[] }).items)) {
-    return (val as { items: unknown[] }).items;
-  }
-  if (val && typeof val === "object" && "results" in val && Array.isArray((val as { results: unknown[] }).results)) {
-    return (val as { results: unknown[] }).results;
+  const o = val as Record<string, unknown>;
+  if (o && typeof o === "object") {
+    for (const key of ["matches", "items", "results", "data"]) {
+      if (key in o && Array.isArray(o[key])) return o[key];
+    }
   }
   return val;
 }, matchSchema);
@@ -89,6 +89,9 @@ export const matchWrappedSchema = z.preprocess((val) => {
 export const draftSchema = z.object({
   draft_response: z.string(),
   reviewer_notes: z.string().nullable(),
+  requires_bid_manager_decision: z.boolean(),
+  evidence_used: z.array(z.string()),
+  unsupported_claims: z.array(z.string()),
 });
 export type DraftOutput = z.infer<typeof draftSchema>;
 

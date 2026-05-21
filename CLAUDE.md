@@ -11,6 +11,7 @@ Always read these before making any changes:
 1. `AGENTS.md` — shared rules and conventions
 2. `PRODUCT.md` — product purpose, users, principles
 3. `DESIGN.md` — design system (tokens, components, motion, accessibility)
+4. `CLAUDE_REVIEW.local.md` — local review notes, if present
 
 If the user references a specific feature area (e.g., extraction, matching, export), also read the relevant files in `src/lib/` before touching anything.
 

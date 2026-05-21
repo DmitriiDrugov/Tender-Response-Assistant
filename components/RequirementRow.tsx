@@ -367,10 +367,7 @@ function ReviewerControls({
   }, [r.id, r.reviewer_notes]);
 
   useEffect(() => {
-    if (notes === lastNotesRef.current) {
-      setError(null);
-      return;
-    }
+    if (notes === lastNotesRef.current) return;
     if (notesTimer.current) clearTimeout(notesTimer.current);
     notesTimer.current = setTimeout(async () => {
       try {
