@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Capability, Requirement, TenderFull } from "@/lib/types";
 import { CoverageStats } from "../CoverageStats";
+import { DraftGenerationBanner } from "../DraftGenerationBanner";
 import { FilterStrip, type FilterKey } from "../FilterStrip";
 import { RequirementRow } from "../RequirementRow";
 import { SidePanel } from "../SidePanel";
@@ -21,6 +22,13 @@ export function AnalysisTab({
   const [filter, setFilter] = useState<FilterKey>("all");
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [showBanner, setShowBanner] = useState(tender.drafting_status === 'running');
+
+  useEffect(() => {
+    if (tender.drafting_status === 'running') setShowBanner(true);
+  }, [tender.drafting_status]);
+
+  const draftingRunning = tender.drafting_status === 'running';
 
   const filtered = useMemo(() => filterRequirements(tender.requirements, filter, query), [
     tender.requirements,
@@ -72,6 +80,12 @@ export function AnalysisTab({
   return (
     <div className="grid gap-7 lg:grid-cols-[1fr_22rem] items-start">
       <section className="space-y-5 min-w-0">
+        {showBanner && (
+          <DraftGenerationBanner
+            tender={tender}
+            onDone={() => setShowBanner(false)}
+          />
+        )}
         <CoverageStats counts={counts} />
         <FilterStrip
           filter={filter}
@@ -97,6 +111,7 @@ export function AnalysisTab({
                 expanded={expanded.has(r.id)}
                 onToggle={() => toggleExpanded(r.id)}
                 onUpdated={updateRequirement}
+                draftingRunning={draftingRunning}
               />
             ))}
           </ul>
