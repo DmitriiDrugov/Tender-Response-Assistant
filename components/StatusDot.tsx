@@ -8,35 +8,34 @@ export type StatusKind =
   | null
   | undefined;
 
-const COLOR_VAR: Record<NonNullable<StatusKind>, string> = {
-  fully_covered: "var(--status-covered)",
-  partially_covered: "var(--status-partial)",
-  not_covered: "var(--status-missing)",
-  unclear: "var(--status-unclear)",
+const STATUS_COLOR: Record<NonNullable<StatusKind>, string> = {
+  fully_covered:     "#705d00",
+  partially_covered: "#e9c400",
+  not_covered:       "#ba1a1a",
+  unclear:           "#7e775f",
 };
 
 export const STATUS_LABEL: Record<NonNullable<StatusKind>, string> = {
-  fully_covered: "Covered",
+  fully_covered:     "Covered",
   partially_covered: "Partial",
-  not_covered: "Missing",
-  unclear: "Unclear",
+  not_covered:       "Missing",
+  unclear:           "Unclear",
 };
 
 export function StatusDot({
   status,
-  ring,
   className,
 }: {
   status: StatusKind;
   ring?: boolean;
   className?: string;
 }) {
-  const color = status ? COLOR_VAR[status] : "var(--ink-faint)";
+  const color = status ? STATUS_COLOR[status] : "#d0c6ab";
   return (
     <span
       aria-hidden="true"
-      className={cn("dot", ring && "dot--ring", className)}
-      style={ring ? { color } : { background: color }}
+      className={cn("inline-block w-1.5 h-1.5 rounded-full flex-shrink-0", className)}
+      style={{ background: color }}
     />
   );
 }
@@ -44,16 +43,16 @@ export function StatusDot({
 export function StatusPill({ status }: { status: StatusKind }) {
   if (!status) {
     return (
-      <span className="pill text-ink-muted">
-        <span className="dot" style={{ background: "var(--ink-faint)" }} />
+      <span className="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-outline" />
         Pending
       </span>
     );
   }
-  const color = COLOR_VAR[status];
+  const color = STATUS_COLOR[status];
   return (
-    <span className="pill" style={{ color }}>
-      <span className="dot" style={{ background: color }} />
+    <span className="inline-flex items-center gap-1.5 font-label-md text-label-md" style={{ color }}>
+      <span className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
       {STATUS_LABEL[status]}
     </span>
   );
