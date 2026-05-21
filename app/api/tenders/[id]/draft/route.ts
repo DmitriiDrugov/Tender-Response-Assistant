@@ -58,7 +58,9 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   const capById = new Map<string, (typeof capabilities)[number]>();
   for (const c of capabilities) capById.set(c.id, c);
 
-  const alreadyDone = requirements.filter((r) => r.draft_response).length;
+  const alreadyDone = requirements.filter(
+    (r) => r.draft_status === 'ready' || r.draft_status === 'blocked',
+  ).length;
 
   await sb
     .from("tenders")
@@ -80,7 +82,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   for (const r of requirements) {
     if (!r) continue;
     // Resume: skip requirements that were already drafted in a previous run.
-    if (r.draft_response) continue;
+    if (r.draft_status === 'ready' || r.draft_status === 'blocked') continue;
     const matchedCapabilities = ((r.matched_capability_ids || []) as string[])
       .map((cid) => capById.get(cid))
       .filter((c: (typeof capabilities)[number] | undefined): c is (typeof capabilities)[number] => !!c);
