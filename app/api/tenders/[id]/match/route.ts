@@ -89,7 +89,6 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   try {
     const chunkResults = await Promise.all(
       chunks.map(async (chunkReqs, chunkIdx) => {
-        if (!chunkReqs) return { chunkStart: chunkIdx * CHUNK_SIZE, items: [] as MatchOutput };
         const chunkStart = chunkIdx * CHUNK_SIZE;
         const requirementsForPrompt = chunkReqs.map((r, localIdx) => ({
           index: localIdx,
@@ -125,7 +124,9 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
           ? err.message
           : err instanceof LlmJSONParseError
             ? "Model returned an unparseable response. Try again."
-            : (err as Error).message;
+            : err instanceof Error
+                ? err.message
+                : "Unknown error.";
     const httpStatus = err instanceof RateLimitedError ? 429 : 500;
     await sb
       .from("tenders")
@@ -138,9 +139,9 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
   // existing match_status; all other fields (capabilities, gap, confidence) update.
   const updateResults = await Promise.all(
     requirements.map((reqRow, i) => {
-      if (!reqRow) return Promise.resolve({ error: null });
+      if (!reqRow) return Promise.resolve(null);
       const m = byIndex.get(i);
-      if (!m) return Promise.resolve({ error: null });
+      if (!m) return Promise.resolve(null);
 
       const matchedIds = m.matched_capability_names
         .map((n) => capabilityByName.get(n.toLowerCase()))
@@ -162,8 +163,8 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     }),
   );
 
-  const failed = updateResults.filter((r) => r.error).length;
-  const updated = requirements.length - failed;
+  const failed = updateResults.filter((r) => r?.error).length;
+  const updated = updateResults.filter((r) => r !== null && !r.error).length;
 
   if (failed > 0) {
     const errMsg = `${failed} requirement(s) failed to save.`;
