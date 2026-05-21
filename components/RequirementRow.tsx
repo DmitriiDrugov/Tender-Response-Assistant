@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown, RefreshCcw } from "lucide-react";
+import { InkStroke } from './InkStroke';
+import { DraftStatusBadge } from './DraftStatusBadge';
 import type { Capability, Requirement, MatchStatus } from "@/lib/types";
 import { STATUS_LABEL, StatusDot } from "./StatusDot";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -14,12 +16,14 @@ export function RequirementRow({
   expanded,
   onToggle,
   onUpdated,
+  draftingRunning,
 }: {
   requirement: Requirement;
   capabilities: Capability[];
   expanded: boolean;
   onToggle: () => void;
   onUpdated: (r: Requirement) => void;
+  draftingRunning: boolean;
 }) {
   const r = requirement;
   const matchedCaps = r.matched_capability_ids
@@ -32,7 +36,13 @@ export function RequirementRow({
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
-        className="w-full text-left py-3 px-5 grid items-center gap-5 hover:bg-surface-sunk transition-colors duration-160 ease-out [grid-template-columns:auto_1fr_auto_auto_auto_auto]"
+        className={cn(
+          'w-full text-left py-3 px-5 grid items-center gap-5',
+          'hover:bg-surface-sunk transition-colors duration-160 ease-out',
+          draftingRunning
+            ? '[grid-template-columns:auto_1fr_auto_auto_auto_auto_auto]'
+            : '[grid-template-columns:auto_1fr_auto_auto_auto_auto]',
+        )}
       >
         <StatusDot status={r.match_status} ring={r.overridden_by_user} />
         <span className="text-14 text-ink line-clamp-2">{r.text}</span>
@@ -45,12 +55,13 @@ export function RequirementRow({
         )}
         <MandatoryBadge mandatory={r.is_mandatory} />
         <ConfidenceBadge confidence={r.confidence} />
+        {draftingRunning ? <DraftStatusBadge status={r.draft_status} /> : null}
         <ChevronDown
           size={16}
           strokeWidth={1.5}
           className={cn(
-            "text-ink-muted transition-transform duration-240 ease-out",
-            expanded && "rotate-180",
+            'text-ink-muted transition-transform duration-240 ease-out',
+            expanded && 'rotate-180',
           )}
           aria-hidden="true"
         />
@@ -169,23 +180,65 @@ function DraftEditor({
   requirement: Requirement;
   onUpdated: (r: Requirement) => void;
 }) {
-  const [value, setValue] = useState(requirement.draft_response ?? "");
+  const status = requirement.draft_status;
+
+  if (status === 'pending') {
+    return (
+      <section className="space-y-2">
+        <div className="label">Draft response</div>
+        <p className="text-14 text-ink-muted">Draft response not generated yet.</p>
+      </section>
+    );
+  }
+
+  if (status === 'generating') {
+    return (
+      <section className="space-y-2">
+        <div className="label">Draft response</div>
+        <div className="flex items-center gap-3 text-14 text-ink-muted">
+          <span>Generating draft response.</span>
+          <InkStroke />
+        </div>
+      </section>
+    );
+  }
+
+  if (status === 'skipped') {
+    return (
+      <section className="space-y-2">
+        <div className="label">Draft response</div>
+        <p className="text-14 text-ink-muted">This requirement was skipped during drafting.</p>
+      </section>
+    );
+  }
+
+  return <DraftEditorEditable requirement={requirement} onUpdated={onUpdated} />;
+}
+
+function DraftEditorEditable({
+  requirement,
+  onUpdated,
+}: {
+  requirement: Requirement;
+  onUpdated: (r: Requirement) => void;
+}) {
+  const r = requirement;
+  const [value, setValue] = useState(r.draft_response ?? '');
   const [savedAt, setSavedAt] = useState<Date | null>(
-    requirement.updated_at ? new Date(requirement.updated_at) : null,
+    r.updated_at ? new Date(r.updated_at) : null,
   );
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]             = useState(false);
   const [regenerating, setRegenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastSentRef = useRef(value);
-  const labelId = useId();
+  const [error, setError]               = useState<string | null>(null);
+  const timer                           = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSentRef                     = useRef(value);
+  const labelId                         = useId();
 
   useEffect(() => {
-    setValue(requirement.draft_response ?? "");
-    lastSentRef.current = requirement.draft_response ?? "";
-  }, [requirement.id, requirement.draft_response]);
+    setValue(r.draft_response ?? '');
+    lastSentRef.current = r.draft_response ?? '';
+  }, [r.id, r.draft_response]);
 
-  // Debounced autosave
   useEffect(() => {
     if (value === lastSentRef.current) return;
     if (timer.current) clearTimeout(timer.current);
@@ -193,94 +246,86 @@ function DraftEditor({
       setSaving(true);
       setError(null);
       try {
-        const res = await fetch(`/api/requirements/${requirement.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch(`/api/requirements/${r.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ draft_response: value }),
         });
         if (!res.ok) {
           const d = (await res.json().catch(() => null)) as { error?: string } | null;
-          setError(d?.error || "Save failed.");
+          setError(d?.error || 'Save failed.');
           return;
         }
         const updated = (await res.json()) as Requirement;
-        lastSentRef.current = updated.draft_response ?? "";
+        lastSentRef.current = updated.draft_response ?? '';
         setSavedAt(new Date());
         onUpdated(updated);
       } catch {
-        setError("Network error. Will retry on next change.");
+        setError('Network error. Will retry on next change.');
       } finally {
         setSaving(false);
       }
     }, AUTOSAVE_MS);
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
-  }, [value, requirement.id, onUpdated]);
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, [value, r.id, onUpdated]);
 
   const onRegenerate = useCallback(async () => {
     setRegenerating(true);
     setError(null);
     try {
-      const res = await fetch(`/api/requirements/${requirement.id}/regenerate`, {
-        method: "POST",
-      });
+      const res = await fetch(`/api/requirements/${r.id}/regenerate`, { method: 'POST' });
       if (!res.ok) {
         const d = (await res.json().catch(() => null)) as { error?: string } | null;
-        setError(d?.error || "Regenerate failed.");
+        setError(d?.error || 'Regenerate failed.');
         return;
       }
       const updated = (await res.json()) as Requirement;
       onUpdated(updated);
-      setValue(updated.draft_response ?? "");
-      lastSentRef.current = updated.draft_response ?? "";
+      setValue(updated.draft_response ?? '');
+      lastSentRef.current = updated.draft_response ?? '';
       setSavedAt(new Date());
     } catch {
-      setError("Network error during regenerate.");
+      setError('Network error during regenerate.');
     } finally {
       setRegenerating(false);
     }
-  }, [requirement.id, onUpdated]);
+  }, [r.id, onUpdated]);
 
-  const requiresDecision = (value || "").startsWith("[REQUIRES BID MANAGER DECISION]");
+  const isBlocked = r.draft_status === 'blocked';
+  const isFailed  = r.draft_status === 'failed';
 
   return (
     <section className="space-y-2">
       <div className="flex items-baseline justify-between">
-        <label id={labelId} className="label">
-          Draft response
-        </label>
-        <div className="text-12 text-ink-muted tabular">
-          {saving
-            ? "Saving."
-            : savedAt
-              ? `Saved ${formatRelativeTime(savedAt.toISOString()) || "just now"}`
-              : ""}
-        </div>
+        <label id={labelId} className="label">Draft response</label>
+        {!isBlocked && !isFailed ? (
+          <div className="text-12 text-ink-muted tabular">
+            {saving
+              ? 'Saving.'
+              : savedAt
+                ? `Saved ${formatRelativeTime(savedAt.toISOString()) || 'just now'}`
+                : ''}
+          </div>
+        ) : null}
       </div>
 
-      <textarea
-        aria-labelledby={labelId}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Draft will appear here after the pipeline completes."
-        className={cn(
-          "w-full min-h-[8rem] bg-surface border border-border-strong px-4 py-3 font-serif text-16 leading-relaxed text-ink",
-          "focus:outline-none focus:border-ink",
-          requiresDecision && "border-accent",
-        )}
-      />
-
-      {requiresDecision ? (
-        <p className="text-12 text-accent">
-          Requires bid manager decision — model declined to fabricate a response for an uncovered mandatory requirement.
+      {isBlocked ? (
+        <p className="text-14 text-ink-2">
+          Draft response requires evidence. No supporting capability was found.
         </p>
-      ) : null}
+      ) : isFailed ? (
+        <p className="text-14 text-accent">Draft generation failed.</p>
+      ) : (
+        <textarea
+          aria-labelledby={labelId}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-full min-h-[8rem] bg-surface border border-border-strong px-4 py-3 font-serif text-16 leading-relaxed text-ink focus:outline-none focus:border-ink"
+        />
+      )}
 
       {error ? (
-        <p role="alert" className="text-12 text-accent">
-          {error}
-        </p>
+        <p role="alert" className="text-12 text-accent">{error}</p>
       ) : null}
 
       <div className="flex items-center gap-3 pt-2">
@@ -291,7 +336,7 @@ function DraftEditor({
           className="btn btn-sm"
         >
           <RefreshCcw size={14} strokeWidth={1.5} aria-hidden="true" />
-          {regenerating ? "Regenerating." : "Regenerate"}
+          {regenerating ? 'Regenerating.' : 'Regenerate'}
         </button>
       </div>
     </section>
