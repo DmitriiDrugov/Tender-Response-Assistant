@@ -83,6 +83,13 @@ export function TenderHeader({ tender }: { tender: TenderFull }) {
           {tender.scope_summary}
         </p>
       ) : null}
+
+      {tender.extraction_status === 'complete' && tender.last_error ? (
+        <p className="text-13 text-ink-muted max-w-reading">
+          <span className="label mr-1.5">Note</span>
+          {tender.last_error}
+        </p>
+      ) : null}
     </header>
   );
 }
