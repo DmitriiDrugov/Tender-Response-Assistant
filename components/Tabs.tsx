@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 
-export type TabSpec = { key: string; label: string; count?: number };
+export type TabSpec = { key: string; label: string; count?: number; badge?: number };
 
 /**
  * Segmented horizontal tabs with an underline on active. Keyboard:
@@ -56,7 +56,9 @@ export function Tabs({
             ].join(" ")}
           >
             <span className={isActive ? "font-medium" : ""}>{t.label}</span>
-            {t.count != null ? (
+            {t.badge != null && t.badge > 0 ? (
+              <span className="text-12 tabular text-accent font-medium">{t.badge}</span>
+            ) : t.count != null ? (
               <span className="text-12 tabular text-ink-muted">{t.count}</span>
             ) : null}
             {isActive ? (
