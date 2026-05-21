@@ -7,6 +7,7 @@ import { Tabs } from "./Tabs";
 import { AnalysisTab } from "./tabs/AnalysisTab";
 import { CapabilitiesTab } from "./tabs/CapabilitiesTab";
 import { ExportTab } from "./tabs/ExportTab";
+import { AnalysisProgressScreen } from "./AnalysisProgressScreen";
 
 type TabKey = "analysis" | "capabilities" | "export";
 
@@ -19,6 +20,10 @@ function pipelineActive(t: TenderFull): boolean {
   );
 }
 
+function hasAnyDraftFromInitial(t: TenderFull): boolean {
+  return t.requirements.some(r => r.draft_status === 'ready' || r.draft_status === 'blocked');
+}
+
 export function TenderDashboard({
   initial,
   initialCapabilities,
@@ -29,7 +34,12 @@ export function TenderDashboard({
   const [tender, setTender] = useState<TenderFull>(initial);
   const [capabilities, setCapabilities] = useState<Capability[]>(initialCapabilities);
   const [tab, setTab] = useState<TabKey>("analysis");
+  const [showOverlay, setShowOverlay] = useState(!hasAnyDraftFromInitial(initial));
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const hasAnyDraft = tender.requirements.some(
+    r => r.draft_status === 'ready' || r.draft_status === 'blocked'
+  );
 
   const refreshTender = useCallback(async () => {
     const res = await fetch(`/api/tenders/${tender.id}`, { cache: "no-store" });
@@ -68,40 +78,49 @@ export function TenderDashboard({
   }, [tender, refreshTender]);
 
   return (
-    <div className="px-7 lg:px-9 py-6">
-      <div className="space-y-6">
-        <TenderHeader tender={tender} />
-        <Tabs
-          tabs={[
-            { key: "analysis", label: "Analysis" },
-            { key: "capabilities", label: "Capabilities" },
-            { key: "export", label: "Export" },
-          ]}
-          active={tab}
-          onChange={(k) => setTab(k as TabKey)}
+    <>
+      {showOverlay && (
+        <AnalysisProgressScreen
+          tender={tender}
+          hasAnyDraft={hasAnyDraft}
+          onDismissed={() => setShowOverlay(false)}
         />
-
-        {tab === "analysis" ? (
-          <AnalysisTab
-            tender={tender}
-            capabilities={capabilities}
-            onTenderChange={setTender}
-            onRefresh={refreshTender}
+      )}
+      <div className="px-7 lg:px-9 py-6">
+        <div className="space-y-6">
+          <TenderHeader tender={tender} />
+          <Tabs
+            tabs={[
+              { key: "analysis", label: "Analysis" },
+              { key: "capabilities", label: "Capabilities" },
+              { key: "export", label: "Export" },
+            ]}
+            active={tab}
+            onChange={(k) => setTab(k as TabKey)}
           />
-        ) : null}
 
-        {tab === "capabilities" ? (
-          <CapabilitiesTab
-            tenderId={tender.id}
-            capabilities={capabilities}
-            onCapabilitiesChange={setCapabilities}
-            onRefreshCapabilities={refreshCapabilities}
-            onRefreshTender={refreshTender}
-          />
-        ) : null}
+          {tab === "analysis" ? (
+            <AnalysisTab
+              tender={tender}
+              capabilities={capabilities}
+              onTenderChange={setTender}
+              onRefresh={refreshTender}
+            />
+          ) : null}
 
-        {tab === "export" ? <ExportTab tender={tender} /> : null}
+          {tab === "capabilities" ? (
+            <CapabilitiesTab
+              tenderId={tender.id}
+              capabilities={capabilities}
+              onCapabilitiesChange={setCapabilities}
+              onRefreshCapabilities={refreshCapabilities}
+              onRefreshTender={refreshTender}
+            />
+          ) : null}
+
+          {tab === "export" ? <ExportTab tender={tender} /> : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
