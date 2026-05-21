@@ -2,13 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload } from "lucide-react";
 
-/**
- * Drag-and-drop upload. After upload completes, the parent triggers the
- * extract → match → draft → risks pipeline; this component only owns the
- * upload itself.
- */
 export function UploadCard({ onUploaded }: { onUploaded: (tenderId: string) => void }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -19,14 +13,8 @@ export function UploadCard({ onUploaded }: { onUploaded: (tenderId: string) => v
   const onFile = useCallback(
     async (file: File) => {
       setError(null);
-      if (file.size > 25 * 1024 * 1024) {
-        setError("File exceeds 25 MB.");
-        return;
-      }
-      if (!file.name.toLowerCase().endsWith(".pdf")) {
-        setError("Only PDF files are accepted.");
-        return;
-      }
+      if (file.size > 25 * 1024 * 1024) { setError("File exceeds 25 MB."); return; }
+      if (!file.name.toLowerCase().endsWith(".pdf")) { setError("Only PDF files are accepted."); return; }
       setUploading(true);
       try {
         const form = new FormData();
@@ -51,67 +39,60 @@ export function UploadCard({ onUploaded }: { onUploaded: (tenderId: string) => v
   );
 
   return (
-    <div className="space-y-2">
-      <label htmlFor="tender-pdf-input" className="label block">
-        Upload tender PDF
-      </label>
+    <section className="mb-16">
+      <input
+        ref={inputRef}
+        id="tender-pdf-input"
+        type="file"
+        accept="application/pdf,.pdf"
+        className="sr-only"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); }}
+      />
       <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragging(true);
-        }}
+        onClick={() => !isUploading && inputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={(e) => {
           e.preventDefault();
           setDragging(false);
-          const file = e.dataTransfer.files?.[0];
-          if (file) void onFile(file);
+          const f = e.dataTransfer.files?.[0];
+          if (f) void onFile(f);
         }}
+        role="button"
+        tabIndex={0}
+        aria-label="Upload tender PDF"
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         className={[
-          "relative border border-dashed transition-colors duration-160 ease-out",
-          isDragging ? "border-ink bg-surface-sunk" : "border-border-strong bg-surface",
+          "h-64 flex flex-col items-center justify-center p-8 cursor-pointer transition-all",
+          isDragging ? "bg-surface-container-low" : "bg-surface-container-lowest hover:bg-surface",
         ].join(" ")}
+        style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237e775f' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")",
+        }}
       >
-        <input
-          ref={inputRef}
-          id="tender-pdf-input"
-          type="file"
-          accept="application/pdf,.pdf"
-          className="sr-only"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void onFile(file);
-          }}
-        />
-
+        <span
+          className="material-symbols-outlined text-outline mb-4 transition-transform group-hover:scale-110"
+          style={{ fontSize: "2.5rem" }}
+        >
+          upload_file
+        </span>
+        <p className="font-label-md text-label-md text-on-surface-variant mb-6 text-center">
+          {isUploading
+            ? "UPLOADING AND PARSING THE PDF…"
+            : "DRAG AND DROP A TENDER PDF OR CLICK TO BROWSE"}
+        </p>
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
+          onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
           disabled={isUploading}
-          className="w-full text-left p-7 flex items-start gap-5 hover:bg-surface-sunk transition-colors duration-160 ease-out disabled:cursor-wait"
+          className="bg-primary-container text-on-primary-container px-8 py-3 font-label-md text-label-md heavy-border hover:shadow-[4px_4px_0px_0px_#333] transition-all active:scale-95 disabled:opacity-50"
         >
-          <Upload
-            size={20}
-            strokeWidth={1.5}
-            className="text-ink-2 mt-1 shrink-0"
-            aria-hidden="true"
-          />
-          <div className="space-y-1">
-            <div className="font-serif text-20 text-ink leading-tight">
-              {isUploading ? "Uploading and parsing the PDF…" : "Drop a tender PDF here, or click to select."}
-            </div>
-            <p className="text-13 text-ink-muted">
-              PDFs up to 25 MB. Text is extracted and stored. Scanned-image PDFs are not supported.
-            </p>
-          </div>
+          UPLOAD PDF
         </button>
-
-        {error ? (
-          <p className="px-7 pb-4 text-13 text-accent" role="alert">
-            {error}
-          </p>
-        ) : null}
       </div>
-    </div>
+      {error ? (
+        <p className="mt-2 font-body-md text-body-md text-error" role="alert">{error}</p>
+      ) : null}
+    </section>
   );
 }

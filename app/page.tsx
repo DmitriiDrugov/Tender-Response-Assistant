@@ -6,18 +6,22 @@ export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
     <Shell>
-      <div className="px-7 lg:px-9 py-7">
-        <div className="max-w-[68rem] mx-auto space-y-7">
-          <header className="space-y-3">
-            <h1 className="font-serif text-31 text-ink leading-tight">Tenders</h1>
-            <p className="text-14 text-ink-2 max-w-reading">
-              Upload a tender PDF. Requirements are extracted, matched against your capability matrix,
-              drafted, and screened for risk. You review the result.
+      <div className="flex-1 flex flex-col">
+        <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant/30 px-10 py-4">
+          <h1 className="font-headline-md text-headline-md text-primary">
+            Tender Response Assistant
+          </h1>
+        </header>
+        <main className="flex-1 w-full max-w-5xl mx-auto px-10 py-12">
+          <section className="mb-12">
+            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-4">Tenders</h2>
+            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+              Upload a tender PDF. Requirements are extracted, matched against your capability
+              matrix, drafted, and screened for risk. You review the result.
             </p>
-          </header>
-
+          </section>
           <TenderListClient />
-        </div>
+        </main>
       </div>
     </Shell>
   );
