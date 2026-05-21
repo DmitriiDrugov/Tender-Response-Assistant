@@ -311,7 +311,9 @@ function DraftEditorEditable({
 
       {isBlocked ? (
         <p className="text-14 text-ink-2">
-          Draft response requires evidence. No supporting capability was found.
+          {(r.draft_response ?? '')
+            .replace(/^\[REQUIRES BID MANAGER DECISION\]\s*/i, '')
+            .trim() || 'Draft requires bid manager decision.'}
         </p>
       ) : isFailed ? (
         <p className="text-14 text-accent">Draft generation failed.</p>
