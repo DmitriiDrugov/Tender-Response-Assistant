@@ -40,8 +40,8 @@ function derivePipelineSteps(tender: TenderFull): Step[] {
 
   return [
     { label: "Matching against capabilities.", state: matchState },
-    { label: "Identifying risks.", state: risksState },
     { label: draftLabel, state: draftState },
+    { label: "Identifying risks.", state: risksState },
     { label: "Ready.", state: allDone ? "complete" : "pending" },
   ];
 }
@@ -93,8 +93,8 @@ export function PipelineProgressBanner({ tender }: { tender: TenderFull }) {
       )}
     >
       <ol className="flex flex-wrap items-center gap-x-7 gap-y-1.5" aria-label="Analysis pipeline">
-        {steps.map((step) => (
-          <li key={step.label} className="flex items-center gap-2 text-13">
+        {steps.map((step, i) => (
+          <li key={i} className="flex items-center gap-2 text-13">
             <span
               className="dot flex-shrink-0"
               style={{
