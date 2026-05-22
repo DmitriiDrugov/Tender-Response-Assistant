@@ -130,8 +130,8 @@ function MandatoryBadge({ mandatory }: { mandatory: boolean }) {
   if (!mandatory)
     return <span className="hidden md:inline text-12 text-outline uppercase tracking-wider">Optional</span>;
   return (
-    <span className="inline-flex items-center gap-1.5 text-12 uppercase tracking-wider font-medium text-accent">
-      <span className="dot" style={{ background: "var(--accent)" }} />
+    <span className="inline-flex items-center gap-1.5 text-12 uppercase tracking-wider font-medium text-primary">
+      <span className="dot" style={{ background: "#705d00" }} />
       Required
     </span>
   );
@@ -190,7 +190,7 @@ function ExpandedPanel({
               <li
                 key={c.id}
                 className="inline-flex items-center gap-2 px-2.5 py-1 text-12 uppercase tracking-wider"
-                style={{ color: "#705d00", background: "var(--accent-tint)" }}
+                style={{ color: "#705d00", background: "#ffd70033" }}
                 title={c.description || ""}
               >
                 <span className="font-medium">{c.name}</span>
@@ -406,7 +406,7 @@ function DraftEditorEditable({
             .trim() || 'Draft requires bid manager decision.'}
         </p>
       ) : isFailed ? (
-        <p className="text-14 text-accent">Draft generation failed.</p>
+        <p className="text-14 text-error">Draft generation failed.</p>
       ) : (
         <>
           {pendingRegen !== null ? (
@@ -436,7 +436,7 @@ function DraftEditorEditable({
       )}
 
       {error ? (
-        <p role="alert" className="text-12 text-accent">{error}</p>
+        <p role="alert" className="text-12 text-error">{error}</p>
       ) : null}
 
       {pendingRegen === null ? (
@@ -645,7 +645,7 @@ function ReviewerControls({
           className="input text-14 min-h-[4rem]"
         />
         {error ? (
-          <p role="alert" className="text-12 text-accent">{error}</p>
+          <p role="alert" className="text-12 text-error">{error}</p>
         ) : null}
       </div>
 

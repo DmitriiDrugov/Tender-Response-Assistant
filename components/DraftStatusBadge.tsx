@@ -3,7 +3,7 @@ import { InkStroke } from './InkStroke';
 
 const BADGE: Record<DraftStatus, { dot: string; label: string; stroke?: true }> = {
   pending:    { dot: '#d0c6ab',  label: 'Queued' },
-  generating: { dot: 'var(--ink)',            label: 'Generating', stroke: true },
+  generating: { dot: '#1b1c1c',               label: 'Generating', stroke: true },
   ready:      { dot: '#705d00', label: 'Ready' },
   blocked:    { dot: '#e9c400', label: 'Requires evidence' },
   failed:     { dot: '#ba1a1a', label: 'Failed' },

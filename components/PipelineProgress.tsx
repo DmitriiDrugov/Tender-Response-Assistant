@@ -52,11 +52,11 @@ export function PipelineProgress({ state }: { state: PipelineState }) {
       <div
         role="status"
         aria-live="polite"
-        className="flex items-baseline gap-3 text-14 text-accent"
+        className="flex items-baseline gap-3 text-14 text-error"
       >
         <span className="font-medium">Failed at {STAGE_LABEL[failed].toLowerCase()}.</span>
         {state.last_error ? (
-          <span className="text-ink-muted">{state.last_error}</span>
+          <span className="text-outline">{state.last_error}</span>
         ) : null}
       </div>
     );
@@ -66,14 +66,14 @@ export function PipelineProgress({ state }: { state: PipelineState }) {
   if (!stage) {
     if (allComplete(state)) {
       return (
-        <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-ink-2">
+        <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-on-surface-variant">
           <span className="dot" style={{ background: "var(--status-covered)" }} />
           <span>Ready for review.</span>
         </div>
       );
     }
     return (
-      <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-ink-muted">
+      <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-outline">
         <span>Waiting to start.</span>
       </div>
     );
@@ -85,7 +85,7 @@ export function PipelineProgress({ state }: { state: PipelineState }) {
       : `${STAGE_LABEL[stage]}.`;
 
   return (
-    <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-ink-2">
+    <div role="status" aria-live="polite" className="flex items-center gap-3 text-14 text-on-surface-variant">
       <InkStroke />
       <span>{detail}</span>
     </div>

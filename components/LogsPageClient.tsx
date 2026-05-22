@@ -63,7 +63,7 @@ function Dot({ color }: { color: string }) {
 }
 
 function TruncatedError({ text }: { text: string | null }) {
-  if (!text) return <span className="text-ink-muted">—</span>;
+  if (!text) return <span className="text-outline">—</span>;
   const truncated = text.length > 60 ? text.slice(0, 60) + "…" : text;
   return <span title={text}>{truncated}</span>;
 }
@@ -142,7 +142,7 @@ export function LogsPageClient() {
   return (
     <div className="space-y-5">
       {/* Tabs */}
-      <div className="flex gap-6 border-b border-border">
+      <div className="flex gap-6 border-b border-outline-variant">
         {(["llm", "pipeline"] as Tab[]).map((t) => (
           <button
             key={t}
@@ -151,8 +151,8 @@ export function LogsPageClient() {
             className={[
               "text-14 pb-3 border-b-2 transition-colors duration-160 ease-out",
               tab === t
-                ? "border-accent text-ink"
-                : "border-transparent text-ink-muted hover:text-ink",
+                ? "border-primary text-on-surface"
+                : "border-transparent text-outline hover:text-on-surface",
             ].join(" ")}
           >
             {t === "llm" ? "LLM Requests" : "Pipeline Events"}
@@ -161,13 +161,13 @@ export function LogsPageClient() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-5 text-14 text-ink-muted">
+      <div className="flex flex-wrap items-center gap-5 text-14 text-outline">
         <label className="flex items-center gap-2">
           Tender
           <select
             value={tenderId}
             onChange={handleSelect(setTenderId)}
-            className="bg-transparent border border-border text-ink text-14 px-2 h-8 outline-none focus:border-accent transition-colors duration-160"
+            className="bg-transparent border border-outline-variant text-on-surface text-14 px-2 h-8 outline-none focus:border-primary transition-colors duration-160"
           >
             <option value="">All</option>
             {tenders.map((t) => (
@@ -183,7 +183,7 @@ export function LogsPageClient() {
           <select
             value={status}
             onChange={handleSelect(setStatus)}
-            className="bg-transparent border border-border text-ink text-14 px-2 h-8 outline-none focus:border-accent transition-colors duration-160"
+            className="bg-transparent border border-outline-variant text-on-surface text-14 px-2 h-8 outline-none focus:border-primary transition-colors duration-160"
           >
             <option value="">All</option>
             {tab === "llm" ? (
@@ -208,7 +208,7 @@ export function LogsPageClient() {
           <select
             value={routeOrStage}
             onChange={handleSelect(setRouteOrStage)}
-            className="bg-transparent border border-border text-ink text-14 px-2 h-8 outline-none focus:border-accent transition-colors duration-160"
+            className="bg-transparent border border-outline-variant text-on-surface text-14 px-2 h-8 outline-none focus:border-primary transition-colors duration-160"
           >
             <option value="">All</option>
             <option value="extract">extract</option>
@@ -230,41 +230,41 @@ export function LogsPageClient() {
         <div className="overflow-x-auto" style={{ opacity: loading ? 0.6 : 1 }}>
           <table className="w-full text-13">
             <thead>
-              <tr className="border-b border-border text-left">
-                <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Time</th>
-                <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Tender</th>
+              <tr className="border-b border-outline-variant text-left">
+                <th className="pb-2 pr-5 font-normal text-12 text-outline">Time</th>
+                <th className="pb-2 pr-5 font-normal text-12 text-outline">Tender</th>
                 {tab === "llm" ? (
                   <>
-                    <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Route</th>
-                    <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Model</th>
-                    <th className="pb-2 pr-5 font-normal text-12 text-ink-muted text-right">In</th>
-                    <th className="pb-2 pr-5 font-normal text-12 text-ink-muted text-right">Out</th>
-                    <th className="pb-2 pr-5 font-normal text-12 text-ink-muted text-right">ms</th>
+                    <th className="pb-2 pr-5 font-normal text-12 text-outline">Route</th>
+                    <th className="pb-2 pr-5 font-normal text-12 text-outline">Model</th>
+                    <th className="pb-2 pr-5 font-normal text-12 text-outline text-right">In</th>
+                    <th className="pb-2 pr-5 font-normal text-12 text-outline text-right">Out</th>
+                    <th className="pb-2 pr-5 font-normal text-12 text-outline text-right">ms</th>
                   </>
                 ) : (
-                  <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Stage</th>
+                  <th className="pb-2 pr-5 font-normal text-12 text-outline">Stage</th>
                 )}
-                <th className="pb-2 pr-5 font-normal text-12 text-ink-muted">Status</th>
-                <th className="pb-2 font-normal text-12 text-ink-muted">Error</th>
+                <th className="pb-2 pr-5 font-normal text-12 text-outline">Status</th>
+                <th className="pb-2 font-normal text-12 text-outline">Error</th>
               </tr>
             </thead>
             <tbody>
               {tab === "llm"
                 ? llmRows.map((row) => (
-                    <tr key={row.id} className="border-b border-border">
-                      <td className="py-2 pr-5 font-mono text-12 text-ink-muted whitespace-nowrap">
+                    <tr key={row.id} className="border-b border-outline-variant">
+                      <td className="py-2 pr-5 font-mono text-12 text-outline whitespace-nowrap">
                         {formatTime(row.created_at)}
                       </td>
                       <td className="py-2 pr-5 text-12">
                         {row.tender_id ? (
                           <Link
                             href={`/tenders/${row.tender_id}`}
-                            className="text-accent hover:underline"
+                            className="text-primary hover:underline"
                           >
                             {row.tender_title ?? row.tender_id.slice(0, 8)}
                           </Link>
                         ) : (
-                          <span className="text-ink-muted">—</span>
+                          <span className="text-outline">—</span>
                         )}
                       </td>
                       <td className="py-2 pr-5 font-mono text-12">{row.route}</td>
@@ -285,56 +285,56 @@ export function LogsPageClient() {
                       </td>
                       <td className="py-2 pr-5 text-12">
                         <span className="flex items-center gap-1.5">
-                          <Dot color={LLM_STATUS_COLOR[row.status] ?? "var(--ink-faint)"} />
+                          <Dot color={LLM_STATUS_COLOR[row.status] ?? "#7e775f"} />
                           {row.status}
                         </span>
                       </td>
-                      <td className="py-2 text-12 text-ink-muted">
+                      <td className="py-2 text-12 text-outline">
                         <TruncatedError text={row.error} />
                       </td>
                     </tr>
                   ))
                 : pipelineRows.map((row) => (
-                    <tr key={row.id} className="border-b border-border">
-                      <td className="py-2 pr-5 font-mono text-12 text-ink-muted whitespace-nowrap">
+                    <tr key={row.id} className="border-b border-outline-variant">
+                      <td className="py-2 pr-5 font-mono text-12 text-outline whitespace-nowrap">
                         {formatTime(row.created_at)}
                       </td>
                       <td className="py-2 pr-5 text-12">
                         {row.tender_id ? (
                           <Link
                             href={`/tenders/${row.tender_id}`}
-                            className="text-accent hover:underline"
+                            className="text-primary hover:underline"
                           >
                             {row.tender_title ?? row.tender_id.slice(0, 8)}
                           </Link>
                         ) : (
-                          <span className="text-ink-muted">—</span>
+                          <span className="text-outline">—</span>
                         )}
                       </td>
                       <td className="py-2 pr-5 font-mono text-12">{row.stage}</td>
                       <td className="py-2 pr-5 text-12">
                         <span className="flex items-center gap-1.5">
                           <Dot
-                            color={PIPELINE_STATUS_COLOR[row.status] ?? "var(--ink-faint)"}
+                            color={PIPELINE_STATUS_COLOR[row.status] ?? "#7e775f"}
                           />
                           {row.status}
                         </span>
                       </td>
-                      <td className="py-2 text-12 text-ink-muted">
+                      <td className="py-2 text-12 text-outline">
                         <TruncatedError text={row.error} />
                       </td>
                     </tr>
                   ))}
               {!loading && tab === "llm" && llmRows.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-14 text-ink-muted">
+                  <td colSpan={9} className="py-8 text-center text-14 text-outline">
                     No log entries found.
                   </td>
                 </tr>
               )}
               {!loading && tab === "pipeline" && pipelineRows.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-14 text-ink-muted">
+                  <td colSpan={5} className="py-8 text-center text-14 text-outline">
                     No pipeline events found.
                   </td>
                 </tr>
@@ -346,12 +346,12 @@ export function LogsPageClient() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center gap-5 text-14 text-ink-muted">
+        <div className="flex items-center gap-5 text-14 text-outline">
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="label hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-160 ease-out"
+            className="label hover:text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-160 ease-out"
           >
             ← Prev
           </button>
@@ -362,7 +362,7 @@ export function LogsPageClient() {
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page >= totalPages - 1}
-            className="label hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-160 ease-out"
+            className="label hover:text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-160 ease-out"
           >
             Next →
           </button>
