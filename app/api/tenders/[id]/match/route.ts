@@ -82,7 +82,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     evidence: c.evidence,
   }));
 
-  const model = process.env.OPENROUTER_MODEL_MATCH || "anthropic/claude-3-haiku";
+  const model = process.env.OPENROUTER_MODEL_MATCH || "deepseek/deepseek-chat:free";
 
   // Build a global index map: requirement_index (in full list) → LLM result
   const byIndex = new Map<number, MatchOutput[number]>();
