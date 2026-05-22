@@ -179,7 +179,7 @@ export function CapabilityMatrix({
           onSectionFilterChange={setSectionFilter}
         />
 
-        {message ? <p className="text-14 text-ink-muted" aria-live="polite">{message}</p> : null}
+        {message ? <p className="text-14 text-on-surface-variant" aria-live="polite">{message}</p> : null}
 
         <div className="space-y-7">
           {visibleCategories.map((cat) => {
@@ -232,9 +232,9 @@ function CapabilitySummaryCards({ capabilities }: { capabilities: Capability[] }
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5" aria-label="Capability summary">
       {cards.map((card) => (
-        <div key={card.label} className="border border-border bg-surface px-4 py-3">
+        <div key={card.label} className="border border-outline-variant bg-surface px-4 py-3">
           <p className="label">{card.label}</p>
-          <p className="mt-2 text-25 font-semibold leading-none text-ink tabular">{card.value}</p>
+          <p className="mt-2 text-25 font-semibold leading-none text-on-surface tabular">{card.value}</p>
         </div>
       ))}
     </div>
@@ -255,25 +255,25 @@ function CapabilitySearchFilters({
   onSectionFilterChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-3 border border-border bg-surface-sunk p-3 md:grid-cols-[minmax(0,1fr)_16rem]">
-      <label className="flex min-h-9 items-center gap-2 border border-border-strong bg-surface px-3">
-        <Search size={16} strokeWidth={1.5} className="text-ink-muted" aria-hidden="true" />
+    <div className="grid gap-3 border border-outline-variant bg-surface-container-low p-3 md:grid-cols-[minmax(0,1fr)_16rem]">
+      <label className="flex min-h-9 items-center gap-2 border border-outline bg-surface px-3">
+        <Search size={16} strokeWidth={1.5} className="text-on-surface-variant" aria-hidden="true" />
         <span className="sr-only">Search capabilities</span>
         <input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          className="h-9 min-w-0 flex-1 bg-transparent text-14 text-ink placeholder:text-ink-faint"
+          className="h-9 min-w-0 flex-1 bg-transparent text-14 text-on-surface placeholder:text-outline"
           placeholder="Search name, evidence, or description"
         />
       </label>
 
-      <label className="flex min-h-9 items-center gap-2 border border-border-strong bg-surface px-3">
-        <Filter size={16} strokeWidth={1.5} className="text-ink-muted" aria-hidden="true" />
+      <label className="flex min-h-9 items-center gap-2 border border-outline bg-surface px-3">
+        <Filter size={16} strokeWidth={1.5} className="text-on-surface-variant" aria-hidden="true" />
         <span className="sr-only">Filter by section</span>
         <select
           value={sectionFilter}
           onChange={(e) => onSectionFilterChange(e.target.value)}
-          className="h-9 min-w-0 flex-1 bg-transparent text-14 text-ink"
+          className="h-9 min-w-0 flex-1 bg-transparent text-14 text-on-surface"
         >
           {sectionOptions.map((option) => (
             <option key={option} value={option}>
@@ -309,17 +309,17 @@ function CapabilitySection({
 
   return (
     <section aria-labelledby={`capability-section-${slug(category)}`} className="space-y-3">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border-strong pb-3">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-outline pb-3">
         <div>
           <div className="flex items-center gap-2">
-            <h3 id={`capability-section-${slug(category)}`} className="font-serif text-20 leading-tight text-ink">
+            <h3 id={`capability-section-${slug(category)}`} className="font-serif text-20 leading-tight text-on-surface">
               {category}
             </h3>
             <span className="label tabular">{unfilteredCount}</span>
           </div>
-          <p className="mt-1 text-14 text-ink-muted">{helper}</p>
+          <p className="mt-1 text-14 text-on-surface-variant">{helper}</p>
         </div>
-        <button type="button" onClick={onAdd} className="btn" aria-label={`Add capability to ${category}`}>
+        <button type="button" onClick={onAdd} className="industrial-border px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-variant transition-colors" aria-label={`Add capability to ${category}`}>
           <Plus size={16} strokeWidth={1.5} aria-hidden="true" />
           Add capability
         </button>
@@ -338,11 +338,11 @@ function CapabilitySection({
           ))}
         </ul>
       ) : (
-        <div className="border border-border bg-surface px-4 py-5">
-          <p className="text-14 font-medium text-ink">
+        <div className="border border-outline-variant bg-surface px-4 py-5">
+          <p className="text-14 font-medium text-on-surface">
             {isFiltered && unfilteredCount > 0 ? "No capabilities match the current filters." : "No capabilities added yet."}
           </p>
-          <p className="mt-1 text-14 text-ink-muted">
+          <p className="mt-1 text-14 text-on-surface-variant">
             {isFiltered && unfilteredCount > 0 ? "Adjust the search or section filter." : "Add one to improve tender matching."}
           </p>
         </div>
@@ -365,24 +365,24 @@ function CapabilityCard({
   return (
     <li
       className={cn(
-        "border bg-surface p-4 transition-colors duration-160 ease-out hover:bg-surface-sunk",
-        active ? "border-accent" : "border-border",
+        "border bg-surface p-4 transition-colors duration-160 ease-out hover:bg-surface-container-low",
+        active ? "border-error" : "border-outline-variant",
       )}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
-          <span className="inline-flex items-center gap-2 border border-border bg-surface-2 px-2 py-1 text-12 font-medium uppercase tracking-[0.06em] text-ink-muted">
-            <span className="dot bg-accent" aria-hidden="true" />
+          <span className="inline-flex items-center gap-2 border border-outline-variant bg-surface-container px-2 py-1 text-12 font-medium uppercase tracking-[0.06em] text-on-surface-variant">
+            <span className="dot bg-error" aria-hidden="true" />
             {capability.category}
           </span>
-          <h4 className="text-16 font-semibold leading-snug text-ink">{capability.name}</h4>
+          <h4 className="text-16 font-semibold leading-snug text-on-surface">{capability.name}</h4>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <button type="button" onClick={onEdit} className="btn" aria-label={`Edit ${capability.name}`}>
+          <button type="button" onClick={onEdit} className="industrial-border px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-variant transition-colors" aria-label={`Edit ${capability.name}`}>
             <Pencil size={16} strokeWidth={1.5} aria-hidden="true" />
             Edit
           </button>
-          <button type="button" onClick={onDelete} className="btn btn-ghost" aria-label={`Delete ${capability.name}`}>
+          <button type="button" onClick={onDelete} className="industrial-border px-3 py-1.5 font-label-md text-label-md hover:bg-surface-variant transition-colors" aria-label={`Delete ${capability.name}`}>
             <Trash2 size={16} strokeWidth={1.5} aria-hidden="true" />
             Delete
           </button>
@@ -410,9 +410,9 @@ function PreviewBlock({
 }) {
   const hasValue = Boolean(value?.trim());
   return (
-    <div className={cn("space-y-1", emphasized ? "bg-surface-2 p-3" : "py-1")}>
+    <div className={cn("space-y-1", emphasized ? "bg-surface-container p-3" : "py-1")}>
       <p className="label">{label}</p>
-      <p className={cn("mt-1 text-14 leading-5", hasValue ? "text-ink-2" : "text-ink-faint")}>
+      <p className={cn("mt-1 text-14 leading-5", hasValue ? "text-on-surface-variant" : "text-outline")}>
         {hasValue ? truncate(value, 170) : fallback}
       </p>
     </div>
@@ -436,13 +436,13 @@ function CapabilityEditorPanel({
   const actionLabel = editor.mode === "create" ? "Add capability" : "Save changes";
 
   return (
-    <aside className="border border-border-strong bg-surface p-5 xl:sticky xl:top-6 xl:self-start" aria-label={title}>
-      <div className="flex items-start justify-between gap-3 border-b border-border pb-4">
+    <aside className="border border-outline bg-surface p-5 xl:sticky xl:top-6 xl:self-start" aria-label={title}>
+      <div className="flex items-start justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
           <p className="label">{editor.draft.category}</p>
-          <h3 className="mt-1 font-serif text-20 leading-tight text-ink">{title}</h3>
+          <h3 className="mt-1 font-serif text-20 leading-tight text-on-surface">{title}</h3>
         </div>
-        <button type="button" onClick={onCancel} className="btn btn-ghost" aria-label="Close capability editor">
+        <button type="button" onClick={onCancel} className="industrial-border px-3 py-1.5 font-label-md text-label-md hover:bg-surface-variant transition-colors" aria-label="Close capability editor">
           <X size={16} strokeWidth={1.5} aria-hidden="true" />
         </button>
       </div>
@@ -477,11 +477,11 @@ function CapabilityEditorPanel({
         </label>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border pt-4">
-        <button type="button" onClick={onCancel} className="btn">
+      <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-outline-variant pt-4">
+        <button type="button" onClick={onCancel} className="industrial-border px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-variant transition-colors">
           Cancel
         </button>
-        <button type="button" onClick={onSave} disabled={saving || !editor.draft.name.trim()} className="btn btn-primary">
+        <button type="button" onClick={onSave} disabled={saving || !editor.draft.name.trim()} className="bg-primary text-on-primary px-4 py-2 font-label-md text-label-md hover:brightness-110 transition-all">
           <Save size={16} strokeWidth={1.5} aria-hidden="true" />
           {saving ? "Saving." : actionLabel}
         </button>
