@@ -16,6 +16,13 @@ const patchSchema = z
       .nullable()
       .optional(),
     matched_capability_ids: z.array(z.string().uuid()).optional(),
+    next_action: z.string().nullable().optional(),
+    owner_name: z.string().nullable().optional(),
+    team: z.string().nullable().optional(),
+    due_date: z.string().nullable().optional(),
+    workflow_status: z
+      .enum(["not_started", "waiting_input", "in_progress", "in_review", "blocked", "done", "not_applicable"])
+      .optional(),
   })
   .strict();
 
@@ -34,6 +41,11 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   if ("draft_response" in body) update.draft_response = body.draft_response;
   if ("reviewer_notes" in body) update.reviewer_notes = body.reviewer_notes;
   if ("matched_capability_ids" in body) update.matched_capability_ids = body.matched_capability_ids;
+  if ("next_action" in body) update.next_action = body.next_action;
+  if ("owner_name" in body) update.owner_name = body.owner_name;
+  if ("team" in body) update.team = body.team;
+  if ("due_date" in body) update.due_date = body.due_date;
+  if ("workflow_status" in body) update.workflow_status = body.workflow_status;
   if (body.reviewed != null) {
     update.reviewed_at = body.reviewed ? new Date().toISOString() : null;
   }

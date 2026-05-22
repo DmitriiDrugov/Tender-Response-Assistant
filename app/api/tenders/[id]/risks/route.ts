@@ -37,7 +37,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     const output = await llmJSON({
       promptFile: "risk",
       variables: { TENDER_TEXT: tenderText },
-      model: process.env.OPENROUTER_MODEL_RISK || "deepseek/deepseek-chat:free",
+      model: process.env.OPENROUTER_MODEL_RISK || "anthropic/claude-3-haiku",
       schema: riskWrappedSchema,
       route: "risk",
       tenderId: id,

@@ -10,7 +10,6 @@ Read `AGENTS.md` first. This file extends it with Codex-specific behavior.
 
 1. `AGENTS.md` — shared rules (authoritative)
 2. `PRODUCT.md` — product purpose and principles
-3. `DESIGN.md` — design system (all visual decisions live here)
 
 For feature work, read the relevant `src/lib/` and `src/app/` files before writing anything.
 
@@ -26,14 +25,13 @@ This is where correctness is most critical. Write tests before implementation.
 - Extraction: PDF → structured requirements with exact source quotes
 - Matching: requirement vs. capability matrix → coverage status + gap description
 - Drafting: evidence-based response text; no fabrication, no marketing language
-- Export: DOCX must match the procurement document spec in `DESIGN.md`
+- Export: DOCX must be A4, serif body, section hierarchy, black text only — no status colors, no AI attribution
 
 ### 2. API routes (`src/app/api/`)
 Validate all inputs with Zod before any logic. Return structured error responses.
 Never expose secrets. Never stream model output directly to the client without validation.
 
 ### 3. UI components (`src/components/` and `src/app/`)
-Follow `DESIGN.md` exactly. Do not invent tokens or patterns.
 Prefer Server Components. Add `"use client"` only when required.
 
 ---

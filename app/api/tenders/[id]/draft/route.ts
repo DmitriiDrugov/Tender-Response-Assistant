@@ -112,7 +112,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     .eq("id", id);
   await logPipelineEvent(id, "draft", "running");
 
-  const model = process.env.OPENROUTER_MODEL_DRAFT || "meta-llama/llama-3.3-70b-instruct:free";
+  const model = process.env.OPENROUTER_MODEL_DRAFT || "anthropic/claude-3-haiku";
 
   const sleep = PACING_MS > 0
     ? (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -194,6 +194,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
               draft_response: guarded.draft_response,
               reviewer_notes: guarded.reviewer_notes,
               draft_status: guarded.requires_bid_manager_decision ? "blocked" : "ready",
+              evidence_used: guarded.evidence_used ?? [],
             })
             .eq("id", r.id);
 

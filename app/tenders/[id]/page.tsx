@@ -9,13 +9,14 @@ export const dynamic = "force-dynamic";
 
 async function loadTender(id: string): Promise<TenderFull | null> {
   const sb = supabaseServer();
-  const [tenderRes, lotsRes, reqsRes, risksRes, docsRes, criteriaRes] = await Promise.all([
+  const [tenderRes, lotsRes, reqsRes, risksRes, docsRes, criteriaRes, clarificationsRes] = await Promise.all([
     sb.from("tenders").select("*").eq("id", id).single(),
     sb.from("tender_lots").select("*").eq("tender_id", id),
     sb.from("requirements").select("*").eq("tender_id", id).order("ordinal"),
     sb.from("risks").select("*").eq("tender_id", id),
     sb.from("required_documents").select("*").eq("tender_id", id).order("name"),
     sb.from("evaluation_criteria").select("*").eq("tender_id", id),
+    sb.from("clarification_questions").select("*").eq("tender_id", id).order("created_at"),
   ]);
   if (tenderRes.error || !tenderRes.data) return null;
   return {
@@ -25,6 +26,7 @@ async function loadTender(id: string): Promise<TenderFull | null> {
     risks: risksRes.data ?? [],
     required_documents: docsRes.data ?? [],
     evaluation_criteria: criteriaRes.data ?? [],
+    clarification_questions: clarificationsRes.data ?? [],
   } as TenderFull;
 }
 

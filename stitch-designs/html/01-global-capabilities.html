@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Source+Serif+4:ital,wght@0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffe16d",
+                        "primary-fixed-dim": "#e9c400",
+                        "primary": "#705d00",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#221b00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "secondary-fixed": "#e4e2e1",
+                        "background": "#fbf9f8",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#5e5f60",
+                        "tertiary-container": "#d9dada",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7e775f",
+                        "inverse-primary": "#e9c400",
+                        "tertiary": "#5d5f5f",
+                        "primary-container": "#ffd700",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface": "#fbf9f8",
+                        "on-surface-variant": "#4d4732",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed-variant": "#544600",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "edge-margin": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Public Sans"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"],
+                        "headline-md": ["Source Serif 4"],
+                        "headline-lg": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #fbf9f8;
+            color: #1b1c1c;
+        }
+        .brutalist-border {
+            border: 1px solid #333333;
+        }
+        .brutalist-border-heavy {
+            border: 2px solid #1b1c1c;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high dark:bg-surface-container-low border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold">Tender Response</h1>
+<p class="font-label-mono text-[10px] uppercase tracking-widest text-on-surface-variant opacity-70">Procurement Triage</p>
+</div>
+<nav class="flex-grow flex flex-col">
+<a class="px-6 py-3 flex items-center gap-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md uppercase">Tenders</span>
+</a>
+<a class="px-6 py-3 flex items-center gap-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/30" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-md text-label-md uppercase">Capabilities</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-[oklch(0.215_0.012_70_/_0.1)] mt-auto">
+<div class="flex items-center gap-3 mb-6">
+<img alt="User avatar" class="w-10 h-10 rounded-none brutalist-border" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBtmW7q4Yiz2A93zBEXNHfeWmg7sheoA1Eiyt_MTg5aupm5zLnPqxGxr-sr2kLlzLtIRw0D8UoTxvLL5wVlIhikOQXz7j5lyukc4fUUykaGkpPyNQs4im8eVtyu0x_u-rWubqmWdvJsRI_prPlhraEcXZVII7RZCaEeds_gkbVyA5GO23nASfDDJSCJLsjZbtuV9RKsuadUG20Ni-gNYzxnig6nVZjwCvJAmFk2NUA-Z3RzpfjVKhn0XfGCxI2Cw7EsTCL7WenmDhe"/>
+<div>
+<p class="font-label-md text-label-md">ADMIN_01</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Matrix Controller</p>
+</div>
+</div>
+<a class="flex items-center gap-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md uppercase">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-grow ml-64 flex flex-col">
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 w-full z-40 bg-surface dark:bg-background border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-8 py-4 gap-4">
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary uppercase tracking-tighter">System Environment / Global</span>
+<h2 class="font-headline-md text-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Global Capabilities Matrix</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-surface-container-lowest brutalist-border px-4 py-2 font-data-md text-data-md w-64 focus:border-2 focus:outline-none transition-all" placeholder="SEARCH_CAPABILITY..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-on-surface-variant" data-icon="search">search</span>
+</div>
+<button class="w-10 h-10 brutalist-border flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 brutalist-border flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+<nav class="flex gap-8 mt-2">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Overview</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-8">
+<!-- Description & Stats Header -->
+<div class="grid grid-cols-12 gap-gutter bg-on-surface/10 brutalist-border">
+<div class="col-span-8 bg-surface p-6">
+<p class="font-body-lg text-body-lg text-on-surface mb-4">Master registry of organizational bid-matching logic. Use this matrix to define, validate, and assign technical prowess against incoming procurement requirements.</p>
+<div class="flex gap-4">
+<button class="bg-primary-container text-on-primary-container brutalist-border-heavy px-6 py-2 font-label-md text-label-md uppercase flex items-center gap-2 hover:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                            Register New Capability
+                        </button>
+<button class="bg-surface text-on-surface brutalist-border px-6 py-2 font-label-md text-label-md uppercase flex items-center gap-2 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
+                            Export Manifest
+                        </button>
+</div>
+</div>
+<div class="col-span-4 bg-surface-container-high p-6 flex flex-col justify-center">
+<div class="space-y-4">
+<div class="flex justify-between items-end border-b border-on-surface/10 pb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">ACTIVE_NODES</span>
+<span class="font-data-md text-headline-sm text-primary">142</span>
+</div>
+<div class="flex justify-between items-end border-b border-on-surface/10 pb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">COMPLIANCE_RATE</span>
+<span class="font-data-md text-headline-sm text-primary">98.4%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Matrix Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Category: Technical Infrastructure -->
+<section class="brutalist-border-heavy bg-surface flex flex-col h-full">
+<div class="bg-on-surface text-surface px-4 py-2 flex justify-between items-center">
+<h3 class="font-label-md text-label-md uppercase tracking-widest">01 / Technical Infrastructure</h3>
+<span class="material-symbols-outlined text-sm" data-icon="hub">hub</span>
+</div>
+<div class="flex-grow">
+<!-- Entry 1 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">Precision Logistics Network</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Real-time telemetry and predictive routing for heavy industrial payloads across non-standard transport corridors.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "Successfully routed 1400t turbine via Northern Passage - ISO-9001:2023 certified."
+                                </p>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">Quantum Supply Chain Ledger</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Immutable tracking of raw material provenance using high-frequency cryptographic verification.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "Deployed for Tier-1 automotive procurement cycle 2024."
+                                </p>
+</div>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container hover:bg-surface-variant font-label-md text-label-md uppercase border-t brutalist-border">Add to Category</button>
+</section>
+<!-- Category: Compliance & Legal -->
+<section class="brutalist-border-heavy bg-surface flex flex-col h-full">
+<div class="bg-on-surface text-surface px-4 py-2 flex justify-between items-center">
+<h3 class="font-label-md text-label-md uppercase tracking-widest">02 / Compliance &amp; Legal</h3>
+<span class="material-symbols-outlined text-sm" data-icon="gavel">gavel</span>
+</div>
+<div class="flex-grow">
+<!-- Entry 1 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">Cross-Border Sanction Screening</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Automated legal vetting against Global Magnitsky Act and OFAC consolidated lists in &lt;2ms latency.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "Zero audit failures across 4M+ transactions in Fiscal Year 2023."
+                                </p>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">ESG Environmental Matrix</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Dynamic reporting of carbon-intensity scores for multi-modal logistics operations.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "Compliant with EU Corporate Sustainability Reporting Directive (CSRD)."
+                                </p>
+</div>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container hover:bg-surface-variant font-label-md text-label-md uppercase border-t brutalist-border">Add to Category</button>
+</section>
+<!-- Category: Manufacturing & Specs -->
+<section class="brutalist-border-heavy bg-surface flex flex-col h-full">
+<div class="bg-on-surface text-surface px-4 py-2 flex justify-between items-center">
+<h3 class="font-label-md text-label-md uppercase tracking-widest">03 / Manufacturing &amp; Specs</h3>
+<span class="material-symbols-outlined text-sm" data-icon="factory">factory</span>
+</div>
+<div class="flex-grow">
+<!-- Entry 1 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">Additive Metal Fabrication</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Rapid prototyping and production of titanium aerospace components via DMLM technology.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "NADCAP accredited facility in Munich cluster."
+                                </p>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="p-4 border-b brutalist-border hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-md font-bold text-on-surface">Cleanroom Grade-A Integration</span>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 brutalist-border hover:bg-primary-container"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-1 brutalist-border hover:bg-error hover:text-white"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md mb-3">Assembly and testing of semiconductor lithography modules in Class 100 sterile environments.</p>
+<div class="bg-surface-variant/30 p-3 brutalist-border border-dashed">
+<p class="font-headline-sm italic text-sm text-on-surface-variant flex gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                                    "Annual particle count audit passed with zero deviations."
+                                </p>
+</div>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container hover:bg-surface-variant font-label-md text-label-md uppercase border-t brutalist-border">Add to Category</button>
+</section>
+</div>
+<!-- Visualization / Asymmetric Area -->
+<div class="grid grid-cols-12 gap-8">
+<div class="col-span-12 lg:col-span-7 brutalist-border p-6 bg-surface-container-lowest">
+<h4 class="font-label-md text-label-md uppercase mb-6 flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span> 
+                        Global Capability Density
+                    </h4>
+<div class="h-64 relative bg-surface-container brutalist-border overflow-hidden">
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#1b1c1c 1px, transparent 1px); background-size: 20px 20px;"></div>
+<!-- Placeholder for a map/data visualization -->
+<img class="w-full h-full object-cover grayscale opacity-80 mix-blend-multiply" data-alt="A sophisticated data visualization map showing a world grid in industrial grayscale. Connection lines in signal yellow link major manufacturing hubs in Europe, Asia, and North America. The aesthetic is clinical and technical, resembling a mission control dashboard with minimal UI elements and high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY1_C68-nw0JYZ44c9KItRF_RuF7oeDoLSH3jTOcdZqDf2ZXJ7Hc6ImqUrgP6u689ZHhLR9DZUalvtctiIg3oxMZEGr43keDIw3y-dUt7rRaBJPNMlB4tK4mJoYbo__V1Nb1PAgYFcWJ4pe38hi-dnIu5pmAkSsQPelyvMJLZtovLYpV4JEMD6pU6yfokvjBlX7x2qcfVZeVVLr0o64nhLv065gyfboClWm-R5uFWk-ynPBsMXkJJUpVdyjhjSxakAX5MKnt06xMf7"/>
+<div class="absolute bottom-4 left-4 bg-on-surface text-surface px-3 py-1 font-data-md text-xs">
+                            REAL-TIME_COVERAGE: ACTIVE
+                        </div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-6">
+<div class="brutalist-border p-6 bg-primary-container/10 border-primary">
+<h4 class="font-label-md text-label-md uppercase text-primary mb-2">Critical Alert</h4>
+<p class="font-body-md text-on-surface">Capability "Arctic Maritime Transit" is approaching compliance expiration in 14 days. Registry lock scheduled if evidence is not updated.</p>
+<button class="mt-4 w-full brutalist-border-heavy bg-primary text-white py-2 font-label-md uppercase hover:opacity-90">Review Compliance</button>
+</div>
+<div class="brutalist-border p-6 bg-surface">
+<h4 class="font-label-md text-label-md uppercase mb-4">Pending Requests</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between font-data-md text-xs border-b border-on-surface/5 pb-2">
+<span>REQ_882: Bio-Storage Logistics</span>
+<span class="bg-secondary text-white px-2 py-0.5">PENDING</span>
+</div>
+<div class="flex items-center justify-between font-data-md text-xs border-b border-on-surface/5 pb-2">
+<span>REQ_901: Sub-Orbital Delivery</span>
+<span class="bg-secondary text-white px-2 py-0.5">REVIEW</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for hover states
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.97)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search highlight simulation
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('section > div > div');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (term && text.includes(term)) {
+                    item.style.backgroundColor = 'rgba(255, 225, 109, 0.2)';
+                    item.style.borderColor = '#705d00';
+                } else {
+                    item.style.backgroundColor = '';
+                    item.style.borderColor = '';
+                }
+            });
+        });
+    </script>
+</body></html>

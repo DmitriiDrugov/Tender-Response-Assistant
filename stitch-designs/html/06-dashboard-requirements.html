@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;family=Source+Serif+4:ital,wght@0,600;0,700;1,600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#e4e2e1",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "background": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#ffd700",
+                        "surface-container-highest": "#e4e2e1",
+                        "surface": "#fbf9f8",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-variant": "#e4e2e1",
+                        "on-surface": "#1b1c1c",
+                        "on-primary-container": "#705e00",
+                        "inverse-primary": "#e9c400",
+                        "on-primary-fixed-variant": "#544600",
+                        "surface-dim": "#dcd9d9",
+                        "primary": "#705d00",
+                        "secondary": "#5f5e5e",
+                        "outline": "#7e775f",
+                        "on-background": "#1b1c1c",
+                        "surface-container-high": "#eae8e7",
+                        "inverse-surface": "#303030",
+                        "on-secondary-fixed-variant": "#474747",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#5d5f5f",
+                        "primary-fixed": "#ffe16d",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-container": "#5e5f60",
+                        "surface-bright": "#fbf9f8",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container": "#f0eded",
+                        "tertiary-container": "#d9dada",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#4d4732",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-tint": "#705d00",
+                        "outline-variant": "#d0c6ab",
+                        "inverse-on-surface": "#f3f0f0",
+                        "tertiary-fixed-dim": "#c6c6c7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "edge-margin": "16px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Source Serif 4"],
+                        "headline-md": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "headline-lg": ["Source Serif 4"],
+                        "data-md": ["JetBrains Mono"],
+                        "label-md": ["Public Sans"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .ink-stroke {
+            background: linear-gradient(90deg, transparent, #ffd700 50%, transparent);
+            height: 2px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            animation: move-stroke 3s infinite linear;
+        }
+        @keyframes move-stroke {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .requirement-row:hover {
+            background-color: rgba(228, 226, 225, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-8 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Tender Response</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">Procurement Triage</p>
+</div>
+<nav class="flex-1">
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md">Tenders</span>
+</a>
+<a class="flex items-center px-6 py-3 gap-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-md">Capabilities</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-outline-variant">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-8 h-8 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container font-bold text-xs">JD</div>
+<div>
+<p class="font-label-md text-label-md leading-none">James Dyson</p>
+<p class="font-data-md text-[10px] text-on-surface-variant mt-1">Senior Lead</p>
+</div>
+</div>
+<a class="flex items-center gap-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 flex-1 flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface border-b border-[oklch(0.215_0.012_70_/_0.1)] px-10 py-4 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Tender Response Assistant</h2>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-surface-container-low border border-outline px-10 py-1 font-label-md text-xs focus:ring-2 focus:ring-primary outline-none" placeholder="SEARCH REQUIREMENTS..." type="text"/>
+</div>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-transform active:scale-95" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-transform active:scale-95" data-icon="settings">settings</button>
+</div>
+</div>
+</div>
+<nav class="flex gap-8">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Overview</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Canvas -->
+<div class="p-10 space-y-8">
+<!-- Draft Generation Banner -->
+<div class="relative bg-surface-container-high p-4 flex justify-between items-center overflow-hidden border border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="auto_fix_high" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">Generating draft responses. <span class="text-primary font-bold">14 of 42</span> complete</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-data-md text-xs">AI ENGINE OPTIMIZING</span>
+<div class="w-16 h-1 bg-outline-variant relative overflow-hidden">
+<div class="ink-stroke"></div>
+</div>
+</div>
+</div>
+<!-- Coverage Stats -->
+<div class="grid grid-cols-4 border border-outline">
+<div class="p-6 border-r border-outline flex flex-col gap-1 bg-surface-container-lowest">
+<span class="font-label-md text-on-surface-variant uppercase">Ready for review</span>
+<span class="font-headline-lg text-headline-lg">18</span>
+</div>
+<div class="p-6 border-r border-outline flex flex-col gap-1 bg-surface-container-lowest">
+<span class="font-label-md text-on-surface-variant uppercase">Needs input</span>
+<span class="font-headline-lg text-headline-lg text-primary">12</span>
+</div>
+<div class="p-6 border-r border-outline flex flex-col gap-1 bg-surface-container-lowest">
+<span class="font-label-md text-on-surface-variant uppercase">Gap detected</span>
+<span class="font-headline-lg text-headline-lg text-error">04</span>
+</div>
+<div class="p-6 flex flex-col gap-1 bg-surface-container-lowest">
+<span class="font-label-md text-on-surface-variant uppercase">Clarification needed</span>
+<span class="font-headline-lg text-headline-lg text-secondary">08</span>
+</div>
+</div>
+<!-- FilterStrip -->
+<div class="space-y-gutter bg-outline">
+<div class="bg-surface flex p-1 gap-2 border-x border-t border-outline">
+<button class="bg-primary-container text-on-primary-container px-4 py-1 font-label-md border border-primary">ALL</button>
+<button class="bg-surface-container hover:bg-surface-variant px-4 py-1 font-label-md border border-transparent">MANDATORY</button>
+<button class="bg-surface-container hover:bg-surface-variant px-4 py-1 font-label-md border border-transparent">HIGH CONFIDENCE</button>
+<button class="bg-surface-container hover:bg-surface-variant px-4 py-1 font-label-md border border-transparent">UNASSIGNED</button>
+</div>
+<div class="bg-surface flex p-1 gap-2 border-x border-b border-outline">
+<button class="bg-surface-container hover:bg-surface-variant px-3 py-1 font-label-md text-[10px]">COMPLIANCE</button>
+<button class="bg-surface-container hover:bg-surface-variant px-3 py-1 font-label-md text-[10px]">TECHNICAL</button>
+<button class="bg-surface-container hover:bg-surface-variant px-3 py-1 font-label-md text-[10px]">COMMERCIAL</button>
+<button class="bg-surface-container hover:bg-surface-variant px-3 py-1 font-label-md text-[10px]">LEGAL</button>
+</div>
+</div>
+<!-- Requirements List Container -->
+<div class="border border-outline bg-surface-container-lowest">
+<!-- Requirement Header -->
+<div class="grid grid-cols-[40px_1fr_120px_120px_120px_120px_40px] border-b border-outline bg-secondary-container p-3 font-label-md text-[11px] uppercase">
+<div></div>
+<div>Requirement Detail</div>
+<div>Category</div>
+<div>Priority</div>
+<div>Function</div>
+<div>Confidence</div>
+<div></div>
+</div>
+<!-- Row 1: Expanded Item -->
+<div class="requirement-row border-b border-outline cursor-pointer transition-all duration-300">
+<div class="grid grid-cols-[40px_1fr_120px_120px_120px_120px_40px] items-center p-4">
+<div class="flex justify-center">
+<div class="w-3 h-3 rounded-full border-2 border-error bg-error/20"></div>
+</div>
+<div class="font-body-md line-clamp-2 pr-8">Section 4.2.1: Provide detailed evidence of Tier 1 supplier emission tracking and scope 3 verification protocols.</div>
+<div class="font-data-md text-xs">Sustainability</div>
+<div>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 border border-error text-error text-[10px] font-bold">
+<span class="w-1.5 h-1.5 bg-error rounded-full"></span>
+                                REQUIRED
+                            </span>
+</div>
+<div class="font-data-md text-xs">Supply Chain</div>
+<div>
+<span class="text-error font-bold font-data-md">LOW</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant rotate-180" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Expanded Content -->
+<div class="bg-surface-container-low border-t border-outline grid grid-cols-3 gap-gutter bg-outline">
+<!-- Left: Requirement Detail -->
+<div class="col-span-2 bg-surface p-6 space-y-6">
+<div>
+<h4 class="font-label-md uppercase text-on-surface-variant mb-3">Original Requirement Source</h4>
+<blockquote class="border-l-4 border-primary pl-4 py-1 italic font-headline-sm text-headline-sm text-secondary">
+                                    "The bidder must demonstrate an automated system for real-time tracking of Scope 3 emissions across all Tier 1 suppliers with third-party audit capability."
+                                </blockquote>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div>
+<h4 class="font-label-md uppercase text-on-surface-variant mb-2">Matched Capabilities</h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container-high border border-outline font-data-md text-[10px]">ISO 14064-1</span>
+<span class="px-2 py-1 bg-surface-container-high border border-outline font-data-md text-[10px]">EcoVadis Platinum</span>
+</div>
+<div class="mt-4">
+<h5 class="font-label-md text-[10px] text-on-surface-variant uppercase">Evidence Strength</h5>
+<div class="w-full bg-surface-container-high h-2 mt-1 border border-outline overflow-hidden">
+<div class="bg-error h-full w-[35%]"></div>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-label-md uppercase text-error mb-2">Gap Description</h4>
+<p class="font-headline-sm italic text-headline-sm text-error/80">Real-time automation for Tier 1 is currently manual-entry only in current ERP. API integration pending.</p>
+<div class="mt-4 p-3 border-2 border-primary bg-primary/5">
+<p class="font-label-md uppercase text-primary">Suggested Action</p>
+<p class="font-body-md font-bold mt-1">Reference the Q3 ERP roadmap and current manual audit frequency as a mitigating control.</p>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<h4 class="font-label-md uppercase text-on-surface-variant">Draft Response</h4>
+<button class="flex items-center gap-2 px-3 py-1 bg-primary text-on-primary font-label-md text-[11px] hover:bg-primary/90">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                                        REGENERATE
+                                    </button>
+</div>
+<textarea class="w-full h-32 p-4 font-data-md text-sm border border-outline bg-surface-container-lowest focus:border-primary focus:ring-0 outline-none" placeholder="Drafting text...">Our current environmental management protocol involves quarterly manual verification of Tier 1 emissions data, validated against ISO 14064 standards. While a real-time automated API interface is scheduled for release in Q3 2024, our existing third-party audit chain provides 99.8% data accuracy...</textarea>
+</div>
+</div>
+<!-- Right: Workflow Panel -->
+<div class="bg-surface p-6 space-y-6">
+<h4 class="font-label-md uppercase text-on-surface-variant border-b border-outline pb-2">Workflow &amp; Control</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Next Action</label>
+<select class="w-full bg-surface-container-low border border-outline px-2 py-1.5 font-body-md text-xs">
+<option>Approve Draft</option>
+<option selected="">Manual Edit Required</option>
+<option>Request Clarification</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Status</label>
+<select class="w-full bg-surface-container-low border border-outline px-2 py-1.5 font-body-md text-xs">
+<option selected="">In Progress</option>
+<option>Completed</option>
+<option>Blocked</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Team</label>
+<select class="w-full bg-surface-container-low border border-outline px-2 py-1.5 font-body-md text-xs">
+<option selected="">ESG Compliance</option>
+<option>Legal</option>
+<option>Engineering</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Owner</label>
+<select class="w-full bg-surface-container-low border border-outline px-2 py-1.5 font-body-md text-xs">
+<option selected="">Sarah Jenkins</option>
+<option>Mike Ross</option>
+</select>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Due Date</label>
+<input class="w-full bg-surface-container-low border border-outline px-3 py-1.5 font-data-md text-xs" type="date" value="2024-05-15"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-[10px] uppercase text-on-surface-variant">Internal Notes</label>
+<textarea class="w-full h-24 p-3 bg-surface-container-low border border-outline font-body-md text-xs" placeholder="Add private notes for the team..."></textarea>
+</div>
+<button class="w-full py-3 bg-primary-container border-2 border-primary text-on-primary-container font-label-md uppercase font-bold hover:bg-primary-container/80 transition-colors">
+                                Mark as Reviewed
+                            </button>
+</div>
+</div>
+</div>
+<!-- Row 2: Standard Row -->
+<div class="requirement-row border-b border-outline">
+<div class="grid grid-cols-[40px_1fr_120px_120px_120px_120px_40px] items-center p-4">
+<div class="flex justify-center">
+<div class="w-3 h-3 rounded-full border-2 border-primary bg-primary/20"></div>
+</div>
+<div class="font-body-md line-clamp-2 pr-8">Section 2.1: Operational redundancy for critical server clusters in EMEA region.</div>
+<div class="font-data-md text-xs">Infrastructure</div>
+<div>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 border border-primary text-primary text-[10px] font-bold">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                OPTIONAL
+                            </span>
+</div>
+<div class="font-data-md text-xs">IT Ops</div>
+<div>
+<span class="text-primary font-bold font-data-md">HIGH</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Row 3: Standard Row -->
+<div class="requirement-row border-b border-outline">
+<div class="grid grid-cols-[40px_1fr_120px_120px_120px_120px_40px] items-center p-4">
+<div class="flex justify-center">
+<div class="w-3 h-3 rounded-full border-2 border-secondary bg-secondary/20"></div>
+</div>
+<div class="font-body-md line-clamp-2 pr-8">Appendix C: Financial audit statements for last 3 fiscal years (Audited).</div>
+<div class="font-data-md text-xs">Commercial</div>
+<div>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 border border-error text-error text-[10px] font-bold">
+<span class="w-1.5 h-1.5 bg-error rounded-full"></span>
+                                REQUIRED
+                            </span>
+</div>
+<div class="font-data-md text-xs">Finance</div>
+<div>
+<span class="text-secondary font-bold font-data-md">MED</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for rows
+        document.querySelectorAll('.requirement-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
+                    // Logic for toggling expansion would go here in a full app
+                    console.log('Toggled row expansion');
+                }
+            });
+        });
+    </script>
+</body></html>

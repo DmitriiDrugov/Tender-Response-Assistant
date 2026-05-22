@@ -59,7 +59,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     const output = await llmJSON({
       promptFile: "extract",
       variables: { TENDER_TEXT: tenderText },
-      model: process.env.OPENROUTER_MODEL_EXTRACT || "deepseek/deepseek-chat:free",
+      model: process.env.OPENROUTER_MODEL_EXTRACT || "anthropic/claude-sonnet-4-6",
       schema: extractSchema,
       route: "extract",
       tenderId: id,
@@ -80,6 +80,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         estimated_value_currency: output.estimated_value?.currency ?? null,
         contract_duration: output.contract_duration,
         scope_summary: output.scope_summary,
+        clarification_deadline: isoDate((output as { clarification_deadline?: string | null }).clarification_deadline ?? null),
         // reset downstream pipeline so the user sees fresh state
         matching_status: "pending",
         drafting_status: "pending",
@@ -140,8 +141,10 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
           ordinal: idx,
           text: r.text,
           category: r.category,
+          requirement_type: r.requirement_type ?? null,
           is_mandatory: r.is_mandatory,
           source_excerpt: r.source_excerpt,
+          confidence_reason: r.confidence_reason ?? null,
         })),
       );
       if (reqsRes.error) {
@@ -155,12 +158,16 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
     if (output.required_documents.length > 0) {
       // Upsert on (tender_id, name) so existing rows keep their user-set status.
+      // required_documents may be string[] (old format) or object[] (new format).
+      const docRows = (output.required_documents as (string | { name: string; is_required?: boolean; source_section?: string | null })[]).map(
+        (d) =>
+          typeof d === "string"
+            ? { tender_id: id, name: d }
+            : { tender_id: id, name: d.name, is_required: d.is_required ?? true, source_section: d.source_section ?? null },
+      );
       const docsRes = await sb
         .from("required_documents")
-        .upsert(
-          output.required_documents.map((name) => ({ tender_id: id, name })),
-          { onConflict: "tender_id,name", ignoreDuplicates: true },
-        );
+        .upsert(docRows, { onConflict: "tender_id,name", ignoreDuplicates: true });
       if (docsRes.error) {
         await sb
           .from("tenders")

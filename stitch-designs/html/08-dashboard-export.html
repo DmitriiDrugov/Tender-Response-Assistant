@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tender Response Assistant - Export</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fbf9f8;
+            color: #1b1c1c;
+        }
+        .document-shadow {
+            box-shadow: 0 0 0 1px #333333;
+        }
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0eded;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #5f5e5e;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1b1c1c;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffe16d",
+                        "primary-fixed-dim": "#e9c400",
+                        "primary": "#705d00",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#221b00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "secondary-fixed": "#e4e2e1",
+                        "background": "#fbf9f8",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#5e5f60",
+                        "tertiary-container": "#d9dada",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7e775f",
+                        "inverse-primary": "#e9c400",
+                        "tertiary": "#5d5f5f",
+                        "primary-container": "#ffd700",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface": "#fbf9f8",
+                        "on-surface-variant": "#4d4732",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed-variant": "#544600",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "edge-margin": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"],
+                        "headline-md": ["Source Serif 4"],
+                        "headline-lg": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex min-h-screen">
+<!-- Predicted SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-4 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Tender Response</h1>
+<p class="font-label-mono text-[10px] uppercase tracking-wider text-on-surface-variant">Procurement Triage</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/30 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="description">description</span>
+<span class="font-label-md text-label-md uppercase">Tenders</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-md text-label-md uppercase">Capabilities</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-4 border-t border-[oklch(0.215_0.012_70_/_0.1)]">
+<div class="flex items-center gap-3 mb-6">
+<img alt="User" class="w-10 h-10 rounded-sm grayscale border border-outline" data-alt="A professional headshot of a person in a minimalist, industrial setting. The lighting is sharp and technical with cool tones. The style is modern industrial, reflecting a high-stakes corporate environment with a focus on precision and authority. Monochrome and high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7YL6STJb6geYkF-7AEPhe-XB1wMfu-9X_6nsK_w0K6xvv8ftv8n0yelHk-4_0eYB6gd9vby05JLN9LEquAIk-TqIJ8igCJrITf7NRrdW5UG3xbhQjbzhpiX7zY2QXBgTPHWoMRtqNEwV_jMEhMlEHEi1aH2x8FtZxwqKcNFVZKRk0P9D1hAMjuTy-pTBZDzRP-IQ3wVynjh5KjbsaqTZs_9_cUupt2vF1tKqmbq8SwV7oUo50tL4lVOQlW5Q9vf1sycLt1HCLR5NP"/>
+<div>
+<p class="font-label-md text-label-md">OPERATOR_04</p>
+<p class="text-[10px] text-on-surface-variant">LEVEL 3 ACCESS</p>
+</div>
+</div>
+<a class="flex items-center py-2 text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md uppercase">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-64 flex flex-col">
+<!-- Predicted TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-8 py-4 gap-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Tender Response Assistant</h2>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-white border border-outline px-4 py-2 text-label-md font-label-md w-64 focus:border-2 focus:ring-0 outline-none" placeholder="SEARCH ARCHIVE..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-outline" data-icon="search">search</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="settings">settings</button>
+</div>
+</div>
+<nav class="flex gap-8">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Action plan</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Export</a>
+</nav>
+</header>
+<!-- Content Area: Two-column layout -->
+<div class="flex flex-1 p-8 gap-8 overflow-y-auto bg-surface-container-low">
+<!-- Left: A4 Document Preview -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full max-w-[800px] bg-white document-shadow min-h-[1131px] p-[60px] flex flex-col">
+<!-- Document Header -->
+<div class="border-b-2 border-on-surface pb-6 mb-8 flex justify-between items-start">
+<div>
+<h3 class="font-headline-lg text-headline-lg uppercase mb-1">Tender Response</h3>
+<p class="font-data-md text-data-md text-on-surface-variant">REF: TR-2024-X92-FINAL</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md uppercase">Strictly Confidential</p>
+<p class="font-data-md text-data-md">SYSTEM TIMESTAMP: 2024-05-22T14:30:00Z</p>
+</div>
+</div>
+<!-- Metadata Section -->
+<div class="grid grid-cols-2 gap-y-4 mb-10 bg-surface-container p-4 border border-outline-variant">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Project Name</p>
+<p class="font-body-lg text-body-lg font-bold">Industrial Logistics Terminal Expansion</p>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Client</p>
+<p class="font-body-lg text-body-lg font-bold">Global Supply Dynamics Corp</p>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Submission Deadline</p>
+<p class="font-data-md text-data-md">2024-06-15 17:00 GMT</p>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Reviewer</p>
+<p class="font-body-md text-body-md">S. HARPER (Lead Procurement)</p>
+</div>
+</div>
+<!-- Requirements and Responses Section -->
+<div class="mb-10">
+<h4 class="font-label-md text-label-md uppercase border-b border-on-surface pb-1 mb-4">Section 1: Requirements and Responses</h4>
+<div class="space-y-6">
+<div class="border-l-2 border-primary pl-4 py-2">
+<p class="font-label-md text-label-md text-primary uppercase mb-1">REQ-001: Operational Uptime</p>
+<p class="font-body-md text-body-md mb-2">The system must maintain 99.98% operational uptime during peak logistics windows.</p>
+<p class="font-body-md text-body-md italic text-on-surface-variant">Response: Proposed architecture utilizes redundant server clusters and failover load balancers to ensure continuous availability. Real-time telemetry monitoring included.</p>
+</div>
+<div class="border-l-2 border-primary pl-4 py-2">
+<p class="font-label-md text-label-md text-primary uppercase mb-1">REQ-002: Environmental Compliance</p>
+<p class="font-body-md text-body-md mb-2">All hardware must meet ISO 14001:2015 environmental standards for waste management.</p>
+<p class="font-body-md text-body-md italic text-on-surface-variant">Response: Tier 1 suppliers certified. Lifecycle disposal certificates will be provided for all major hardware units.</p>
+</div>
+</div>
+</div>
+<!-- Identified Risks Section -->
+<div>
+<h4 class="font-label-md text-label-md uppercase border-b border-on-surface pb-1 mb-4">Section 2: Identified Risks</h4>
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-on-surface text-white">
+<th class="font-label-md text-label-md p-2 text-left">RISK ID</th>
+<th class="font-label-md text-label-md p-2 text-left">DESCRIPTION</th>
+<th class="font-label-md text-label-md p-2 text-left">IMPACT</th>
+</tr>
+</thead>
+<tbody class="font-data-md text-data-md">
+<tr class="border-b border-outline-variant">
+<td class="p-2">RSK-A1</td>
+<td class="p-2">Component supply chain volatility in Asia-Pacific region.</td>
+<td class="p-2"><span class="bg-error text-white px-2 py-0.5 text-[10px] font-bold">HIGH</span></td>
+</tr>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<td class="p-2">RSK-C5</td>
+<td class="p-2">Potential delay in regulatory zoning approvals for Site B.</td>
+<td class="p-2"><span class="bg-primary-container text-on-primary-container px-2 py-0.5 text-[10px] font-bold">MEDIUM</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Page Footer -->
+<div class="mt-auto pt-10 border-t border-outline-variant flex justify-between">
+<p class="font-data-md text-[10px]">TENDER_ASSIST_GEN_V2.0</p>
+<p class="font-data-md text-[10px]">PAGE 01 OF 12</p>
+</div>
+</div>
+</div>
+<!-- Right: Sticky Export Sidebar -->
+<div class="w-80">
+<div class="sticky top-40 bg-white border border-on-surface p-6">
+<h3 class="font-headline-sm text-headline-sm mb-6 uppercase flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                        Export
+                    </h3>
+<div class="mb-8">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-4">Select Categories for Export</p>
+<div class="space-y-4">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded-none border-2 border-on-surface focus:ring-0 text-primary" type="checkbox"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Executive Summary</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded-none border-2 border-on-surface focus:ring-0 text-primary" type="checkbox"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Requirements and responses</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded-none border-2 border-on-surface focus:ring-0 text-primary" type="checkbox"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Identified risks</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded-none border-2 border-on-surface focus:ring-0 text-primary" type="checkbox"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Clarification log</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded-none border-2 border-on-surface focus:ring-0 text-primary" type="checkbox"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Action plan / Roadmap</span>
+</label>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full bg-primary-container text-on-primary-container font-bold py-3 border-2 border-on-surface hover:bg-primary transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md uppercase">Download DOCX</span>
+</button>
+<button class="w-full bg-white text-on-surface font-bold py-3 border border-on-surface hover:bg-surface-variant/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-label-md text-label-md uppercase">Download PDF</span>
+</button>
+<button class="w-full bg-white text-on-surface font-bold py-3 border border-on-surface hover:bg-surface-variant/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="table_chart">table_chart</span>
+<span class="font-label-md text-label-md uppercase">Export to Excel</span>
+</button>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant">
+<div class="bg-surface-container-high p-3 flex items-start gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<p class="font-body-md text-[11px] leading-tight text-on-surface-variant">
+                                Exporting will lock the current version of the response. Any further changes will require a new version branch.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const label = btn.querySelector('.font-label-md')?.innerText || 'Action';
+                console.log(`System Event: ${label} initialized.`);
+            });
+        });
+
+        // Hover effect for checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    e.target.parentElement.classList.add('text-primary');
+                } else {
+                    e.target.parentElement.classList.remove('text-primary');
+                }
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tender Response Assistant - Clarifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffe16d",
+                        "primary-fixed-dim": "#e9c400",
+                        "primary": "#705d00",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#221b00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "secondary-fixed": "#e4e2e1",
+                        "background": "#fbf9f8",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#5e5f60",
+                        "tertiary-container": "#d9dada",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7e775f",
+                        "inverse-primary": "#e9c400",
+                        "tertiary": "#5d5f5f",
+                        "primary-container": "#ffd700",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface": "#fbf9f8",
+                        "on-surface-variant": "#4d4732",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed-variant": "#544600",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "edge-margin": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Public Sans"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"],
+                        "headline-md": ["Source Serif 4"],
+                        "headline-lg": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .brutal-border { border: 1px solid #1b1c1c; }
+        .brutal-border-heavy { border: 2px solid #1b1c1c; }
+        .brutal-shadow { box-shadow: 4px 4px 0px 0px #1b1c1c; }
+        .concrete-pattern {
+            background-color: #f0eded;
+            background-image: radial-gradient(#1b1c1c 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            background-opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high dark:bg-surface-container-low border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-inset-stretch z-50">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Tender Response</h1>
+<p class="font-label-mono text-label-md text-on-surface-variant mt-1">Procurement Triage</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/30 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md">Tenders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-md">Capabilities</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pb-8 space-y-4">
+<div class="flex items-center gap-3 px-4 py-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center border brutal-border">
+<span class="material-symbols-outlined text-on-primary-container">person</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md truncate">Lead Procure</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Admin Access</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col">
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 w-full z-40 bg-surface dark:bg-background border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-margin-page py-4 gap-4 px-8">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Tender Response Assistant</h2>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<input class="brutal-border bg-white px-4 py-2 text-sm w-64 focus:brutal-border-heavy outline-none" placeholder="Search tender data..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-transform active:scale-95" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-transform active:scale-95" data-icon="settings">settings</button>
+</div>
+</div>
+<nav class="flex gap-8 items-end">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Risks</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 max-w-7xl w-full mx-auto space-y-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b brutal-border pb-6">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">Clarification questions</h3>
+<div class="flex items-center gap-4 mt-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 font-data-md text-data-md brutal-border">3 active</span>
+<span class="text-on-surface-variant font-label-md">PROJECT: ID-992-DELTA-FORGE</span>
+</div>
+</div>
+<button class="bg-primary-container text-on-primary-container brutal-border-heavy px-6 py-3 font-label-md flex items-center gap-2 hover:bg-primary-fixed transition-colors active:translate-y-0.5" onclick="document.getElementById('add-question-form').classList.toggle('hidden')">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                    Add question
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Sidebar: Add Form -->
+<div class="lg:col-span-4 space-y-6 animate-in fade-in slide-in-from-left duration-300" id="add-question-form">
+<div class="bg-white brutal-border p-6 space-y-6">
+<div class="border-b brutal-border pb-2 mb-4">
+<p class="font-label-md text-on-surface uppercase">New Clarification</p>
+</div>
+<div class="space-y-2">
+<label class="block font-label-md uppercase text-on-surface-variant">Question Text</label>
+<textarea class="w-full brutal-border p-3 focus:brutal-border-heavy outline-none font-body-md" placeholder="Enter technical or commercial query..." rows="4"></textarea>
+</div>
+<div class="space-y-2">
+<label class="block font-label-md uppercase text-on-surface-variant">Priority Level</label>
+<select class="w-full brutal-border p-3 focus:brutal-border-heavy outline-none bg-white font-body-md">
+<option>Critical</option>
+<option>High</option>
+<option selected="">Normal</option>
+<option>Low</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block font-label-md uppercase text-on-surface-variant">Reasoning / Justification</label>
+<textarea class="w-full brutal-border p-3 focus:brutal-border-heavy outline-none font-body-md italic" placeholder="Why is this question necessary?" rows="2"></textarea>
+</div>
+<button class="w-full bg-on-surface text-white brutal-border py-4 font-label-md uppercase hover:bg-secondary transition-colors">
+                            Submit for Review
+                        </button>
+</div>
+<div class="bg-surface-container p-6 brutal-border">
+<p class="font-label-md uppercase mb-4">Submission Guidelines</p>
+<ul class="text-xs space-y-2 font-data-md list-disc pl-4 text-on-surface-variant">
+<li>Be specific about Clause references</li>
+<li>Avoid open-ended 'Why' questions</li>
+<li>Include impact assessment</li>
+</ul>
+</div>
+</div>
+<!-- Questions List -->
+<div class="lg:col-span-8 space-y-4">
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 px-4 font-label-md uppercase text-on-surface-variant mb-2">
+<div class="col-span-1">Prio</div>
+<div class="col-span-7">Question &amp; Reasoning</div>
+<div class="col-span-4 text-right">Status</div>
+</div>
+<!-- Question Item 1 -->
+<div class="bg-white brutal-border p-5 grid grid-cols-12 gap-4 items-start hover:bg-surface-container-low transition-colors">
+<div class="col-span-1 flex justify-start pt-1">
+<div class="w-3 h-3 bg-error brutal-border" title="Critical"></div>
+</div>
+<div class="col-span-7 space-y-2">
+<p class="font-body-lg text-on-surface leading-snug">Clarification required on Section 4.2 regarding the concrete curing additive specification. Is proprietary substitution allowed?</p>
+<p class="font-body-md italic text-on-surface-variant">Reason: Our current supplier cannot meet the exact chemical weight ratio specified in Annex B.</p>
+</div>
+<div class="col-span-4 flex justify-end">
+<select class="brutal-border bg-surface-container-highest px-3 py-1 font-label-md outline-none">
+<option>Draft</option>
+<option selected="">Approved</option>
+<option>Sent</option>
+<option>Not needed</option>
+</select>
+</div>
+</div>
+<!-- Question Item 2 -->
+<div class="bg-white brutal-border p-5 grid grid-cols-12 gap-4 items-start hover:bg-surface-container-low transition-colors">
+<div class="col-span-1 flex justify-start pt-1">
+<div class="w-3 h-3 bg-primary-container brutal-border" title="Normal"></div>
+</div>
+<div class="col-span-7 space-y-2">
+<p class="font-body-lg text-on-surface leading-snug">Confirm if the digital twin handover includes the SCADA mapping logic or just the geometric 3D models.</p>
+<p class="font-body-md italic text-on-surface-variant">Reason: Direct impact on man-hours for the integration phase.</p>
+</div>
+<div class="col-span-4 flex justify-end">
+<select class="brutal-border bg-primary-container text-on-primary-container px-3 py-1 font-label-md outline-none">
+<option>Draft</option>
+<option>Approved</option>
+<option selected="">Sent</option>
+<option>Not needed</option>
+</select>
+</div>
+</div>
+<!-- Question Item 3 -->
+<div class="bg-white brutal-border p-5 grid grid-cols-12 gap-4 items-start hover:bg-surface-container-low transition-colors opacity-75 grayscale-[0.5]">
+<div class="col-span-1 flex justify-start pt-1">
+<div class="w-3 h-3 bg-secondary brutal-border" title="Low"></div>
+</div>
+<div class="col-span-7 space-y-2">
+<p class="font-body-lg text-on-surface leading-snug">Will there be on-site storage provided for the Phase 2 heavy machinery?</p>
+<p class="font-body-md italic text-on-surface-variant">Reason: Logistics planning for mobilization costs.</p>
+</div>
+<div class="col-span-4 flex justify-end">
+<select class="brutal-border bg-surface-container px-3 py-1 font-label-md outline-none">
+<option>Draft</option>
+<option>Approved</option>
+<option>Sent</option>
+<option selected="">Not needed</option>
+</select>
+</div>
+</div>
+<!-- Question Item 4 -->
+<div class="bg-white brutal-border p-5 grid grid-cols-12 gap-4 items-start hover:bg-surface-container-low transition-colors">
+<div class="col-span-1 flex justify-start pt-1">
+<div class="w-3 h-3 bg-error brutal-border" title="Critical"></div>
+</div>
+<div class="col-span-7 space-y-2">
+<p class="font-body-lg text-on-surface leading-snug">Environmental Indemnity: Clarify the cap on liability for pre-existing ground contamination mentioned in Part 5.</p>
+<p class="font-body-md italic text-on-surface-variant">Reason: Legal review flagged this as a high-risk uncapped liability.</p>
+</div>
+<div class="col-span-4 flex justify-end">
+<select class="brutal-border bg-white px-3 py-1 font-label-md outline-none">
+<option selected="">Draft</option>
+<option>Approved</option>
+<option>Sent</option>
+<option>Not needed</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Dashboard Footprint -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter brutal-border bg-on-surface p-gutter mt-12">
+<div class="bg-white p-6">
+<p class="font-label-md uppercase text-on-surface-variant mb-2">Total Queries</p>
+<p class="font-headline-lg text-headline-lg font-data-md">14</p>
+</div>
+<div class="bg-white p-6">
+<p class="font-label-md uppercase text-on-surface-variant mb-2">Response Rate</p>
+<p class="font-headline-lg text-headline-lg font-data-md">42%</p>
+</div>
+<div class="bg-white p-6">
+<p class="font-label-md uppercase text-on-surface-variant mb-2">Time to Deadline</p>
+<p class="font-headline-lg text-headline-lg font-data-md">08d 14h</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple interactivity for priority dot tooltips or status color changes
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                const val = this.value;
+                this.classList.remove('bg-primary-container', 'bg-surface-container', 'bg-surface-container-highest', 'bg-white');
+                
+                if (val === 'Sent') this.classList.add('bg-primary-container');
+                else if (val === 'Not needed') this.classList.add('bg-surface-container');
+                else if (val === 'Approved') this.classList.add('bg-surface-container-highest');
+                else this.classList.add('bg-white');
+            });
+        });
+
+        // Add visual feedback to the "Add" button
+        const addBtn = document.querySelector('button[onclick]');
+        addBtn.addEventListener('click', () => {
+           // Small toggle state if needed via script
+        });
+    </script>
+</body></html>

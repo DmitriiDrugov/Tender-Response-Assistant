@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tender Response Assistant - Documents</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffe16d",
+                        "primary-fixed-dim": "#e9c400",
+                        "primary": "#705d00",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#221b00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "secondary-fixed": "#e4e2e1",
+                        "background": "#fbf9f8",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#5e5f60",
+                        "tertiary-container": "#d9dada",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7e775f",
+                        "inverse-primary": "#e9c400",
+                        "tertiary": "#5d5f5f",
+                        "primary-container": "#ffd700",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface": "#fbf9f8",
+                        "on-surface-variant": "#4d4732",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed-variant": "#544600",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "edge-margin": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Public Sans"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"],
+                        "headline-md": ["Source Serif 4"],
+                        "headline-lg": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .brutalist-border {
+            border: 1px solid #333333;
+        }
+        .brutalist-border-heavy {
+            border: 2px solid #333333;
+        }
+        .data-grid-row:nth-child(even) {
+            background-color: #f6f3f2;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden flex h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high dark:bg-surface-container-low border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-inset-stretch z-50">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">Tender Response</h1>
+<p class="text-on-surface-variant font-label-mono text-xs mt-1 uppercase tracking-widest">Procurement Triage</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-mono text-label-mono">Tenders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-mono text-label-mono">Capabilities</span>
+</a>
+</nav>
+<div class="mt-auto p-4 space-y-4">
+<div class="flex items-center gap-3 px-4 py-3 brutalist-border bg-white">
+<img alt="User avatar" class="w-8 h-8 rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPY3mnTaKCDS1GpZzlxb01_LsXgZec3z7rSiHp0wuYAraF_G9tBvM0vJIBr-m5aXdHEKJVgXb3lRnuzN0KY-swzL4tMQDeLbnN6jlvb0Do6UWClCi1VjA1MNW3uCxxwo2bKDqAKA8KHGTsFtmDd1tDPudkNJtpz_4Sws9hNqZSilAq5qGkqIamw19w6iP0mcVcZGoncAyxQoX62BhE1D2gstzO3DeqWpFgs_oLJTVzaHWvlBK_mUdSC2kHNp2urt4ZR-YT-MnFpLXz"/>
+<div class="overflow-hidden">
+<p class="text-label-md font-bold truncate">Lead Estimator</p>
+<p class="text-[10px] text-on-surface-variant truncate">v2.4.1-PROD</p>
+</div>
+</div>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-mono text-label-mono">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 flex flex-col h-full">
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 w-full z-40 bg-surface dark:bg-background border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-6 py-4 gap-4">
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Tender Response Assistant</span>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="brutalist-border bg-white px-3 py-1 text-xs font-data-md w-64 focus:ring-0 focus:border-primary" placeholder="SEARCH ARCHIVE..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-sm" data-icon="search">search</span>
+</div>
+<button class="p-1 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-1 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+<nav class="flex gap-8">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Requirements</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Page Canvas -->
+<div class="flex-1 overflow-auto p-6 bg-surface-container-low">
+<!-- Section Header with Industrial Badge -->
+<div class="flex items-center justify-between mb-6 brutalist-border-heavy bg-white p-4">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-tight">Required documents</h2>
+<div class="bg-primary-container text-on-primary-container brutalist-border px-3 py-1 flex items-center gap-2">
+<span class="font-data-md text-sm">14/16</span>
+<span class="font-label-md text-[10px] uppercase">PREPARED</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="brutalist-border px-4 py-2 font-label-md text-xs hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        FILTER
+                    </button>
+<button class="bg-primary-container brutalist-border-heavy px-4 py-2 font-label-md text-xs hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        UPLOAD NEW
+                    </button>
+</div>
+</div>
+<!-- Documents Table -->
+<div class="brutalist-border-heavy bg-white overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-on-surface text-white border-b border-on-surface">
+<tr>
+<th class="w-12 p-3 text-center">
+<span class="material-symbols-outlined text-xs" data-icon="fiber_manual_record">fiber_manual_record</span>
+</th>
+<th class="p-3 font-label-md text-xs uppercase tracking-wider">Document Name</th>
+<th class="p-3 font-label-md text-xs uppercase tracking-wider w-64">Source Section</th>
+<th class="p-3 font-label-md text-xs uppercase tracking-wider text-right w-48">Status / Action</th>
+</tr>
+</thead>
+<tbody class="font-data-md text-data-md">
+<!-- Row 1: Approved -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-primary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">ISO 9001:2015 Certification</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[ANNEX_A_TECHNICAL]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-green-100 text-green-800 font-bold uppercase w-32">Approved</button>
+</td>
+</tr>
+<!-- Row 2: Needs Review -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-primary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Environmental Impact Statement</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[SEC_04_ESG]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-orange-100 text-orange-800 font-bold uppercase w-32">Needs Review</button>
+</td>
+</tr>
+<!-- Row 3: Missing -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-error mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Sub-contractor Insurance Deeds</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[LEGAL_COMP_02]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-error text-on-error font-bold uppercase w-32">Missing</button>
+</td>
+</tr>
+<!-- Row 4: Prepared -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-primary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Financial Audit - Q4 2023</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[FINANCIAL_STMT]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-primary-container text-on-primary-container font-bold uppercase w-32">Prepared</button>
+</td>
+</tr>
+<!-- Row 5: In Progress -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-primary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Health &amp; Safety Plan v2</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[HSE_OPERATIONAL]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-blue-100 text-blue-800 font-bold uppercase w-32">In Progress</button>
+</td>
+</tr>
+<!-- Row 6: Uploaded -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-primary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Past Performance Case Study A</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[REF_PROJECTS]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-surface-container-highest text-on-surface font-bold uppercase w-32">Uploaded</button>
+</td>
+</tr>
+<!-- Row 7: Requested -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 rounded-full bg-secondary mx-auto"></div>
+</td>
+<td class="p-3 font-bold">Joint Venture Agreement</td>
+<td class="p-3 text-on-surface-variant font-mono text-[11px]">[CORP_STRUCT]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-secondary-fixed text-on-secondary-fixed font-bold uppercase w-32">Requested</button>
+</td>
+</tr>
+<!-- Row 8: N/A -->
+<tr class="data-grid-row border-b border-on-surface/10 hover:bg-primary-container/10 transition-colors">
+<td class="p-3 text-center">
+<div class="w-2 h-2 border border-on-surface-variant/20 mx-auto"></div>
+</td>
+<td class="p-3 font-bold text-on-surface-variant/60">Import Licenses (Non-applicable)</td>
+<td class="p-3 text-on-surface-variant/40 font-mono text-[11px]">[LOGISTICS_04]</td>
+<td class="p-3 text-right">
+<button class="brutalist-border px-2 py-1 text-[10px] bg-transparent text-on-surface-variant/50 font-bold uppercase w-32">N/A</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Dashboard Visual Insight Area (Asymmetric Layout) -->
+<div class="mt-8 grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-4 brutalist-border p-6 bg-white flex flex-col justify-between">
+<div>
+<p class="font-label-md text-xs uppercase text-on-surface-variant mb-2">Compliance Risk Score</p>
+<h3 class="font-headline-lg text-headline-lg">94%</h3>
+<p class="text-xs text-on-surface-variant mt-4 leading-relaxed">System calculated based on missing sub-contractor insurance deeds and environmental certification review lag.</p>
+</div>
+<div class="mt-8 h-2 bg-surface-container w-full">
+<div class="h-full bg-primary" style="width: 94%;"></div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-8 brutalist-border overflow-hidden bg-white">
+<div class="bg-on-surface text-white p-3 flex justify-between items-center">
+<span class="font-label-md text-xs uppercase">Recent Activity Log</span>
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+</div>
+<div class="p-4 space-y-3 font-data-md text-xs">
+<div class="flex items-start gap-4 border-b border-surface-container pb-2">
+<span class="text-primary font-bold">14:22</span>
+<span class="flex-1 uppercase">ISO 9001:2015 Certification approved by [REGINA_QA]</span>
+</div>
+<div class="flex items-start gap-4 border-b border-surface-container pb-2">
+<span class="text-primary font-bold">11:05</span>
+<span class="flex-1 uppercase">Health &amp; Safety Plan v2 uploaded by [LEAD_EST]</span>
+</div>
+<div class="flex items-start gap-4 border-b border-surface-container pb-2">
+<span class="text-primary font-bold">09:12</span>
+<span class="flex-1 uppercase text-error">Warning: Sub-contractor Insurance Deeds missing for 48 hours</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Graphic / Data Visualization Placeholder -->
+<div class="mt-6 brutalist-border h-32 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/5"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+<span class="material-symbols-outlined text-[120px]" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div class="relative z-10 p-6 flex flex-col justify-center h-full">
+<span class="font-label-md text-xs uppercase text-primary">System Health Monitoring</span>
+<p class="font-headline-sm text-headline-sm uppercase mt-1">Operational Matrix Normal</p>
+</div>
+<!-- Image prompt for a technical, data-heavy backdrop if this were an img -->
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-50 grayscale mix-blend-multiply">
+<img class="object-cover w-full h-full" data-alt="A detailed industrial technical schematic or blueprint with precise linework, measurements, and annotations. The aesthetic is brutalist and utilitarian, featuring a monochrome palette of grays and blacks with slight yellow signal accents. High contrast lighting emphasizes the structural complexity of an industrial machine layout in a modern, clean light-mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXTwlYf2H_TvtXcNhb8EcvkimcWDNlPKOvQZkzdSwsKODHQa37xiIt1qnZJ_OHEtRsSKoQjaTn-jjLi9egfR365iABq1GNh7M5PV_iyfwF_El7k8PqVcE6e2K6WQj7wJ3_Tr8Q8zrOmxF9AHBgbcRFzPqLD7BSC98m2LA7GaEDfDxDv6XDsjYK7ma3CS8HKOav1puXWdf6D4mWMz_f-DZVjiIKJ8F9yLOiOgRew6clw3h_s8sRsJ855xsqzQuHjbWasXVhxogbUgHh"/>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.98)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

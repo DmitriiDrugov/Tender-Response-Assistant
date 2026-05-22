@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tenders | Tender Response Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        /* Industrial Brutalism Custom Utilities */
+        .brutal-border { border: 1px solid #333333; }
+        .brutal-border-heavy { border: 2px solid #333333; }
+        .brutal-shadow-active { box-shadow: 4px 4px 0px 0px #333333; }
+        .dashed-zone { background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e"); }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#e4e2e1",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "secondary-fixed": "#e4e2e1",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "background": "#fbf9f8",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#ffd700",
+                      "surface-container-highest": "#e4e2e1",
+                      "surface": "#fbf9f8",
+                      "secondary-fixed-dim": "#c8c6c6",
+                      "surface-variant": "#e4e2e1",
+                      "on-surface": "#1b1c1c",
+                      "on-primary-container": "#705e00",
+                      "inverse-primary": "#e9c400",
+                      "on-primary-fixed-variant": "#544600",
+                      "surface-dim": "#dcd9d9",
+                      "primary": "#705d00",
+                      "secondary": "#5f5e5e",
+                      "outline": "#7e775f",
+                      "on-background": "#1b1c1c",
+                      "surface-container-high": "#eae8e7",
+                      "inverse-surface": "#303030",
+                      "on-secondary-fixed-variant": "#474747",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#656464",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#5d5f5f",
+                      "primary-fixed": "#ffe16d",
+                      "on-primary-fixed": "#221b00",
+                      "on-tertiary-container": "#5e5f60",
+                      "surface-bright": "#fbf9f8",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface-container": "#f0eded",
+                      "tertiary-container": "#d9dada",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#4d4732",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#e9c400",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-tint": "#705d00",
+                      "outline-variant": "#d0c6ab",
+                      "inverse-on-surface": "#f3f0f0",
+                      "tertiary-fixed-dim": "#c6c6c7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "gutter": "1px",
+                      "lg": "24px",
+                      "edge-margin": "16px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Source Serif 4"],
+                      "headline-md": ["Source Serif 4"],
+                      "body-lg": ["Public Sans"],
+                      "headline-lg": ["Source Serif 4"],
+                      "data-md": ["JetBrains Mono"],
+                      "label-md": ["Public Sans"],
+                      "headline-lg-mobile": ["Source Serif 4"],
+                      "body-md": ["Public Sans"],
+                      "label-mono": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "label-mono": ["11px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex font-body-md">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high dark:bg-surface-container-low border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h2 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">Tender Response</h2>
+<p class="font-label-mono text-label-mono opacity-60">Procurement Triage</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 text-primary font-bold border-r-2 border-primary bg-surface-variant/30 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-mono text-label-mono">Tenders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-mono text-label-mono">Capabilities</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-[oklch(0.215_0.012_70_/_0.1)] pt-6">
+<div class="flex items-center gap-3 px-3 mb-6">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold">JD</div>
+<div>
+<p class="text-xs font-bold">John Doe</p>
+<p class="text-[10px] opacity-60">Lead Estimator</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-mono text-label-mono">Logout</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 ml-64 flex flex-col">
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 w-full z-40 bg-surface dark:bg-background border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-10 py-4 gap-4">
+<div class="flex items-center justify-between">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Tender Response Assistant</h1>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-1 hover:text-primary transition-colors duration-200" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-1 hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-1 hover:text-primary transition-colors duration-200" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-1 hover:text-primary transition-colors duration-200" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-1 hover:text-primary transition-colors duration-200" href="#">Action plan</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 hover:bg-surface-variant/50 rounded transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined p-2 hover:bg-surface-variant/50 rounded transition-colors" data-icon="settings">settings</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-5xl mx-auto px-10 py-12">
+<!-- Page Header -->
+<section class="mb-12">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Tenders</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Upload a tender PDF. Requirements are extracted, matched against your capability matrix, drafted, and screened for risk. You review the result.
+                </p>
+</section>
+<!-- Upload Card -->
+<section class="mb-16">
+<div class="dashed-zone brutal-border h-64 flex flex-col items-center justify-center p-8 bg-surface-container-lowest hover:bg-surface transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline mb-4 group-hover:scale-110 transition-transform" data-icon="upload_file">upload_file</span>
+<p class="font-label-md text-label-md mb-6">DRAG AND DROP A TENDER PDF OR CLICK TO BROWSE</p>
+<button class="bg-primary-container text-on-primary-container px-8 py-3 font-label-md text-label-md brutal-border-heavy hover:brutal-shadow-active transition-all active:scale-95">
+                        UPLOAD PDF
+                    </button>
+</div>
+</section>
+<!-- Past Tenders Section -->
+<section>
+<div class="flex items-end justify-between mb-6 border-b-2 border-on-surface pb-2">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface">PAST TENDERS</span>
+<span class="bg-on-surface text-surface px-2 py-0.5 font-label-mono text-label-mono">14</span>
+</div>
+<button class="text-xs font-label-mono underline uppercase tracking-wider hover:text-primary">Download History</button>
+</div>
+<!-- Tenders List -->
+<div class="space-y-4">
+<!-- Row 1: Active Progress -->
+<div class="brutal-border bg-surface-container-low p-6 hover:bg-white transition-colors">
+<div class="grid grid-cols-12 gap-6 items-center">
+<!-- Left: Info -->
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<a class="font-headline-sm text-headline-sm text-primary hover:underline" href="#">Sydney Metro West C601 Tunneling</a>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_outward">arrow_outward</span>
+</div>
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono uppercase opacity-70">Infrastructure NSW</p>
+<div class="flex items-center gap-3">
+<p class="font-label-mono text-label-mono text-error font-bold uppercase">Deadline: 14 Oct (Overdue)</p>
+<span class="w-1 h-1 bg-outline rounded-full"></span>
+<p class="font-label-mono text-label-mono opacity-60">Updated 2h ago</p>
+</div>
+</div>
+</div>
+<!-- Middle: Coverage -->
+<div class="col-span-4">
+<p class="font-label-md text-label-md mb-3 text-on-surface-variant">CAPABILITY COVERAGE</p>
+<div class="flex h-3 w-full brutal-border overflow-hidden">
+<div class="bg-primary h-full w-[65%]" title="Covered: 65%"></div>
+<div class="bg-primary-fixed h-full w-[20%]" title="Partial: 20%"></div>
+<div class="bg-surface-variant h-full w-[10%]" title="Missing: 10%"></div>
+<div class="bg-error h-full w-[5%]" title="Unclear: 5%"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-mono text-[10px] opacity-60">
+<span>24 Covered</span>
+<span>2 Unclear</span>
+</div>
+</div>
+<!-- Right: Score & Actions -->
+<div class="col-span-3 flex items-center justify-end gap-6">
+<div class="text-right">
+<p class="font-label-mono text-[10px] opacity-60">MATCH</p>
+<p class="font-headline-md text-headline-md leading-none">85%</p>
+</div>
+<button class="brutal-border p-2 hover:bg-error hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Pipeline Progress Bar -->
+<div class="mt-6 pt-4 border-t border-outline-variant/30">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-mono text-label-mono uppercase font-bold text-primary">Pipeline Progress: Screening Risks</span>
+<span class="font-label-mono text-label-mono">75%</span>
+</div>
+<div class="w-full bg-secondary-container h-1">
+<div class="bg-primary h-full w-[75%] transition-all duration-1000 ease-in-out"></div>
+</div>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="brutal-border bg-surface-container-low p-6 hover:bg-white transition-colors">
+<div class="grid grid-cols-12 gap-6 items-center">
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<a class="font-headline-sm text-headline-sm text-on-surface hover:underline" href="#">WA Renewable Hub - Substation B</a>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_outward">arrow_outward</span>
+</div>
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono uppercase opacity-70">EnergyCo WA</p>
+<div class="flex items-center gap-3">
+<p class="font-label-mono text-label-mono opacity-80 uppercase">Deadline: 28 Nov (12 d)</p>
+<span class="w-1 h-1 bg-outline rounded-full"></span>
+<p class="font-label-mono text-label-mono opacity-60">Updated 1d ago</p>
+</div>
+</div>
+</div>
+<div class="col-span-4">
+<p class="font-label-md text-label-md mb-3 text-on-surface-variant">CAPABILITY COVERAGE</p>
+<div class="flex h-3 w-full brutal-border overflow-hidden">
+<div class="bg-primary h-full w-[40%]" title="Covered"></div>
+<div class="bg-primary-fixed h-full w-[10%]" title="Partial"></div>
+<div class="bg-surface-variant h-full w-[40%]" title="Missing"></div>
+<div class="bg-error h-full w-[10%]" title="Unclear"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-mono text-[10px] opacity-60">
+<span>12 Covered</span>
+<span>8 Missing</span>
+</div>
+</div>
+<div class="col-span-3 flex items-center justify-end gap-6">
+<div class="text-right">
+<p class="font-label-mono text-[10px] opacity-60">MATCH</p>
+<p class="font-headline-md text-headline-md leading-none">42%</p>
+</div>
+<button class="brutal-border p-2 hover:bg-error hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="brutal-border bg-surface-container-low p-6 hover:bg-white transition-colors">
+<div class="grid grid-cols-12 gap-6 items-center">
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<a class="font-headline-sm text-headline-sm text-on-surface hover:underline" href="#">Brisbane Logistics Hub - Phase 4</a>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_outward">arrow_outward</span>
+</div>
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono uppercase opacity-70">Port of Brisbane</p>
+<div class="flex items-center gap-3">
+<p class="font-label-mono text-label-mono opacity-80 uppercase">Deadline: 02 Dec (16 d)</p>
+<span class="w-1 h-1 bg-outline rounded-full"></span>
+<p class="font-label-mono text-label-mono opacity-60">Updated 4d ago</p>
+</div>
+</div>
+</div>
+<div class="col-span-4">
+<p class="font-label-md text-label-md mb-3 text-on-surface-variant">CAPABILITY COVERAGE</p>
+<div class="flex h-3 w-full brutal-border overflow-hidden">
+<div class="bg-primary h-full w-[92%]" title="Covered"></div>
+<div class="bg-primary-fixed h-full w-[8%]" title="Partial"></div>
+<div class="bg-surface-variant h-full w-[0%]" title="Missing"></div>
+<div class="bg-error h-full w-[0%]" title="Unclear"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-mono text-[10px] opacity-60">
+<span>38 Covered</span>
+<span>0 Missing</span>
+</div>
+</div>
+<div class="col-span-3 flex items-center justify-end gap-6">
+<div class="text-right">
+<p class="font-label-mono text-[10px] opacity-60">MATCH</p>
+<p class="font-headline-md text-headline-md leading-none">96%</p>
+</div>
+<button class="brutal-border p-2 hover:bg-error hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-8 flex justify-center">
+<button class="brutal-border px-10 py-3 font-label-md text-label-md hover:bg-on-surface hover:text-surface transition-all">
+                        LOAD MORE TENDERS
+                    </button>
+</div>
+</section>
+<!-- Bottom Context/Summary Cards -->
+<section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-gutter bg-outline border brutal-border">
+<div class="bg-surface-container p-6">
+<p class="font-label-mono text-[10px] uppercase mb-2 opacity-60">Total Value Scanned</p>
+<p class="font-headline-md text-headline-md">$1.2B</p>
+<p class="text-[10px] font-label-mono text-primary mt-2">▲ 12.5% FROM LAST MONTH</p>
+</div>
+<div class="bg-surface-container p-6 border-l brutal-border">
+<p class="font-label-mono text-[10px] uppercase mb-2 opacity-60">Drafting Efficiency</p>
+<p class="font-headline-md text-headline-md">-64h</p>
+<p class="text-[10px] font-label-mono opacity-60 mt-2">AVG TIME SAVED PER RESPONSE</p>
+</div>
+<div class="bg-surface-container p-6 border-l brutal-border">
+<p class="font-label-mono text-[10px] uppercase mb-2 opacity-60">Matrix Health</p>
+<p class="font-headline-md text-headline-md">Optimal</p>
+<p class="text-[10px] font-label-mono text-tertiary mt-2">CAPABILITY DATA SYNCED 4H AGO</p>
+</div>
+</section>
+</main>
+<!-- Footer Branding -->
+<footer class="px-10 py-6 border-t border-outline-variant/30 flex justify-between items-center bg-surface-container-low">
+<p class="font-label-mono text-[10px] opacity-40 uppercase tracking-widest">System Status: Nominal // Deployment: v2.4.1</p>
+<div class="flex gap-4">
+<a class="font-label-mono text-[10px] opacity-40 hover:opacity-100 uppercase" href="#">Privacy</a>
+<a class="font-label-mono text-[10px] opacity-40 hover:opacity-100 uppercase" href="#">Terms</a>
+<a class="font-label-mono text-[10px] opacity-40 hover:opacity-100 uppercase" href="#">Support</a>
+</div>
+</footer>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate dragging effect on upload card
+            const uploadCard = document.querySelector('.dashed-zone');
+            uploadCard.addEventListener('mouseenter', () => {
+                uploadCard.style.backgroundColor = '#ffffff';
+            });
+            uploadCard.addEventListener('mouseleave', () => {
+                uploadCard.style.backgroundColor = 'var(--surface-container-lowest)';
+            });
+
+            // Smooth simple scaling for buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.98)');
+                btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
+            });
+        });
+    </script>
+</body></html>

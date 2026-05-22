@@ -64,6 +64,15 @@
     font-size: 1.25rem;
   }
 
+  /* Pulsing dot for the active pipeline step */
+  .dot-pulse {
+    animation: dot-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.35; transform: scale(0.75); }
+  }
+
   /* The "ink stroke" thinking indicator — 1px animated SVG path */
   .ink-stroke {
     width: 1.5rem;

@@ -19,9 +19,6 @@ Read these before touching any feature area:
 | File | What it governs |
 |------|----------------|
 | `PRODUCT.md` | Purpose, users, tone, strategic principles, anti-references |
-| `DESIGN.md` | Full design system: color tokens, typography, spacing, component specs, motion, accessibility |
-
-Never invent design decisions. If `DESIGN.md` specifies a token, use it. If a pattern is not in `DESIGN.md`, ask before adding it.
 
 ---
 
@@ -30,7 +27,7 @@ Never invent design decisions. If `DESIGN.md` specifies a token, use it. If a pa
 | Layer | Technology |
 |-------|-----------|
 | Framework | Next.js 15 App Router (TypeScript strict) |
-| Styling | Tailwind CSS v3 with custom tokens from `DESIGN.md` |
+| Styling | Tailwind CSS v3 with custom tokens |
 | Database | Supabase (Postgres + Row Level Security) |
 | AI SDK | `openai` npm package (used as the API client) |
 | Validation | Zod |
@@ -69,10 +66,9 @@ Follow this layout. Do not create new top-level directories without a documented
 - Never expose Supabase service role key to the client. Use the anon key on the client side.
 
 ### Styling
-- Use the CSS custom properties defined in `DESIGN.md` for all color. Never raw hex, `#000`, or `#fff`.
 - Status colors appear only as the 6px dot and/or text label — never as full row backgrounds or side stripes.
 - No gradients, no glassmorphism, no `transition-all` (specify properties explicitly).
-- Motion timings from `DESIGN.md`: 160ms hover, 240ms row expand, 320ms panel.
+- Motion timings: 160ms hover, 240ms row expand, 320ms panel.
 
 ### Components
 - No nested cards. Requirement items are rows with hairline dividers.
@@ -95,7 +91,7 @@ Follow this layout. Do not create new top-level directories without a documented
 2. **Source excerpts are sacred.** Display the PDF quote verbatim. Never paraphrase it in the UI.
 3. **Honest classification.** Do not default uncertain matches to "fully_covered". Surface the gap.
 4. **Density is a feature.** Do not pad components with unnecessary whitespace. The user scans 200+ requirements.
-5. **Export looks like a procurement document.** See the DOCX spec in `DESIGN.md`.
+5. **Export looks like a procurement document.** A4, serif body, section hierarchy, no status colors — black text only.
 
 ---
 

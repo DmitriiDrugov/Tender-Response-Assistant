@@ -8,12 +8,16 @@ const paramsSchema = z.object({ id: z.string().uuid() });
 
 const patchSchema = z
   .object({
-    status: z
-      .enum(["missing", "requested", "in_progress", "uploaded", "prepared", "needs_review", "approved", "not_applicable"])
+    decision: z
+      .enum(["accept", "mitigate", "clarify", "escalate_legal", "exclude_from_offer", "no_bid_trigger", "false_positive"])
+      .nullable()
       .optional(),
+    mitigation: z.string().nullable().optional(),
+    business_impact: z.string().nullable().optional(),
     owner_name: z.string().nullable().optional(),
-    due_date: z.string().nullable().optional(),
-    is_required: z.boolean().optional(),
+    team: z.string().nullable().optional(),
+    is_false_positive: z.boolean().optional(),
+    false_positive_reason: z.string().nullable().optional(),
   })
   .strict();
 
@@ -29,17 +33,23 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   }
 
   const update: Record<string, unknown> = {};
-  if ("status" in body) update.status = body.status;
+  if ("decision" in body) update.decision = body.decision;
+  if ("mitigation" in body) update.mitigation = body.mitigation;
+  if ("business_impact" in body) update.business_impact = body.business_impact;
   if ("owner_name" in body) update.owner_name = body.owner_name;
-  if ("due_date" in body) update.due_date = body.due_date;
-  if ("is_required" in body) update.is_required = body.is_required;
+  if ("team" in body) update.team = body.team;
+  if ("is_false_positive" in body) {
+    update.is_false_positive = body.is_false_positive;
+    if (body.is_false_positive === false) update.false_positive_reason = null;
+  }
+  if ("false_positive_reason" in body) update.false_positive_reason = body.false_positive_reason;
 
   if (Object.keys(update).length === 0) {
     return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
   }
 
   const r = await sb
-    .from("required_documents")
+    .from("risks")
     .update(update)
     .eq("id", id)
     .select("*")

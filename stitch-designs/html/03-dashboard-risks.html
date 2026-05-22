@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tender Response Assistant - Risks</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffe16d",
+                        "primary-fixed-dim": "#e9c400",
+                        "primary": "#705d00",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#221b00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "secondary-fixed": "#e4e2e1",
+                        "background": "#fbf9f8",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#5e5f60",
+                        "tertiary-container": "#d9dada",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "on-background": "#1b1c1c",
+                        "outline": "#7e775f",
+                        "inverse-primary": "#e9c400",
+                        "tertiary": "#5d5f5f",
+                        "primary-container": "#ffd700",
+                        "surface-bright": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface": "#fbf9f8",
+                        "on-surface-variant": "#4d4732",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-primary-fixed-variant": "#544600",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "edge-margin": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Public Sans"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"],
+                        "headline-md": ["Source Serif 4"],
+                        "headline-lg": ["Source Serif 4"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        body {
+            background-color: #fbf9f8;
+            color: #1b1c1c;
+        }
+        .industrial-border {
+            border: 1px solid #333333;
+        }
+        .industrial-border-thick {
+            border: 2px solid #333333;
+        }
+        .tiled-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1px;
+            background-color: #333333;
+        }
+        .tiled-cell {
+            background-color: #fbf9f8;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high dark:bg-surface-container-low border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-inset-stretch z-50">
+<div class="px-md py-lg">
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold">Tender Response</h1>
+<p class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Procurement Triage</p>
+</div>
+<nav class="flex-1 px-sm space-y-1">
+<a class="flex items-center gap-3 px-md py-sm text-primary font-bold border-r-2 border-primary hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-mono text-label-mono">Tenders</span>
+</a>
+<a class="flex items-center gap-3 px-md py-sm text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-mono text-label-mono">Capabilities</span>
+</a>
+</nav>
+<div class="mt-auto px-md py-lg border-t border-[oklch(0.215_0.012_70_/_0.1)]">
+<div class="flex items-center gap-3 mb-6">
+<img alt="User avatar" class="w-10 h-10 rounded-none industrial-border" data-alt="A professional close-up portrait of a corporate executive in a neutral industrial setting. The lighting is sharp and clinical, reflecting a modern industrial aesthetic. The color palette is dominated by muted concrete greys and charcoal blacks, maintaining a high-contrast and authoritative visual tone consistent with procurement software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvu8ekV4J-nv1Xj5QSKMxYvxF9LV1J976i66hYUWx4XUH-ttbmFaRBpZF10TpF2OtSXyYM7QSHkD5SJsrAbUlCaaQDKb9gDyIRVJqIyWwMgrb2SnrxfCbR5ovpVxcs3wCKokxsWkBy0Q7byCK2s1Rv7Ff68TjQVDX1mASMVIY9d6X-52umaqW6zOtxlLU9943wPYVXeSUkR54YuWN7tqMCbkuJeniHTD3eH5eK33-yZBNaXvQQVlBvoaYDNwYTO5J7A_3Fzpf7lTA2"/>
+<div>
+<p class="font-label-md text-label-md uppercase">J. Anderson</p>
+<p class="text-[10px] text-on-surface-variant font-data-md">Lead Proc. Officer</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-md py-sm text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-mono text-label-mono">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 w-full z-40 bg-surface dark:bg-background border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-margin-page py-4 gap-4">
+<div class="flex justify-between items-center px-4">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Tender Response Assistant</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative industrial-border px-3 py-1 flex items-center gap-2 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 font-label-md text-label-md w-48 uppercase" placeholder="SEARCH REGISTRY..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors scale-95" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors scale-95" data-icon="settings">settings</button>
+</div>
+</div>
+</div>
+<nav class="flex gap-8 px-4 mt-2">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Documents</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Clarifications</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Dashboard Canvas -->
+<section class="p-8 max-w-7xl">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8 border-b-2 border-on-surface pb-4">
+<div>
+<div class="flex items-center gap-4">
+<h2 class="font-headline-lg text-headline-lg uppercase tracking-tight">Risks</h2>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 industrial-border font-label-md text-label-md">5 ACTIVE</span>
+</div>
+<p class="font-body-md text-on-surface-variant mt-1">Registry of identified logistical, legal, and operational vulnerabilities for Project TR-2024-08.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-primary text-on-primary px-6 py-2 industrial-border font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-2 uppercase">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Log New Risk
+                    </button>
+<button class="bg-surface-container-lowest text-on-surface px-6 py-2 industrial-border font-label-md text-label-md hover:bg-surface-container-high transition-colors flex items-center gap-2 uppercase">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- Risk Matrix/Stats (Industrial Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter bg-[#333333] industrial-border mb-8 overflow-hidden">
+<div class="bg-surface-container-lowest p-4">
+<p class="font-label-md text-on-surface-variant mb-2 uppercase">Critical Exposure</p>
+<p class="font-headline-md text-error">02</p>
+</div>
+<div class="bg-surface-container-lowest p-4">
+<p class="font-label-md text-on-surface-variant mb-2 uppercase">Mitigation Pending</p>
+<p class="font-headline-md text-primary">03</p>
+</div>
+<div class="bg-surface-container-lowest p-4">
+<p class="font-label-md text-on-surface-variant mb-2 uppercase">Legal/Compliance</p>
+<p class="font-headline-md text-on-surface">01</p>
+</div>
+<div class="bg-surface-container-lowest p-4">
+<p class="font-label-md text-on-surface-variant mb-2 uppercase">Days to Deadline</p>
+<p class="font-headline-md text-on-surface">14</p>
+</div>
+</div>
+<!-- Risk List -->
+<div class="space-y-4">
+<!-- Risk Item 1 -->
+<div class="industrial-border bg-white overflow-hidden">
+<div class="bg-on-surface text-white px-4 py-2 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-3 h-3 rounded-none bg-error"></span>
+<span class="font-label-md uppercase tracking-widest">CRITICAL RISK</span>
+</div>
+<span class="font-data-md text-[11px]">ID: R-772-B</span>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
+<div class="md:col-span-4">
+<p class="font-label-md text-on-surface-variant uppercase mb-1">Category</p>
+<p class="font-headline-sm mb-4">Supply Chain Disruption</p>
+<p class="font-label-md text-on-surface-variant uppercase mb-1">Source Location</p>
+<code class="block font-data-md bg-surface-container px-2 py-1 mb-4 text-xs">Section 4.2.1: Material Sourcing (Annex C)</code>
+<div class="inline-block bg-primary-container/20 text-on-primary-container px-2 py-1 border border-primary/30 font-label-md uppercase">
+                                Decision: Mitigate
+                            </div>
+</div>
+<div class="md:col-span-5 border-l border-surface-variant pl-8">
+<p class="font-label-md text-on-surface-variant uppercase mb-2">Description</p>
+<p class="font-body-md mb-6 leading-relaxed">Primary lithium-ion component supplier in Region 4 has reported a 30% reduction in production capacity for Q3/Q4. Potential impact on assembly deadlines for Unit Type-G.</p>
+<p class="font-label-md text-on-surface-variant uppercase mb-2">Mitigation Strategy</p>
+<div class="bg-surface-container-low p-3 industrial-border text-on-surface font-body-md text-sm italic">
+                                "Activate backup supply agreement with Vendor 'Aegis'. Pre-purchase 500 units ahead of October 1st deadline."
+                            </div>
+</div>
+<div class="md:col-span-3 flex flex-col justify-end gap-3">
+<label class="font-label-md text-on-surface-variant uppercase">Update Status</label>
+<select class="industrial-border-thick bg-white p-2 font-label-md uppercase text-on-surface focus:ring-0 focus:border-primary">
+<option>Mitigate</option>
+<option>Accept</option>
+<option>Clarify</option>
+<option>Transfer</option>
+<option>Avoid</option>
+</select>
+<button class="bg-on-surface text-white p-2 industrial-border font-label-md uppercase hover:bg-secondary transition-colors">
+                                Commit Changes
+                            </button>
+</div>
+</div>
+</div>
+<!-- Risk Item 2 -->
+<div class="industrial-border bg-white overflow-hidden">
+<div class="bg-primary text-on-primary px-4 py-2 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-3 h-3 rounded-none bg-primary-fixed"></span>
+<span class="font-label-md uppercase tracking-widest">HIGH RISK</span>
+</div>
+<span class="font-data-md text-[11px]">ID: R-812-L</span>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
+<div class="md:col-span-4">
+<p class="font-label-md text-on-surface-variant uppercase mb-1">Category</p>
+<p class="font-headline-sm mb-4">Legal Compliance</p>
+<p class="font-label-md text-on-surface-variant uppercase mb-1">Source Location</p>
+<code class="block font-data-md bg-surface-container px-2 py-1 mb-4 text-xs">Contract Clause 19.4: IP Indemnification</code>
+<div class="inline-block bg-surface-variant text-on-surface-variant px-2 py-1 border border-outline font-label-md uppercase">
+                                Decision: Pending Clarification
+                            </div>
+</div>
+<div class="md:col-span-5 border-l border-surface-variant pl-8">
+<p class="font-label-md text-on-surface-variant uppercase mb-2">Description</p>
+<p class="font-body-md mb-6 leading-relaxed">Ambiguity regarding the ownership of sub-component firmware updates post-deployment. Clause 19.4 may expose the firm to liability for third-party patents.</p>
+<p class="font-label-md text-on-surface-variant uppercase mb-2">Mitigation Strategy</p>
+<div class="bg-surface-container-low p-3 border border-dashed border-outline text-on-surface-variant font-body-md text-sm">
+                                No mitigation defined. Awaiting legal counsel review of subcontractor agreements.
+                            </div>
+</div>
+<div class="md:col-span-3 flex flex-col justify-end gap-3">
+<label class="font-label-md text-on-surface-variant uppercase">Update Status</label>
+<select class="industrial-border-thick bg-white p-2 font-label-md uppercase text-on-surface focus:ring-0 focus:border-primary">
+<option>Clarify</option>
+<option>Mitigate</option>
+<option>Accept</option>
+<option>Transfer</option>
+<option>Avoid</option>
+</select>
+<button class="bg-on-surface text-white p-2 industrial-border font-label-md uppercase hover:bg-secondary transition-colors">
+                                Commit Changes
+                            </button>
+</div>
+</div>
+</div>
+<!-- Risk Item 3 (Moderate) -->
+<div class="industrial-border bg-surface-container-lowest opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
+<div class="bg-secondary text-white px-4 py-1 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-none bg-on-tertiary-fixed"></span>
+<span class="font-label-md uppercase tracking-widest text-[10px]">MODERATE RISK</span>
+</div>
+<span class="font-data-md text-[10px]">ID: R-905-S</span>
+</div>
+<div class="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="md:col-span-3">
+<p class="font-label-md text-on-surface-variant uppercase text-[10px]">Category</p>
+<p class="font-body-lg font-bold">Labor Availability</p>
+</div>
+<div class="md:col-span-6 border-l border-surface-variant pl-4">
+<p class="font-body-md text-sm">Projected shortage of certified safety inspectors for the December commissioning window.</p>
+</div>
+<div class="md:col-span-3 text-right">
+<div class="inline-block bg-surface-container-highest text-on-surface px-3 py-1 industrial-border font-label-md uppercase text-[10px]">
+                                Decision: Accepted
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Registry Footer Info -->
+<div class="mt-12 p-4 bg-surface-container text-on-surface-variant border border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="font-label-md uppercase text-[10px]">Last Sync</span>
+<span class="font-data-md text-xs">2023-10-24 09:14:22 UTC</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md uppercase text-[10px]">Registry Hash</span>
+<span class="font-data-md text-xs">0x7F22...B331</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-primary-fixed-variant" data-icon="verified">verified</span>
+<span class="font-label-md uppercase text-[10px]">All entries audit-locked</span>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Simple micro-interaction for dropdown focus
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('focus', () => {
+                select.parentElement.classList.add('ring-1', 'ring-primary');
+            });
+            select.addEventListener('blur', () => {
+                select.parentElement.classList.remove('ring-1', 'ring-primary');
+            });
+        });
+
+        // Add visual feedback on button clicks
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.98)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

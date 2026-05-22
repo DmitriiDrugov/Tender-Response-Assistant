@@ -10,7 +10,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   const { id } = paramsSchema.parse(await ctx.params);
   const sb = supabaseServer();
 
-  const [tenderRes, lotsRes, reqsRes, risksRes, docsRes, criteriaRes] = await Promise.all([
+  const [tenderRes, lotsRes, reqsRes, risksRes, docsRes, criteriaRes, clarificationsRes] = await Promise.all([
     sb.from("tenders").select("*").eq("id", id).single(),
     sb.from("tender_lots").select("*").eq("tender_id", id),
     sb
@@ -29,6 +29,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
       .eq("tender_id", id)
       .order("name", { ascending: true }),
     sb.from("evaluation_criteria").select("*").eq("tender_id", id),
+    sb.from("clarification_questions").select("*").eq("tender_id", id).order("created_at"),
   ]);
 
   if (tenderRes.error || !tenderRes.data) {
@@ -42,6 +43,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
     risks: risksRes.data ?? [],
     required_documents: docsRes.data ?? [],
     evaluation_criteria: criteriaRes.data ?? [],
+    clarification_questions: clarificationsRes.data ?? [],
   });
 }
 

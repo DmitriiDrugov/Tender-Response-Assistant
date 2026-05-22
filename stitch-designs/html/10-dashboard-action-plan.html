@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Industrial Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f0eded; }
+        ::-webkit-scrollbar-thumb { background: #7e775f; border-radius: 0px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5f5e5e; }
+        
+        .brutal-border { border: 1px solid #1b1c1c; }
+        .brutal-border-heavy { border: 2px solid #1b1c1c; }
+        .tiled-grid {
+            background-size: 20px 20px;
+            background-image: radial-gradient(circle, #d0c6ab 1px, transparent 1px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#e4e2e1",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "background": "#fbf9f8",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#ffd700",
+                        "surface-container-highest": "#e4e2e1",
+                        "surface": "#fbf9f8",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-variant": "#e4e2e1",
+                        "on-surface": "#1b1c1c",
+                        "on-primary-container": "#705e00",
+                        "inverse-primary": "#e9c400",
+                        "on-primary-fixed-variant": "#544600",
+                        "surface-dim": "#dcd9d9",
+                        "primary": "#705d00",
+                        "secondary": "#5f5e5e",
+                        "outline": "#7e775f",
+                        "on-background": "#1b1c1c",
+                        "surface-container-high": "#eae8e7",
+                        "inverse-surface": "#303030",
+                        "on-secondary-fixed-variant": "#474747",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#656464",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#5d5f5f",
+                        "primary-fixed": "#ffe16d",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-container": "#5e5f60",
+                        "surface-bright": "#fbf9f8",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container": "#f0eded",
+                        "tertiary-container": "#d9dada",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#4d4732",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-tint": "#705d00",
+                        "outline-variant": "#d0c6ab",
+                        "inverse-on-surface": "#f3f0f0",
+                        "tertiary-fixed-dim": "#c6c6c7"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Source Serif 4"],
+                        "headline-md": ["Source Serif 4"],
+                        "body-lg": ["Public Sans"],
+                        "headline-lg": ["Source Serif 4"],
+                        "data-md": ["JetBrains Mono"],
+                        "label-md": ["Public Sans"],
+                        "body-md": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex overflow-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-high border-r border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Tender Response</h1>
+<p class="font-label-mono text-[10px] uppercase tracking-widest text-on-surface-variant opacity-70">Procurement Triage</p>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center px-6 py-3 text-primary font-bold border-r-2 border-primary hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">description</span>
+<span class="font-label-mono text-label-mono uppercase">Tenders</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant font-body-md hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">assignment_turned_in</span>
+<span class="font-label-mono text-label-mono uppercase">Capabilities</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 bg-surface-container-low border border-outline-variant mb-6">
+<div class="w-8 h-8 bg-primary-container flex items-center justify-center border border-primary">
+<span class="font-bold text-on-primary-container text-xs">JD</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md truncate">J. DAWSON</p>
+<p class="text-[10px] text-on-surface-variant">SENIOR ANALYST</p>
+</div>
+</div>
+<a class="flex items-center text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-2">logout</span>
+<span class="font-label-mono text-label-mono uppercase">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 flex-grow flex flex-col min-w-0 relative">
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 w-full z-40 bg-surface border-b border-[oklch(0.215_0.012_70_/_0.1)] flex flex-col px-10 py-4 gap-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Tender Response Assistant</h2>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="bg-surface-container-lowest border border-outline px-4 py-2 text-xs font-data-md focus:border-2 focus:outline-none w-64 transition-all" placeholder="SEARCH SYSTEM..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-2 text-on-surface-variant text-sm">search</span>
+</div>
+<div class="flex gap-4">
+<button class="hover:text-primary transition-transform active:scale-95"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-transform active:scale-95"><span class="material-symbols-outlined">settings</span></button>
+</div>
+</div>
+</div>
+<nav class="flex gap-8 overflow-x-auto no-scrollbar">
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Overview</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Requirements</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Documents</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Risks</a>
+<a class="text-on-surface-variant font-body-md pb-2 hover:text-primary transition-colors duration-200" href="#">Clarifications</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-2" href="#">Action plan</a>
+</nav>
+</header>
+<!-- Content Area -->
+<section class="flex-grow p-10 overflow-y-auto bg-surface-container-low tiled-grid">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg uppercase tracking-tight">Action plan</h1>
+<p class="font-data-md text-primary font-bold">12 TOTAL ITEMS PENDING</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex bg-surface-container-highest border border-outline p-1">
+<button class="px-4 py-1 text-xs font-label-md bg-primary-container text-on-primary-container border border-primary">ALL</button>
+<button class="px-4 py-1 text-xs font-label-md hover:bg-surface-variant/50">REQUIREMENTS</button>
+<button class="px-4 py-1 text-xs font-label-md hover:bg-surface-variant/50">RISKS</button>
+<button class="px-4 py-1 text-xs font-label-md hover:bg-surface-variant/50">DOCUMENTS</button>
+</div>
+<div class="relative">
+<select class="appearance-none bg-surface-container-highest border border-outline px-4 py-1 pr-10 text-xs font-label-md focus:border-primary focus:ring-0 rounded-none uppercase">
+<option>Team: All Departments</option>
+<option>Logistics</option>
+<option>Legal</option>
+<option>Procurement</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1.5 text-sm pointer-events-none">expand_more</span>
+</div>
+<button class="bg-primary-container text-on-primary-container border border-primary px-4 py-1 font-label-md text-xs hover:opacity-80 transition-opacity">
+                        + NEW ACTION
+                    </button>
+</div>
+</div>
+<!-- Industrial Action Table -->
+<div class="bg-surface-container-lowest border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(27,28,28,1)] overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-on-surface text-surface-container-lowest font-label-md text-[11px] uppercase tracking-widest">
+<tr>
+<th class="py-3 px-4 border-r border-surface/20">Priority</th>
+<th class="py-3 px-4 border-r border-surface/20">Action Details</th>
+<th class="py-3 px-4 border-r border-surface/20">Source</th>
+<th class="py-3 px-4 border-r border-surface/20">Owner / Team</th>
+<th class="py-3 px-4">Status</th>
+</tr>
+</thead>
+<tbody class="font-data-md text-data-md divide-y divide-on-surface/10">
+<!-- Row 1 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-error"></span>
+<span class="uppercase font-bold text-error">Critical</span>
+</div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<p class="font-bold uppercase mb-1">Resolve mandatory gap</p>
+<p class="text-[11px] italic text-on-surface-variant mb-1">Blocker: Legal sign-off pending on ISO 9001 certification copy</p>
+<div class="flex items-center text-[10px] text-on-surface-variant font-bold">
+<span class="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                    DUE: OCT 12, 2023
+                                </div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase border border-outline">Requirement</span>
+<p class="text-[10px] mt-1 text-on-surface-variant">Sect. 4.2: Compliance</p>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex flex-col">
+<span class="font-bold">M. REEVES</span>
+<span class="text-[10px] text-on-surface-variant uppercase">LEGAL DEPT</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="bg-error text-on-primary px-3 py-1 text-center text-[10px] font-bold uppercase">Delayed</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-low hover:bg-primary-container/5 transition-colors">
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container"></span>
+<span class="uppercase font-bold text-primary">High</span>
+</div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<p class="font-bold uppercase mb-1">Prepare document</p>
+<p class="text-[11px] italic text-on-surface-variant mb-1">Blocker: Waiting for Q3 export volume metrics</p>
+<div class="flex items-center text-[10px] text-on-surface-variant font-bold">
+<span class="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                    DUE: OCT 15, 2023
+                                </div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase border border-outline">Documents</span>
+<p class="text-[10px] mt-1 text-on-surface-variant">App. B: Logistics Plan</p>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex flex-col">
+<span class="font-bold">S. CHEN</span>
+<span class="text-[10px] text-on-surface-variant uppercase">OPERATIONS</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="bg-primary-container text-on-primary-container px-3 py-1 text-center text-[10px] font-bold uppercase border border-primary">In Progress</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary"></span>
+<span class="uppercase font-bold text-secondary">Med</span>
+</div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<p class="font-bold uppercase mb-1">Review risk</p>
+<p class="text-[11px] italic text-on-surface-variant mb-1">No active blockers</p>
+<div class="flex items-center text-[10px] text-on-surface-variant font-bold">
+<span class="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                    DUE: OCT 20, 2023
+                                </div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase border border-outline">Risks</span>
+<p class="text-[10px] mt-1 text-on-surface-variant">RK-09: Geopolitical</p>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex flex-col">
+<span class="font-bold">A. VANCE</span>
+<span class="text-[10px] text-on-surface-variant uppercase">STRATEGY</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="bg-surface-container-high text-on-surface-variant px-3 py-1 text-center text-[10px] font-bold uppercase border border-outline">Pending</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low hover:bg-primary-container/5 transition-colors">
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-outline"></span>
+<span class="uppercase font-bold text-on-surface-variant">Low</span>
+</div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<p class="font-bold uppercase mb-1">Send clarification</p>
+<p class="text-[11px] italic text-on-surface-variant mb-1">Reviewing wording for technical query #4</p>
+<div class="flex items-center text-[10px] text-on-surface-variant font-bold">
+<span class="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                    DUE: OCT 25, 2023
+                                </div>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase border border-outline">Clarification</span>
+<p class="text-[10px] mt-1 text-on-surface-variant">TQ-04: Port access</p>
+</td>
+<td class="py-4 px-4 border-r border-on-surface/10">
+<div class="flex flex-col">
+<span class="font-bold">L. MARTINS</span>
+<span class="text-[10px] text-on-surface-variant uppercase">PROCUREMENT</span>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="bg-surface-container-high text-on-surface-variant px-3 py-1 text-center text-[10px] font-bold uppercase border border-outline">Pending</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Summary Visualization -->
+<div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface border border-on-surface p-6">
+<h3 class="font-label-md text-xs uppercase text-on-surface-variant mb-4">Ownership Distribution</h3>
+<div class="h-4 bg-surface-container-highest flex border border-on-surface">
+<div class="h-full bg-primary" style="width: 40%" title="Legal: 40%"></div>
+<div class="h-full bg-secondary" style="width: 30%" title="Ops: 30%"></div>
+<div class="h-full bg-outline" style="width: 30%" title="Others: 30%"></div>
+</div>
+<div class="mt-4 flex flex-wrap gap-4 text-[10px] font-bold uppercase">
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-primary"></span> Legal</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-secondary"></span> Ops</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 bg-outline"></span> Procurement</div>
+</div>
+</div>
+<div class="md:col-span-2 bg-on-surface text-surface p-6 flex flex-col justify-between">
+<div>
+<h3 class="font-label-md text-xs uppercase text-surface-container-highest mb-2">Efficiency Insight</h3>
+<p class="font-headline-sm text-headline-sm italic">"Mandatory compliance gaps are currently the primary bottleneck. Priority actions should shift towards ISO documentation retrieval."</p>
+</div>
+<div class="mt-4 pt-4 border-t border-surface/20 flex justify-between items-center">
+<span class="font-data-md text-[10px] uppercase">Generated by Procurement AI Engine</span>
+<button class="text-[10px] font-bold underline hover:text-primary-container transition-colors">VIEW FULL AUDIT</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Fixed Footer Status -->
+<footer class="h-8 bg-on-surface text-surface-container-highest px-10 flex items-center justify-between text-[10px] font-label-mono uppercase tracking-widest z-50">
+<div class="flex gap-6">
+<span>SYSTEM STATUS: OPERATIONAL</span>
+<span>DATA FRESHNESS: 2m AGO</span>
+</div>
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> LIVE SYNC ACTIVE</span>
+</div>
+</footer>
+</main>
+<!-- Contextual FAB -->
+<button class="fixed bottom-12 right-12 w-16 h-16 bg-primary-container border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(27,28,28,1)] flex items-center justify-center hover:translate-y-[-2px] hover:translate-x-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(27,28,28,1)] transition-all active:translate-y-[0px] active:translate-x-[0px] active:shadow-none z-50 group">
+<span class="material-symbols-outlined text-on-primary-container text-3xl group-hover:rotate-90 transition-transform">add</span>
+</button>
+<script>
+        // Simple Interaction logic
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Flash effect for interaction
+                row.classList.add('bg-primary-container/20');
+                setTimeout(() => {
+                    row.classList.remove('bg-primary-container/20');
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

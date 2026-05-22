@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            font-size: 18px;
+        }
+        .progress-line-animation {
+            width: 0%;
+            animation: progressMove 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes progressMove {
+            0% { width: 0%; }
+            100% { width: 65%; }
+        }
+        .dot-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .step-transition {
+            transition: all 0.5s ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-high": "#eae8e7",
+                        "tertiary-container": "#d9dada",
+                        "surface-dim": "#dcd9d9",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary": "#5d5f5f",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#7e775f",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "error-container": "#ffdad6",
+                        "surface": "#fbf9f8",
+                        "on-tertiary-container": "#5e5f60",
+                        "surface-variant": "#e4e2e1",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container-low": "#f6f3f2",
+                        "on-background": "#1b1c1c",
+                        "primary-fixed": "#ffe16d",
+                        "on-secondary-container": "#656464",
+                        "on-primary-container": "#705e00",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-highest": "#e4e2e1",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "background": "#fbf9f8",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-secondary-fixed-variant": "#474747",
+                        "inverse-primary": "#e9c400",
+                        "on-error": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "primary": "#705d00",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "inverse-surface": "#303030",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#221b00",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed": "#e4e2e1",
+                        "primary-container": "#ffd700",
+                        "on-primary-fixed-variant": "#544600",
+                        "secondary-container": "#e4e2e1",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#4d4732"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Source Serif 4"],
+                        "label-md": ["Public Sans"],
+                        "headline-lg": ["Source Serif 4"],
+                        "headline-md": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "data-md": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "data-md": ["13px", {"lineHeight": "1.4", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center p-edge-margin overflow-hidden">
+<!-- Top Navigation Anchor (Simulated based on Shared Components) -->
+<header class="flex justify-between items-center px-8 w-full h-16 border-b-2 border-on-surface sticky top-0 z-50 bg-surface absolute top-0 left-0">
+<div class="text-headline-sm font-headline-sm font-bold text-on-surface uppercase tracking-tight">Procurement Triage v1.0</div>
+<div class="flex gap-6 items-center">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<div class="w-8 h-8 border border-on-surface bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 20px;">person</span>
+</div>
+</div>
+</header>
+<!-- Main Analysis Container -->
+<main class="w-full max-w-4xl flex flex-col items-center text-center space-y-12">
+<!-- Identity Section -->
+<div class="space-y-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Project Nexus: Renewable Grid Expansion</h1>
+<p class="font-data-md text-data-md text-primary uppercase tracking-widest transition-opacity duration-500" id="status-label">
+                Preparing tender analysis...
+            </p>
+</div>
+<!-- Progress Bar (The 1px minimal line) -->
+<div class="w-[240px] h-[1px] bg-outline-variant relative overflow-hidden">
+<div class="progress-line-animation absolute top-0 left-0 h-full bg-primary"></div>
+</div>
+<!-- Steps List -->
+<div class="w-full max-w-xs flex flex-col items-start space-y-gutter bg-on-surface/5 p-gutter">
+<!-- Step 1: Done -->
+<div class="w-full flex items-center justify-between p-4 bg-surface border border-on-surface/10 step-transition">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-label-md uppercase text-on-surface">Document uploaded</span>
+</div>
+<span class="font-data-md text-[10px] text-on-surface-variant/60">09:42:01</span>
+</div>
+<!-- Step 2: Done -->
+<div class="w-full flex items-center justify-between p-4 bg-surface border border-on-surface/10 step-transition">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-label-md uppercase text-on-surface">Text extracted</span>
+</div>
+<span class="font-data-md text-[10px] text-on-surface-variant/60">09:42:14</span>
+</div>
+<!-- Step 3: Active -->
+<div class="w-full flex items-center justify-between p-4 bg-surface border-2 border-primary step-transition relative overflow-hidden">
+<div class="flex items-center gap-4">
+<div class="w-[18px] h-[18px] flex items-center justify-center">
+<div class="w-[6px] h-[6px] bg-primary rounded-full dot-pulse"></div>
+</div>
+<span class="font-label-md text-label-md uppercase text-primary">Requirements extracted</span>
+</div>
+<div class="bg-primary/10 px-2 py-0.5 border border-primary/20">
+<span class="font-data-md text-[10px] text-primary">PROCESSING</span>
+</div>
+</div>
+<!-- Step 4: Pending -->
+<div class="w-full flex items-center justify-between p-4 bg-surface-container-low border border-on-surface/10 step-transition">
+<div class="flex items-center gap-4 opacity-40">
+<div class="w-[18px] h-[18px] flex items-center justify-center">
+<div class="w-[6px] h-[6px] border border-on-surface rounded-full"></div>
+</div>
+<span class="font-label-md text-label-md uppercase text-on-surface">Opening analysis</span>
+</div>
+<span class="font-data-md text-[10px] text-on-surface-variant/30">PENDING</span>
+</div>
+</div>
+<!-- System Metadata Footer -->
+<div class="pt-8 opacity-50">
+<div class="flex gap-8 border-t border-on-surface/10 pt-4">
+<div class="text-left">
+<p class="font-label-md text-[10px] uppercase text-on-surface-variant">System Latency</p>
+<p class="font-data-md text-data-md">14ms</p>
+</div>
+<div class="text-left">
+<p class="font-label-md text-[10px] uppercase text-on-surface-variant">Engine</p>
+<p class="font-data-md text-data-md">LLM-TRIAGE-PRO-V4</p>
+</div>
+<div class="text-left">
+<p class="font-label-md text-[10px] uppercase text-on-surface-variant">Session ID</p>
+<p class="font-data-md text-data-md">IND-992-TX</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Side Navigation Anchor (Hidden on mobile via logic but shown for structure) -->
+<nav class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 border-r-2 border-on-surface bg-surface-container flex flex-col z-40 transform -translate-x-full transition-transform hover:translate-x-0 group">
+<div class="p-6 border-b border-on-surface/10">
+<h2 class="font-headline-sm font-black text-on-surface uppercase">Bid Operations</h2>
+<p class="font-data-md text-on-surface-variant">ID: IND-992-TX</p>
+</div>
+<div class="flex-grow py-4">
+<div class="bg-primary-container text-on-primary-container border-y border-on-surface flex items-center gap-3 px-4 py-3 border-l-4 border-primary">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md">Tenders</span>
+</div>
+<div class="text-on-surface-variant flex items-center gap-3 px-4 py-3 hover:bg-surface-container-highest transition-all duration-75 cursor-pointer">
+<span class="material-symbols-outlined">precision_manufacturing</span>
+<span class="font-label-md text-label-md">Capabilities</span>
+</div>
+</div>
+<div class="mt-auto p-4 border-t border-on-surface/10">
+<button class="w-full bg-primary text-on-primary py-3 font-label-md uppercase border-2 border-on-surface hover:opacity-80 transition-opacity">
+                New Manifest
+            </button>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for status text transition
+        setTimeout(() => {
+            const label = document.getElementById('status-label');
+            label.style.opacity = '0';
+            setTimeout(() => {
+                label.innerText = 'Requirements extracted.';
+                label.style.opacity = '1';
+            }, 500);
+        }, 3000);
+    </script>
+</body></html>
