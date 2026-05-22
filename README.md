@@ -7,7 +7,7 @@ Not a chatbot. Not "AI magic." A triage and drafting tool for someone who alread
 ## Stack
 
 - Next.js 15 (App Router) · TypeScript strict
-- Tailwind CSS · custom design system from `DESIGN.md`
+- Tailwind CSS · custom design tokens (OKLCH, Source Serif 4, Inter, JetBrains Mono)
 - Supabase (Postgres + Storage) via `@supabase/supabase-js`
 - LLMs via [OpenRouter](https://openrouter.ai), called through the OpenAI SDK (`baseURL` override)
 - `pdf-parse` for PDF extraction · `docx` for export · `zod` everywhere a boundary exists
@@ -121,15 +121,12 @@ middleware.ts         # Passcode gate
 supabase/
   migrations/         # SQL schema (run in order)
   seed.sql            # Optional starter capability rows
-PRODUCT.md            # Impeccable design context — user / brand / anti-references
-DESIGN.md             # Impeccable design system — OKLCH tokens, typography, spacing
+PRODUCT.md            # Product purpose, users, tone, anti-references
 ```
 
 ## Design
 
 The visual language is editorial-typographic and document-grade. Source Serif 4 carries the hierarchy and document feel; Inter handles dense chrome. Light theme is forced by the user's working scene (bid manager in an office, comparing against a printed PDF). Color is **Restrained**: tinted warm neutrals as canvas, one accent for action and severity.
-
-The full design system is documented in [`DESIGN.md`](./DESIGN.md). The product strategy and anti-references are in [`PRODUCT.md`](./PRODUCT.md). Both are loaded by the `impeccable` design skill (`./.agents/skills/impeccable/`) when iterating.
 
 Banned across the codebase: gradient text, glassmorphism, side-stripe borders, identical card grids, marketing adjectives in UI copy, `#000`/`#fff`, em dashes.
 
@@ -150,6 +147,24 @@ npm run start       # Run the built app
 npm run typecheck   # tsc --noEmit
 npm run lint        # next lint
 ```
+
+## Deploying to Vercel
+
+1. **Push to GitHub** (already configured for `DmitriiDrugov/Tender-Response-Assistant`).
+2. **Import the repo** at <https://vercel.com/new>.
+3. **Set environment variables** in Project Settings → Environment Variables. Mirror everything in `.env.local.example`:
+   - `OPENROUTER_API_KEY`, `OPENROUTER_HTTP_REFERER` (set to your Vercel URL), `OPENROUTER_X_TITLE`
+   - `OPENROUTER_MODEL_EXTRACT` / `_MATCH` / `_DRAFT` / `_RISK`
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+   - `DEMO_PASSCODE`, `AUTH_COOKIE_SECRET`
+4. **Plan requirement**: `extract`, `match`, `draft` routes need `maxDuration: 300` (5 min). Vercel **Hobby caps at 60 s** — you need at least the **Pro plan** for the pipeline to complete on real tenders. `vercel.json` declares the durations explicitly.
+5. **Region**: `vercel.json` pins `fra1` (Frankfurt) — keep server and Supabase in the same region for latency. Adjust if your Supabase project lives elsewhere.
+6. **Upload size**: Vercel functions have a 4.5 MB request-body cap on Hobby and ~50 MB on Pro. The app code accepts PDFs up to 25 MB; on Hobby, uploads >4.5 MB will fail at the platform level. For larger PDFs, switch to direct-to-Storage upload (out of scope for this build).
+7. **Build command**: default `next build`. No custom install command required.
+8. **First deploy checklist**:
+   - Apply the Supabase migrations in order (SQL editor).
+   - Create the `tender-pdfs` private bucket.
+   - Hit `/login` with `DEMO_PASSCODE`, then **Capabilities → Seed from template**.
 
 ## Notes for the demo
 

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "functions": {
+    "app/api/tenders/upload/route.ts":               { "maxDuration": 60 },
+    "app/api/tenders/[id]/extract/route.ts":         { "maxDuration": 300 },
+    "app/api/tenders/[id]/match/route.ts":           { "maxDuration": 300 },
+    "app/api/tenders/[id]/draft/route.ts":           { "maxDuration": 300 },
+    "app/api/tenders/[id]/risks/route.ts":           { "maxDuration": 120 },
+    "app/api/tenders/[id]/export/route.ts":          { "maxDuration": 60 },
+    "app/api/requirements/[id]/regenerate/route.ts": { "maxDuration": 120 }
+  }
+}
