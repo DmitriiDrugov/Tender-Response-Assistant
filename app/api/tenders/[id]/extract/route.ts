@@ -59,7 +59,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     const output = await llmJSON({
       promptFile: "extract",
       variables: { TENDER_TEXT: tenderText },
-      model: process.env.OPENROUTER_MODEL_EXTRACT || "anthropic/claude-sonnet-4-6",
+      model: process.env.OPENROUTER_MODEL_EXTRACT || "deepseek/deepseek-chat:free",
       schema: extractSchema,
       route: "extract",
       tenderId: id,
