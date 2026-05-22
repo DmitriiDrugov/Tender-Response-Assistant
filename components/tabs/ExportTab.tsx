@@ -70,17 +70,17 @@ export function ExportTab({ tender }: { tender: TenderFull }) {
     <div className="grid gap-7 lg:grid-cols-[1fr_22rem] items-start">
       <DocumentPreview tender={tender} included={included} />
 
-      <aside className="lg:sticky lg:top-5 border border-border bg-surface">
-        <div className="px-5 py-4 border-b border-border space-y-3">
-          <h3 className="font-serif text-20 text-ink leading-none">Export</h3>
-          <p className="text-13 text-ink-muted">
+      <aside className="lg:sticky lg:top-5 border border-outline-variant bg-surface">
+        <div className="px-5 py-4 border-b border-outline-variant space-y-3">
+          <h3 className="font-serif text-20 text-on-surface leading-none">Export</h3>
+          <p className="text-13 text-on-surface-variant">
             {includedCount} of {total} requirements included.
           </p>
           <button
             type="button"
             onClick={download}
             disabled={downloading || includedCount === 0}
-            className="btn btn-primary w-full"
+            className="bg-primary text-on-primary px-4 py-2 font-label-md text-label-md hover:brightness-110 transition-all w-full"
           >
             <Download size={14} strokeWidth={1.5} aria-hidden="true" />
             {downloading ? "Preparing DOCX." : "Download DOCX"}
@@ -93,7 +93,7 @@ export function ExportTab({ tender }: { tender: TenderFull }) {
               Select none
             </button>
           </div>
-          {error ? <p className="text-12 text-accent">{error}</p> : null}
+          {error ? <p className="text-12 text-error">{error}</p> : null}
         </div>
 
         <div className="px-5 py-4 space-y-6 max-h-[64vh] overflow-y-auto">
@@ -110,9 +110,9 @@ export function ExportTab({ tender }: { tender: TenderFull }) {
                         type="checkbox"
                         checked={included.has(r.id)}
                         onChange={() => toggle(r.id)}
-                        className="mt-1 accent-[var(--accent)]"
+                        className="mt-1 accent-primary"
                       />
-                      <span className="text-12 text-ink leading-snug line-clamp-2">{r.text}</span>
+                      <span className="text-12 text-on-surface leading-snug line-clamp-2">{r.text}</span>
                     </label>
                   </li>
                 ))}
@@ -149,13 +149,13 @@ function DocumentPreview({
 
   return (
     <article
-      className="bg-surface border border-border px-9 py-9 prose-doc"
+      className="bg-surface border border-outline-variant px-9 py-9 prose-doc"
       aria-label="Document preview"
     >
-      <header className="border-b border-ink pb-3 mb-7">
-        <p className="text-12 uppercase tracking-[0.15em] font-medium text-ink">Tender response</p>
-        <h2 className="font-serif text-31 text-ink leading-tight mt-2">{tender.title}</h2>
-        <p className="text-13 text-ink-muted mt-2 italic">
+      <header className="border-b border-on-surface pb-3 mb-7">
+        <p className="text-12 uppercase tracking-[0.15em] font-medium text-on-surface">Tender response</p>
+        <h2 className="font-serif text-31 text-on-surface leading-tight mt-2">{tender.title}</h2>
+        <p className="text-13 text-on-surface-variant mt-2 italic">
           {[
             tender.issuing_authority ? `Issuing authority: ${tender.issuing_authority}` : null,
             tender.tender_id_external ? `Tender ID: ${tender.tender_id_external}` : null,
@@ -169,36 +169,36 @@ function DocumentPreview({
 
       {tender.scope_summary ? (
         <section className="mb-7">
-          <h3 className="font-serif text-20 text-ink mb-2">Scope summary</h3>
+          <h3 className="font-serif text-20 text-on-surface mb-2">Scope summary</h3>
           <p>{tender.scope_summary}</p>
         </section>
       ) : null}
 
-      <h3 className="font-serif text-25 text-ink mb-5">Requirements and responses</h3>
+      <h3 className="font-serif text-25 text-on-surface mb-5">Requirements and responses</h3>
 
       {groupedByCategory.map(([cat, rows]) => (
         <section key={cat} className="mb-7">
-          <h4 className="font-serif text-20 text-ink mb-3">{cat}</h4>
+          <h4 className="font-serif text-20 text-on-surface mb-3">{cat}</h4>
           {rows.map((r) => {
             counter++;
             return (
-              <div key={r.id} className="border-t border-border py-4 space-y-2">
-                <p className="font-serif text-16 italic text-ink">
+              <div key={r.id} className="border-t border-outline-variant py-4 space-y-2">
+                <p className="font-serif text-16 italic text-on-surface">
                   <span className="font-medium not-italic">{counter}. </span>
                   {r.text}
                   {r.is_mandatory ? (
-                    <span className="not-italic text-12 text-accent ml-2 uppercase tracking-wider">
+                    <span className="not-italic text-12 text-error ml-2 uppercase tracking-wider">
                       [Mandatory]
                     </span>
                   ) : null}
                 </p>
                 {r.source_excerpt ? (
-                  <p className="text-13 text-ink-muted italic pl-5">Source: “{r.source_excerpt}”</p>
+                  <p className="text-13 text-on-surface-variant italic pl-5">Source: "{r.source_excerpt}"</p>
                 ) : null}
                 <div className="label">Response</div>
                 <p>{r.draft_response?.trim() || "[Pending bid manager input]"}</p>
                 {r.reviewer_notes ? (
-                  <p className="text-13 text-ink-muted">
+                  <p className="text-13 text-on-surface-variant">
                     <span className="label mr-1">Reviewer note</span>
                     {r.reviewer_notes}
                   </p>
@@ -211,23 +211,23 @@ function DocumentPreview({
 
       {tender.risks.length > 0 ? (
         <section>
-          <h3 className="font-serif text-25 text-ink mb-3">Identified risks</h3>
+          <h3 className="font-serif text-25 text-on-surface mb-3">Identified risks</h3>
           {[...tender.risks]
             .sort((a, b) => sevRank(a.severity) - sevRank(b.severity))
             .map((r) => (
-              <div key={r.id} className="py-3 border-t border-border">
+              <div key={r.id} className="py-3 border-t border-outline-variant">
                 <p className="text-12 uppercase tracking-wider font-medium">
-                  <span className="text-accent">{r.severity}</span>
-                  <span className="text-ink-muted ml-3 normal-case tracking-normal">
+                  <span className="text-error">{r.severity}</span>
+                  <span className="text-on-surface-variant ml-3 normal-case tracking-normal">
                     {r.category}
                   </span>
                 </p>
                 <p className="mt-1">{r.description}</p>
                 {r.source_location ? (
-                  <p className="text-13 text-ink-muted italic mt-1">Source: {r.source_location}</p>
+                  <p className="text-13 text-on-surface-variant italic mt-1">Source: {r.source_location}</p>
                 ) : null}
                 {r.recommended_action ? (
-                  <p className="text-13 text-ink-2 mt-1">
+                  <p className="text-13 text-on-surface-variant mt-1">
                     <span className="label mr-1">Action</span>
                     {r.recommended_action}
                   </p>
