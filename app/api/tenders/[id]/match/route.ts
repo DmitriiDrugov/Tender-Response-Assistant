@@ -14,9 +14,10 @@ const paramsSchema = z.object({ id: z.string().uuid() });
 // A 'running' tender whose updated_at is older than this is considered stale.
 const STALE_THRESHOLD_MS = 6 * 60 * 1000;
 
-// How many requirements per LLM call. Keeps output well within 8 000-token limit.
-// Override with MATCH_CHUNK_SIZE env var for paid-tier models with larger output windows.
-const CHUNK_SIZE = Math.max(1, Math.floor(Number(process.env.MATCH_CHUNK_SIZE ?? "40") || 40));
+// How many requirements per LLM call. Claude 3 Haiku silently caps output at
+// 4 096 tokens; each match item with confidence_reason is ~150 tokens, so 20 leaves
+// headroom for verbose reasons. Override with MATCH_CHUNK_SIZE for larger-output models.
+const CHUNK_SIZE = Math.max(1, Math.floor(Number(process.env.MATCH_CHUNK_SIZE ?? "20") || 20));
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
@@ -81,7 +82,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     evidence: c.evidence,
   }));
 
-  const model = process.env.OPENROUTER_MODEL_MATCH || "deepseek/deepseek-chat:free";
+  const model = process.env.OPENROUTER_MODEL_MATCH || "anthropic/claude-3-haiku";
 
   // Build a global index map: requirement_index (in full list) → LLM result
   const byIndex = new Map<number, MatchOutput[number]>();
@@ -155,6 +156,8 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         gap_description: m.gap_description,
         suggested_action: m.suggested_action,
         confidence: m.confidence,
+        confidence_reason: m.confidence_reason ?? null,
+        evidence_strength: m.evidence_strength ?? null,
       };
 
       if (!reqRow.overridden_by_user) {

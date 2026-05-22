@@ -13,6 +13,19 @@ const moneySchema = z
   })
   .nullable();
 
+const requirementTypeSchema = z.enum([
+  "Bid Compliance",
+  "Operational Delivery",
+  "Technical / IT",
+  "Commercial",
+  "Legal / Contractual",
+  "Document Requirement",
+  "Reporting / KPI",
+  "User Management",
+  "EHS / Safety",
+  "Other",
+]);
+
 export const extractSchema = z.object({
   title: z.string(),
   issuing_authority: z.string().nullable(),
@@ -21,6 +34,7 @@ export const extractSchema = z.object({
   tender_id_external: z.string().nullable(),
   publication_date: z.string().nullable(),
   submission_deadline: z.string().nullable(),
+  clarification_deadline: z.string().nullable().optional(),
   submission_method: z.string().nullable(),
   estimated_value: moneySchema,
   contract_duration: z.string().nullable(),
@@ -37,18 +51,35 @@ export const extractSchema = z.object({
     z.object({
       text: z.string(),
       category: z.string().nullable(),
+      requirement_type: requirementTypeSchema.optional().nullable(),
       is_mandatory: z.boolean(),
       source_excerpt: z.string().nullable(),
+      confidence_reason: z.string().nullable().optional(),
     }),
   ),
-  required_documents: z.array(z.string()),
-  evaluation_criteria: z.array(
-    z.object({
-      criterion: z.string().nullable(),
-      weight_percent: z.number().nullable(),
-    }),
-  ),
-  notes: z.array(z.string()),
+  // The next three default to [] so a response truncated mid-`requirements`
+  // can still validate after the bracket-balancer recovers what's there.
+  required_documents: z
+    .union([
+      z.array(z.string()),
+      z.array(
+        z.object({
+          name: z.string(),
+          is_required: z.boolean().optional(),
+          source_section: z.string().nullable().optional(),
+        }),
+      ),
+    ])
+    .default([]),
+  evaluation_criteria: z
+    .array(
+      z.object({
+        criterion: z.string().nullable(),
+        weight_percent: z.number().nullable(),
+      }),
+    )
+    .default([]),
+  notes: z.array(z.string()).default([]),
 });
 export type ExtractOutput = z.infer<typeof extractSchema>;
 
@@ -67,6 +98,8 @@ export const matchItemSchema = z.object({
   gap_description: z.string().nullable(),
   suggested_action: z.string().nullable(),
   confidence: z.enum(["high", "medium", "low"]),
+  confidence_reason: z.string().nullable().optional(),
+  evidence_strength: z.enum(["high", "medium", "low"]).nullable().optional(),
 });
 export const matchSchema = z.array(matchItemSchema);
 export type MatchOutput = z.infer<typeof matchSchema>;
@@ -104,6 +137,7 @@ export const riskItemSchema = z.object({
   source_location: z.string(),
   severity: riskSeveritySchema,
   recommended_action: z.string(),
+  business_impact: z.string().nullable().optional(),
 });
 export const riskSchema = z.array(riskItemSchema);
 export type RiskOutput = z.infer<typeof riskSchema>;

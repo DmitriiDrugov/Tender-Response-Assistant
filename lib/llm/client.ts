@@ -43,8 +43,8 @@ export class LlmEmptyResponseError extends Error {
 }
 
 const DEFAULTS: Record<PromptName, { temperature: number; maxTokens: number }> = {
-  extract: { temperature: 0, maxTokens: 8000 },
-  match: { temperature: 0, maxTokens: 8000 },
+  extract: { temperature: 0, maxTokens: 32000 },
+  match: { temperature: 0, maxTokens: 4096 },
   draft: { temperature: 0.3, maxTokens: 2000 },
   risk: { temperature: 0, maxTokens: 4000 },
 };
@@ -86,8 +86,70 @@ function substitute(template: string, variables: Record<string, string>): string
 }
 
 /**
- * Strip markdown JSON fences and trailing commas defensively.
- * Models sometimes wrap output in ```json ... ``` despite explicit instructions.
+ * Walk the raw response tracking string mode and bracket depth, then either trim
+ * trailing prose past a complete top-level close, or — if the response is truncated
+ * mid-element on a token cap — rewind to the last fully-closed element and append
+ * the right number of closers. This recovers N-1 elements from a chunk that would
+ * otherwise fail with "Expected ',' or ']' after array element".
+ */
+function balanceJsonStructure(raw: string): string {
+  const stack: ("{" | "[")[] = [];
+  let inString = false;
+  let escaped = false;
+  let lastTopLevelClosePos = -1;
+  let lastSafePos = -1;
+  let lastSafeStack: ("{" | "[")[] = [];
+
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (c === "\\") escaped = true;
+      else if (c === '"') inString = false;
+      continue;
+    }
+    if (c === '"') {
+      inString = true;
+      continue;
+    }
+    if (c === "{" || c === "[") {
+      stack.push(c);
+      continue;
+    }
+    const top = stack[stack.length - 1];
+    if ((c === "}" && top === "{") || (c === "]" && top === "[")) {
+      stack.pop();
+      if (stack.length === 0) {
+        lastTopLevelClosePos = i + 1;
+      } else if (stack[stack.length - 1] === "[") {
+        // Only mark safe when the close put us back at array level — that's a
+        // boundary between elements. A close that lands inside an object (e.g.
+        // a nested inner array) is mid-element and would yield a partial item
+        // that fails schema validation.
+        lastSafePos = i + 1;
+        lastSafeStack = stack.slice();
+      }
+    }
+  }
+
+  // Balanced: trim trailing prose after the outermost close.
+  if (stack.length === 0 && lastTopLevelClosePos > 0) {
+    return raw.slice(0, lastTopLevelClosePos);
+  }
+  // Truncated: rewind to last fully-closed element and append closers.
+  if (lastSafePos > 0) {
+    let recovered = raw.slice(0, lastSafePos);
+    for (let i = lastSafeStack.length - 1; i >= 0; i--) {
+      recovered += lastSafeStack[i] === "{" ? "}" : "]";
+    }
+    return recovered;
+  }
+  return raw;
+}
+
+/**
+ * Strip markdown JSON fences, leading prose, and recover truncated responses.
+ * Models sometimes wrap output in ```json ... ``` or get cut off on max_tokens.
  */
 function sanitizeJsonString(raw: string): string {
   let s = raw.trim();
@@ -100,9 +162,17 @@ function sanitizeJsonString(raw: string): string {
   const firstBrace = s.search(/[\[{]/);
   if (firstBrace > 0) s = s.slice(firstBrace);
 
-  // Trim after last closing brace/bracket
-  const lastBrace = Math.max(s.lastIndexOf("}"), s.lastIndexOf("]"));
-  if (lastBrace >= 0 && lastBrace < s.length - 1) s = s.slice(0, lastBrace + 1);
+  // Either trim trailing prose past the top-level close, or close unbalanced
+  // brackets on truncated responses. Replaces a naive lastIndexOf("}") which
+  // failed when truncation landed mid-array — the outer [ and { stayed open.
+  s = balanceJsonStructure(s);
+
+  // Repair missing commas between consecutive array element objects or arrays.
+  // \s* handles single newline, double newline (blank line), CRLF, and no-whitespace }{.
+  s = s.replace(/([}\]])(\s*)([{[])/g, '$1,$2$3');
+  // Repair missing commas between consecutive string values (evidence_used, notes, etc.).
+  // Require at least one \n so whitespace-only string values ("  ") are not corrupted.
+  s = s.replace(/"([ \t]*\r?\n[ \t\r\n]*)"/g, (_, ws) => `",${ws}"`);
 
   // Remove trailing commas before } or ]
   s = s.replace(/,(\s*[}\]])/g, "$1");
