@@ -76,25 +76,32 @@ export function AnalysisProgressScreen({
         'transition-[opacity,transform,filter] duration-320 ease-out',
         phase === 'dismissing' && 'opacity-0 scale-[0.98] blur-[2px]',
       )}
+      style={{
+        backgroundImage:
+          'linear-gradient(to right, rgba(27,28,28,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(27,28,28,0.03) 1px, transparent 1px)',
+        backgroundSize: '40px 40px',
+      }}
     >
-      <div className="w-full max-w-sm space-y-7 px-6">
-        <div className="space-y-3">
-          <h2 className="font-serif text-25 text-on-surface leading-tight max-w-reading">
+      <div className="w-full max-w-sm space-y-8 px-6">
+        <div className="space-y-2">
+          <h2 className="font-headline-md text-headline-md text-primary leading-tight">
             {tender.title}
           </h2>
-          <p className="font-serif text-20 text-on-surface-variant">{statusTitle}</p>
+          <p className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-widest">
+            {statusTitle}
+          </p>
         </div>
 
-        {/* Progress bar — exception to DESIGN.md "no progress bar" rule, scoped here only */}
+        {/* Progress bar */}
         <div
-          className="h-0.5 w-60 bg-outline overflow-hidden"
+          className="h-px w-full bg-outline-variant overflow-hidden"
           role="progressbar"
           aria-valuenow={Math.round(progress)}
           aria-valuemin={0}
           aria-valuemax={100}
         >
           <div
-            className="h-full bg-on-surface"
+            className="h-full bg-primary"
             style={{
               width: `${progress}%`,
               transition: phase === 'ready' ? 'width 500ms ease-out' : undefined,
@@ -102,19 +109,26 @@ export function AnalysisProgressScreen({
           />
         </div>
 
-        <ol className="space-y-2" aria-label="Pipeline steps">
+        <ol className="space-y-3" aria-label="Pipeline steps">
           {steps.map((step) => (
-            <li key={step.label} className="flex items-center gap-3 text-14 text-outline">
+            <li key={step.label} className="flex items-center gap-3">
               <span
-                className="dot flex-shrink-0"
+                className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
                 style={{
                   background:
-                    step.state === 'complete' ? 'var(--status-covered)'
+                    step.state === 'complete' ? '#705d00'
                     : step.state === 'active'  ? '#1b1c1c'
                     : '#d0c6ab',
                 }}
               />
-              <span className={step.state !== 'pending' ? 'text-on-surface-variant' : undefined}>
+              <span
+                className={cn(
+                  'font-label-mono text-label-mono uppercase',
+                  step.state === 'complete' ? 'text-primary' :
+                  step.state === 'active'   ? 'text-on-surface font-bold' :
+                  'text-outline',
+                )}
+              >
                 {step.label}
               </span>
               {step.state === 'active' ? <InkStroke className="ml-1" /> : null}
