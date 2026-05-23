@@ -112,7 +112,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
     .eq("id", id);
   await logPipelineEvent(id, "draft", "running");
 
-  const model = process.env.OPENROUTER_MODEL_DRAFT || "anthropic/claude-3-haiku";
+  const model = process.env.OPENROUTER_MODEL_DRAFT || "anthropic/claude-haiku-4-5-20251001";
 
   const sleep = PACING_MS > 0
     ? (ms: number) => new Promise<void>((r) => setTimeout(r, ms))

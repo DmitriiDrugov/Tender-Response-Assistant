@@ -65,7 +65,7 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
         REQUIREMENT_AND_MATCH_JSON: JSON.stringify(requirementAndMatch, null, 2),
         COMPANY_EVIDENCE: evidenceText,
       },
-      model: process.env.OPENROUTER_MODEL_DRAFT || "anthropic/claude-3-haiku",
+      model: process.env.OPENROUTER_MODEL_DRAFT || "anthropic/claude-haiku-4-5-20251001",
       schema: draftSchema,
       route: "draft-regen",
       tenderId: r.tender_id,
